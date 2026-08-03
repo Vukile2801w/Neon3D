@@ -130,4 +130,29 @@ namespace Neon
     {
         glDeleteProgram(0);
     }
+
+    int Shader::getUniformLocation(const std::string &name) const
+    {
+        return glGetUniformLocation(m_program, name.c_str());
+    }
+
+    void Shader::setBool(const std::string &name, bool value) const
+    {
+        glUniform1i(getUniformLocation(name), value);
+    }
+
+    void Shader::setInt(const std::string &name, int value) const
+    {
+        glUniform1i(getUniformLocation(name), value);
+    }
+
+    void Shader::setUInt(const std::string &name, unsigned int value) const
+    {
+        glUniform1ui(getUniformLocation(name), value);
+    }
+
+    void Shader::setFloat(const std::string &name, float value) const
+    {
+        glUniform1f(getUniformLocation(name), value);
+    }
 } // namespace Neon

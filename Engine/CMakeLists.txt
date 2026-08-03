@@ -6,6 +6,7 @@ add_library(Engine
     src/Shader.cpp
     src/VertexArray.cpp
     src/VertexBuffer.cpp
+    src/IndexBuffer.cpp
 )
 
 
