@@ -86,17 +86,65 @@ Engine/CMakeFiles/Engine.dir/src/Window.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Window.cpp.s"
 	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /c/Users/wukbg/programing/C++/Neon3D/Engine/src/Window.cpp -o CMakeFiles/Engine.dir/src/Window.cpp.s
 
+Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o: Engine/CMakeFiles/Engine.dir/flags.make
+Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o: /c/Users/wukbg/programing/C++/Neon3D/Engine/src/Shader.cpp
+Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o: Engine/CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/c/Users/wukbg/programing/C++/Neon3D/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o -MF CMakeFiles/Engine.dir/src/Shader.cpp.o.d -o CMakeFiles/Engine.dir/src/Shader.cpp.o -c /c/Users/wukbg/programing/C++/Neon3D/Engine/src/Shader.cpp
+
+Engine/CMakeFiles/Engine.dir/src/Shader.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/Shader.cpp.i"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /c/Users/wukbg/programing/C++/Neon3D/Engine/src/Shader.cpp > CMakeFiles/Engine.dir/src/Shader.cpp.i
+
+Engine/CMakeFiles/Engine.dir/src/Shader.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/Shader.cpp.s"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /c/Users/wukbg/programing/C++/Neon3D/Engine/src/Shader.cpp -o CMakeFiles/Engine.dir/src/Shader.cpp.s
+
+Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o: Engine/CMakeFiles/Engine.dir/flags.make
+Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o: /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexArray.cpp
+Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o: Engine/CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/c/Users/wukbg/programing/C++/Neon3D/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o -MF CMakeFiles/Engine.dir/src/VertexArray.cpp.o.d -o CMakeFiles/Engine.dir/src/VertexArray.cpp.o -c /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexArray.cpp
+
+Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/VertexArray.cpp.i"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexArray.cpp > CMakeFiles/Engine.dir/src/VertexArray.cpp.i
+
+Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/VertexArray.cpp.s"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexArray.cpp -o CMakeFiles/Engine.dir/src/VertexArray.cpp.s
+
+Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o: Engine/CMakeFiles/Engine.dir/flags.make
+Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o: /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexBuffer.cpp
+Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o: Engine/CMakeFiles/Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/c/Users/wukbg/programing/C++/Neon3D/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o -MF CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o.d -o CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o -c /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexBuffer.cpp
+
+Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Engine.dir/src/VertexBuffer.cpp.i"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexBuffer.cpp > CMakeFiles/Engine.dir/src/VertexBuffer.cpp.i
+
+Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Engine.dir/src/VertexBuffer.cpp.s"
+	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && /mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexBuffer.cpp -o CMakeFiles/Engine.dir/src/VertexBuffer.cpp.s
+
 # Object files for target Engine
 Engine_OBJECTS = \
-"CMakeFiles/Engine.dir/src/Window.cpp.o"
+"CMakeFiles/Engine.dir/src/Window.cpp.o" \
+"CMakeFiles/Engine.dir/src/Shader.cpp.o" \
+"CMakeFiles/Engine.dir/src/VertexArray.cpp.o" \
+"CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o"
 
 # External object files for target Engine
 Engine_EXTERNAL_OBJECTS =
 
 Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/src/Window.cpp.o
+Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o
+Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o
+Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o
 Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/build.make
 Engine/libEngine.a: Engine/CMakeFiles/Engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/c/Users/wukbg/programing/C++/Neon3D/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX static library libEngine.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/c/Users/wukbg/programing/C++/Neon3D/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX static library libEngine.a"
 	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && $(CMAKE_COMMAND) -P CMakeFiles/Engine.dir/cmake_clean_target.cmake
 	cd /c/Users/wukbg/programing/C++/Neon3D/build/Engine && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/Engine.dir/link.txt --verbose=$(VERBOSE)
 

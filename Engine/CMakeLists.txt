@@ -3,6 +3,9 @@ add_subdirectory(lib/glad)
 
 add_library(Engine
     src/Window.cpp
+    src/Shader.cpp
+    src/VertexArray.cpp
+    src/VertexBuffer.cpp
 )
 
 

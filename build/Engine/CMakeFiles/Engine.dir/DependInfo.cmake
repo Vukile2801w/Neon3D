@@ -8,6 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/c/Users/wukbg/programing/C++/Neon3D/Engine/src/Shader.cpp" "Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o" "gcc" "Engine/CMakeFiles/Engine.dir/src/Shader.cpp.o.d"
+  "/c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexArray.cpp" "Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o" "gcc" "Engine/CMakeFiles/Engine.dir/src/VertexArray.cpp.o.d"
+  "/c/Users/wukbg/programing/C++/Neon3D/Engine/src/VertexBuffer.cpp" "Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o" "gcc" "Engine/CMakeFiles/Engine.dir/src/VertexBuffer.cpp.o.d"
   "/c/Users/wukbg/programing/C++/Neon3D/Engine/src/Window.cpp" "Engine/CMakeFiles/Engine.dir/src/Window.cpp.o" "gcc" "Engine/CMakeFiles/Engine.dir/src/Window.cpp.o.d"
   )
 
