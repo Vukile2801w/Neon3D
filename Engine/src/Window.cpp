@@ -85,7 +85,11 @@ namespace Neon
         glClearColor(44 / 250.0f, 44 / 250.0f, 44 / 250.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+        glDrawElements(
+            GL_TRIANGLES,
+            6,
+            GL_UNSIGNED_INT,
+            nullptr);
 
         glfwSwapBuffers(m_window.get());
         glfwPollEvents();

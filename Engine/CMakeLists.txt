@@ -7,6 +7,7 @@ add_library(Engine
     src/VertexArray.cpp
     src/VertexBuffer.cpp
     src/IndexBuffer.cpp
+    src/Texture.cpp
 )
 
 
@@ -16,6 +17,7 @@ target_include_directories(Engine
 
     PRIVATE
         lib/glfw/include
+        lib/stb
 )
 
 
