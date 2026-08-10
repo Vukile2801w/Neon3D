@@ -38,11 +38,11 @@ namespace Neon
         int height() const;
 
     private:
-        unsigned int m_id;
+        unsigned int m_id{};
 
-        int m_width;
-        int m_height;
-        int m_channels;
+        int m_width{};
+        int m_height{};
+        int m_channels{};
     };
 }
 

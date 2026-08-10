@@ -63,6 +63,7 @@ namespace Neon
                 std::cout << "\033[31m[ERROR][NEON] - Failed to load "
                           << (type == Shader::ShaderType::FragmentShader ? "fragment" : "vertex")
                           << " shader, file not found\033[0m" << std::endl;
+                return 0;
             }
         }
 
@@ -80,6 +81,7 @@ namespace Neon
             std::cout << "\033[31m[NEON][ERROR] -  " << (type == Shader::ShaderType::FragmentShader ? "Fragment" : "Vertex")
                       << " shader failed to compile\033[0m\n"
                       << infoLog << std::endl;
+            return 0;
         }
 
         std::cout << "\033[32m[NEON][INFO] - Shader " << path << " is compiled \033[0m\n";
@@ -105,6 +107,7 @@ namespace Neon
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
             std::cout << "\033[31m[NEON][ERROR] - Program failed to link\033[0m\n"
                       << infoLog << std::endl;
+            return 0;
         }
 
         std::cout << "\033[32m[NEON][INFO] - Shaders linked\033[0m\n";
@@ -115,8 +118,22 @@ namespace Neon
         const std::filesystem::path &vertex,
         const std::filesystem::path &fragment)
     {
-        unsigned int vertexShader = compileShader(vertex, ShaderType::VertexShader);
-        unsigned int fragmentShader = compileShader(fragment, ShaderType::FragmentShader);
+        unsigned int vertexShader =
+            compileShader(vertex, ShaderType::VertexShader);
+
+        if (vertexShader == 0)
+        {
+            return;
+        }
+        unsigned int fragmentShader =
+            compileShader(fragment, ShaderType::FragmentShader);
+
+        if (fragmentShader == 0)
+        {
+            glDeleteShader(vertexShader);
+            return;
+        }
+
         m_program = linkProgram(vertexShader, fragmentShader);
 
         glDeleteShader(vertexShader);
@@ -128,7 +145,7 @@ namespace Neon
     }
     void Shader::unbind()
     {
-        glDeleteProgram(0);
+        glUseProgram(0);
     }
 
     int Shader::getUniformLocation(const std::string &name) const

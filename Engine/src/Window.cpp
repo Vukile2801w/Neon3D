@@ -6,12 +6,8 @@
 
 namespace Neon
 {
-    Window::Window(int xSize, int ySize)
-    {
-        m_sizeX = xSize;
-        m_sizeY = ySize;
-        Window();
-    }
+    Window::Window()
+        : Window(800, 600) {}
 
     Window::Window()
     {

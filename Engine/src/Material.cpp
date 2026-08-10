@@ -72,5 +72,17 @@ namespace Neon
                              value.z,
                              value.w);
         }
+        else if (std::holds_alternative<glm::mat3>(data))
+        {
+            const glm::mat3 &matrix = std::get<glm::mat3>(data);
+
+            m_shader.setMat3(name, &matrix[0][0]);
+        }
+        else if (std::holds_alternative<glm::mat4>(data))
+        {
+            const glm::mat4 &matrix = std::get<glm::mat4>(data);
+
+            m_shader.setMat4(name, &matrix[0][0]);
+        }
     }
 }
