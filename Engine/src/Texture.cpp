@@ -8,6 +8,52 @@
 
 namespace Neon
 {
+    GLenum toGLTextureFilter(TextureFilter filter)
+    {
+        switch (filter)
+        {
+        case TextureFilter::Nearest:
+            return GL_NEAREST;
+
+        case TextureFilter::Linear:
+            return GL_LINEAR;
+
+        case TextureFilter::NearestMipmapNearest:
+            return GL_NEAREST_MIPMAP_NEAREST;
+
+        case TextureFilter::LinearMipmapNearest:
+            return GL_LINEAR_MIPMAP_NEAREST;
+
+        case TextureFilter::NearestMipmapLinear:
+            return GL_NEAREST_MIPMAP_LINEAR;
+
+        case TextureFilter::LinearMipmapLinear:
+            return GL_LINEAR_MIPMAP_LINEAR;
+        }
+
+        return GL_LINEAR;
+    }
+
+    GLenum toGLTextureWrap(TextureWrap wrap)
+    {
+        switch (wrap)
+        {
+        case TextureWrap::Repeat:
+            return GL_REPEAT;
+
+        case TextureWrap::MirroredRepeat:
+            return GL_MIRRORED_REPEAT;
+
+        case TextureWrap::ClampToEdge:
+            return GL_CLAMP_TO_EDGE;
+
+        case TextureWrap::ClampToBorder:
+            return GL_CLAMP_TO_BORDER;
+        }
+
+        return GL_REPEAT;
+    }
+
     Texture::Texture(const std::filesystem::path &path)
     {
         stbi_set_flip_vertically_on_load(true);
@@ -47,7 +93,7 @@ namespace Neon
         glTexParameteri(
             GL_TEXTURE_2D,
             GL_TEXTURE_MAG_FILTER,
-            GL_NEAREST);
+            GL_LINEAR);
 
         glTexImage2D(
             GL_TEXTURE_2D,
@@ -68,6 +114,30 @@ namespace Neon
     Texture::~Texture()
     {
         glDeleteTextures(1, &m_id);
+    }
+
+    void Texture::setFilter(TextureFilter min, TextureFilter mag)
+    {
+        glBindTexture(GL_TEXTURE_2D, m_id);
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_MIN_FILTER,
+            toGLTextureFilter(min));
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_MAG_FILTER,
+            toGLTextureFilter(mag));
+    }
+
+    void Texture::setWrap(TextureWrap s, TextureWrap t)
+    {
+
+        glBindTexture(GL_TEXTURE_2D, m_id);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, toGLTextureWrap(s));
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, toGLTextureWrap(t));
     }
 
     void Texture::bind(unsigned int slot) const

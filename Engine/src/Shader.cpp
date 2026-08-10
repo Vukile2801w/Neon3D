@@ -155,4 +155,54 @@ namespace Neon
     {
         glUniform1f(getUniformLocation(name), value);
     }
+
+    void Shader::setVec2(
+        const std::string &name,
+        float x, float y) const
+    {
+        glUniform2f(
+            getUniformLocation(name),
+            x, y);
+    }
+
+    void Shader::setVec3(
+        const std::string &name,
+        float x, float y, float z) const
+    {
+        glUniform3f(
+            getUniformLocation(name),
+            x, y, z);
+    }
+
+    void Shader::setVec4(
+        const std::string &name,
+        float x, float y, float z, float w) const
+    {
+        glUniform4f(
+            getUniformLocation(name),
+            x, y, z, w);
+    }
+
+    void Shader::setMat3(
+        const std::string &name,
+        const float *matrix) const
+    {
+        glUniformMatrix3fv(
+            getUniformLocation(name),
+            1,
+            GL_FALSE,
+            matrix);
+    }
+
+    void Shader::setMat4(
+        const std::string &name,
+        const float *matrix) const
+    {
+        glUniformMatrix4fv(
+            getUniformLocation(name),
+            1,
+            GL_FALSE,
+            matrix);
+    }
+
 } // namespace Neon

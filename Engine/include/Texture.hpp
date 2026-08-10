@@ -4,12 +4,32 @@
 
 namespace Neon
 {
+    enum class TextureFilter
+    {
+        Linear,
+        Nearest,
+        LinearMipmapLinear,
+        LinearMipmapNearest,
+        NearestMipmapLinear,
+        NearestMipmapNearest
+    };
+    enum class TextureWrap
+    {
+        Repeat,
+        MirroredRepeat,
+        ClampToEdge,
+        ClampToBorder
+    };
+
     class Texture
     {
     public:
         Texture(const std::filesystem::path &path);
 
         ~Texture();
+
+        void setFilter(TextureFilter min, TextureFilter mag);
+        void setWrap(TextureWrap s, TextureWrap t);
 
         void bind(unsigned int slot = 0) const;
         static void unbind();

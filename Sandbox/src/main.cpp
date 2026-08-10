@@ -1,11 +1,10 @@
 #include <iterator>
 #include <chrono>
 
+#include "Material.hpp"
 #include "Window.hpp"
 #include "Shader.hpp"
-#include "VertexArray.hpp"
-#include "VertexBuffer.hpp"
-#include "IndexBuffer.hpp"
+#include "Mesh.hpp"
 #include "Texture.hpp"
 
 float getTime()
@@ -22,47 +21,49 @@ float getTime()
 int main()
 {
     std::unique_ptr<Neon::Window> window =
-        std::make_unique<Neon::Window>();
+        std::make_unique<Neon::Window>(); // Kreiranje prozora
 
     float vertices[] = {
-        // positions          // colors           // texture coords
-        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // top right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
-        -0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f   // top left
-    };
+        // Tacke pravugaonika + UV kordinate
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
+
     unsigned int indices[] = {
+        // Redosled crtanja trouglova
         0, 1, 2,
         0, 2, 3};
 
-    auto VBO = std::make_unique<Neon::VertexBuffer>(
-        vertices,
-        sizeof(vertices));
-    std::unique_ptr<Neon::VertexArray> VAO = std::make_unique<Neon::VertexArray>();
-    VAO->addBuffer(*VBO,
-                   {
-                       {3, Neon::ShaderDataType::Float}, // position
-                       {3, Neon::ShaderDataType::Float}, // color
-                       {2, Neon::ShaderDataType::Float}  // texture coords
-                   });
+    // Kreiranje mesha sa prosledjenim podacima
+    auto mesh = std::make_unique<Neon::Mesh>(
+        vertices, sizeof(vertices),
+        indices, sizeof(indices),
+        std::initializer_list<Neon::BufferElement>{
+            {3, Neon::ShaderDataType::Float},
+            {2, Neon::ShaderDataType::Float}});
 
-    auto EBO = std::make_unique<Neon::IndexBuffer>(indices, sizeof(indices));
-
-    auto shader = std::make_unique<Neon::Shader>(
+    // Ucitavanje shadera
+    Neon::Shader shader(
         "C:/Users/wukbg/programing/C++/Neon3D/Sandbox/shaders/shader.vert",
         "C:/Users/wukbg/programing/C++/Neon3D/Sandbox/shaders/shader.frag");
 
-    auto texture = std::make_unique<Neon::Texture>("c:/Users/wukbg/programing/C++/Neon3D/Sandbox/assets/tile.png");
-    texture->bind(0);
-    shader->setInt("texture1", 0);
+    // Kreiranje materijala
+    Neon::Material mat(shader);
+
+    // Kreiranje texture i podesavanje filtera
+    Neon::Texture texture("c:/Users/wukbg/programing/C++/Neon3D/Sandbox/assets/tile.png");
+    texture.setFilter(Neon::TextureFilter::NearestMipmapNearest, Neon::TextureFilter::Nearest);
+
+    // Dodavanje texture u material
+    mat.setTexture("texture1", texture, 0);
 
     while (!window->shoudWindowsClose())
     {
-        shader->bind();
+        mat.bind();   // Aktivitranje materijala
+        mesh->draw(); // Iscrtavanje mesha
 
-        VAO->bind();
-
-        window->render();
+        window->render(); // Osvezavanje ekrana
     }
 
     return 0;
