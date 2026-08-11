@@ -1,4 +1,4 @@
-#include <iostream>
+#include "Logging.hpp"
 #include "VertexBuffer.hpp"
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
@@ -21,8 +21,8 @@ namespace Neon
             data,
             GL_STATIC_DRAW);
 
-        std::cout << "\033[32m[NEON][INFO] - VBO created\033[0m\n";
-        }
+        Logging::Info("VBO created");
+    }
 
     VertexBuffer::~VertexBuffer()
     {

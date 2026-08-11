@@ -1,7 +1,7 @@
-#include <iostream>
 #include <initializer_list>
 #include <cstdlib>
 
+#include "Logging.hpp"
 #include "VertexArray.hpp"
 #include "Shader.hpp"
 #include "glad/glad.h"
@@ -53,7 +53,7 @@ namespace Neon
     {
         glGenVertexArrays(1, &m_id);
         glBindVertexArray(m_id);
-        std::cout << "\033[32m[NEON][INFO] - VAO created\033[0m\n";
+        Logging::Info("VAO created");
     }
 
     VertexArray::~VertexArray()
@@ -93,8 +93,7 @@ namespace Neon
 
             if (type == static_cast<GLenum>(-1))
             {
-                std::cout << "\033[31m[NEON][ERROR] - Unknown type passed as attribute\033[0m"
-                          << std::endl;
+                Logging::Error("Unknown type passed as attribute");
                 return;
             }
 
@@ -112,6 +111,6 @@ namespace Neon
             index++;
         }
 
-        std::cout << "\033[32m[NEON][INFO] - VBO added to VAO\033[0m\n";
-        }
+        Logging::Info("VBO added to VAO");
+    }
 } // namespace Neon

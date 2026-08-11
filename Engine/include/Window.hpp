@@ -10,12 +10,15 @@ namespace Neon
     class Window
     {
     public:
-        Window(int xSize, int ySize);
+        Window(unsigned int xSize, unsigned int ySize);
         Window();
         ~Window();
 
         void render();
         bool shoudWindowsClose();
+
+        int getWidth();
+        int getHeight();
 
     private:
         struct GLFWWindowDeleter

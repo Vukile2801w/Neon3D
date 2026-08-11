@@ -1,9 +1,9 @@
-#include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <string>
 
+#include "Logging.hpp"
 #include "Shader.hpp"
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
@@ -58,11 +58,16 @@ namespace Neon
         else
         {
             shaderSource = readFile(path);
+
             if (shaderSource == nullptr)
             {
-                std::cout << "\033[31m[ERROR][NEON] - Failed to load "
-                          << (type == Shader::ShaderType::FragmentShader ? "fragment" : "vertex")
-                          << " shader, file not found\033[0m" << std::endl;
+                const char *shaderType = type == Shader::ShaderType::FragmentShader ? "fragment" : "vertex";
+
+                std::string msg = "Failed to load ";
+                msg += shaderType;
+                msg += " shader, file not found";
+
+                Logging::Error(msg);
                 return 0;
             }
         }
@@ -78,13 +83,20 @@ namespace Neon
         if (!success)
         {
             glGetShaderInfoLog(shader, 512, NULL, infoLog);
-            std::cout << "\033[31m[NEON][ERROR] -  " << (type == Shader::ShaderType::FragmentShader ? "Fragment" : "Vertex")
-                      << " shader failed to compile\033[0m\n"
-                      << infoLog << std::endl;
+
+            const char *shaderType = type == Shader::ShaderType::FragmentShader ? "fragment" : "vertex";
+
+            std::string msg = "Failed to compile ";
+            msg += shaderType;
+            msg += " shader:\n";
+            msg += infoLog;
+
+            Logging::Error(msg);
+
             return 0;
         }
 
-        std::cout << "\033[32m[NEON][INFO] - Shader " << path << " is compiled \033[0m\n";
+        Logging::Info("Shader " + path.string() + " is compiled");
 
         return shader;
     }
@@ -105,12 +117,11 @@ namespace Neon
         if (!success)
         {
             glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-            std::cout << "\033[31m[NEON][ERROR] - Program failed to link\033[0m\n"
-                      << infoLog << std::endl;
+            Logging::Error("Program failed to link\n" + std::string(infoLog));
             return 0;
         }
 
-        std::cout << "\033[32m[NEON][INFO] - Shaders linked\033[0m\n";
+        Logging::Info("Shaders linked");
         return shaderProgram;
     }
 

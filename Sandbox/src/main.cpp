@@ -1,11 +1,19 @@
 #include <iterator>
 #include <chrono>
 
+#include "Logging.hpp"
 #include "Material.hpp"
 #include "Window.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
 #include "Texture.hpp"
+#include "Transform.hpp"
+#include "Camera.hpp"
+
+// Enums
+using Neon::Logging;
+using Neon::ShaderDataType;
+using Neon::TextureFilter;
 
 float getTime()
 {
@@ -24,24 +32,48 @@ int main()
         std::make_unique<Neon::Window>(); // Kreiranje prozora
 
     float vertices[] = {
-        // Tacke pravugaonika + UV kordinate
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f};
+        // position
+        //  x      y      z
+
+        // Front
+        -0.5f, -0.5f, 0.5f, // 0
+        0.5f, -0.5f, 0.5f,  // 1
+        0.5f, 0.5f, 0.5f,   // 2
+        -0.5f, 0.5f, 0.5f,  // 3
+
+        // Back
+        -0.5f, -0.5f, -0.5f, // 4
+        0.5f, -0.5f, -0.5f,  // 5
+        0.5f, 0.5f, -0.5f,   // 6
+        -0.5f, 0.5f, -0.5f   // 7
+    };
 
     unsigned int indices[] = {
-        // Redosled crtanja trouglova
+        // Front
         0, 1, 2,
-        0, 2, 3};
+        2, 3, 0,
+        // Right
+        1, 5, 6,
+        6, 2, 1,
+        // Back
+        5, 4, 7,
+        7, 6, 5,
+        // Left
+        4, 0, 3,
+        3, 7, 4,
+        // Top
+        3, 2, 6,
+        6, 7, 3,
+        // Bottom
+        4, 5, 1,
+        1, 0, 4};
 
     // Kreiranje mesha sa prosledjenim podacima
     auto mesh = std::make_unique<Neon::Mesh>(
         vertices, sizeof(vertices),
         indices, sizeof(indices),
         std::initializer_list<Neon::BufferElement>{
-            {3, Neon::ShaderDataType::Float},
-            {2, Neon::ShaderDataType::Float}});
+            {3, ShaderDataType::Float}});
 
     // Ucitavanje shadera
     Neon::Shader shader(
@@ -53,14 +85,38 @@ int main()
 
     // Kreiranje texture i podesavanje filtera
     Neon::Texture texture("c:/Users/wukbg/programing/C++/Neon3D/Sandbox/assets/tile.png");
-    texture.setFilter(Neon::TextureFilter::NearestMipmapNearest, Neon::TextureFilter::Nearest);
+    texture.setFilter(TextureFilter::NearestMipmapNearest, TextureFilter::Nearest);
 
-    // Dodavanje texture u material
-    mat.setTexture("texture1", texture, 0);
+    Neon::Camera camera;
+    camera.position.y = 1.3f;
+    camera.rotation.x = glm::radians(-20.0f);
 
+    Neon::Transform cubeTransform;
+    cubeTransform.position = {0.0f, 0.0f, 0.0f};
+
+    float cTime = getTime();
+    float lTime;
     while (!window->shoudWindowsClose())
     {
-        mat.bind();   // Aktivitranje materijala
+        lTime = cTime;
+        cTime = getTime();
+
+        cubeTransform.rotation += glm::vec3(
+            0.0f,
+            cTime - lTime,
+            0.0f);
+
+        float aspect =
+            static_cast<float>(window->getWidth()) /
+            static_cast<float>(window->getHeight());
+
+        mat.bind(); // Aktivitranje materijala
+        mat.set("u_Model", cubeTransform.getMatrix());
+        mat.set("u_View", camera.getViewMatrix());
+        mat.set("u_Projection", camera.getProjectionMatrix(aspect));
+        mat.set("u_time", getTime());
+        mat.set("u_color", glm::vec3(0.1f, 0.8f, 1.0f));
+
         mesh->draw(); // Iscrtavanje mesha
 
         window->render(); // Osvezavanje ekrana

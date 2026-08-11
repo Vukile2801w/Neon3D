@@ -1,9 +1,8 @@
-#include <iostream>
-
 #include "Texture.hpp"
-#include "glad/glad.h"
+#include "Logging.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
+#include "glad/glad.h"
 #include "stb_image.h"
 
 namespace Neon
@@ -67,8 +66,7 @@ namespace Neon
 
         if (!data)
         {
-            std::cout << "[NEON][ERROR] Failed to load texture: "
-                      << path << '\n';
+            Logging::Error("Failed to load texture: " + path.string());
             return;
         }
 

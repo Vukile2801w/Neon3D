@@ -1,6 +1,6 @@
-#include <iostream>
-
 #include "Window.hpp"
+#include "Logging.hpp"
+
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
@@ -9,16 +9,19 @@ namespace Neon
     Window::Window()
         : Window(800, 600) {}
 
-    Window::Window()
+    Window::Window(unsigned int xSize, unsigned int ySize)
     {
+        m_sizeX = xSize;
+        m_sizeY = ySize;
+
         if (!glfwInit())
         {
-            std::cout << "\033[31m[NEON][ERROR] - GLFW init failed\033[0m" << std::endl;
+            Logging::Error("GLFW init failed");
             return;
         }
         else
         {
-            std::cout << "\033[32m[NEON][INFO] - GLFW initialized\033[0m\n";
+            Logging::Info("GLFW initialized");
         }
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
@@ -29,29 +32,30 @@ namespace Neon
         m_window = std::unique_ptr<GLFWwindow, GLFWWindowDeleter>(glfwCreateWindow(m_sizeX, m_sizeY, "Neon3D", NULL, NULL));
         if (m_window == NULL)
         {
-            std::cout << "\033[31m[NEON][ERROR] - Failed to create GLFW window\033[0m" << std::endl;
+            Logging::Error("Failed to create GLFW window");
             glfwTerminate();
             return;
         }
         else
         {
-            std::cout << "\033[32m[NEON][INFO] - GLFW window created\033[0m\n";
+            Logging::Info("GLFW window created");
         }
         glfwSetWindowUserPointer(m_window.get(), this);
         glfwMakeContextCurrent(m_window.get());
 
         if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
         {
-            std::cout << "\033[31m[NEON][ERROR] - Failed to initialize GLAD\033[0m" << std::endl;
+            Logging::Error("Failed to initialize GLAD");
             return;
         }
         else
         {
-            std::cout << "\033[32m[NEON][INFO] - GLAD iinitializedn\033[0m" << std::endl;
+            Logging::Info("GLAD initializedn");
         }
 
         glViewport(0, 0, m_sizeX, m_sizeY);
         glfwSetFramebufferSizeCallback(m_window.get(), framebuffer_size_callback);
+        glEnable(GL_DEPTH_TEST);
     }
 
     Window::~Window()
@@ -83,6 +87,7 @@ namespace Neon
 
         glClearColor(44 / 250.0f, 44 / 250.0f, 44 / 250.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     bool Window::shoudWindowsClose()
@@ -91,6 +96,16 @@ namespace Neon
             return true;
 
         return glfwWindowShouldClose(m_window.get());
+    }
+
+    int Window::getHeight()
+    {
+        return m_sizeY;
+    }
+
+    int Window::getWidth()
+    {
+        return m_sizeX;
     }
 
 } // namespace Neon

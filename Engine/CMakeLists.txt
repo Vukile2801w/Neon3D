@@ -6,6 +6,9 @@ add_library(Engine
     src/Shader.cpp
     src/Texture.cpp
     src/Material.cpp
+    src/Logging.cpp
+    src/Transform.cpp
+    src/Camera.cpp
     # Mesh implementations
     src/Mesh/VertexArray.cpp
     src/Mesh/VertexBuffer.cpp
