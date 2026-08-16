@@ -103,6 +103,11 @@ namespace Neon
         return m_sizeY;
     }
 
+    float Window::getAspectRatio()
+    {
+        return static_cast<float>(m_sizeX) / static_cast<float>(m_sizeY);
+    }
+
     int Window::getWidth()
     {
         return m_sizeX;

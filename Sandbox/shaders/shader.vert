@@ -1,24 +1,29 @@
-#version 330 core
+#version 420 core
 
 layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec3 a_Normal;
 
 uniform mat4 u_Model;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
-uniform float u_time;
+out vec3 v_Normal;
+out vec3 FragPos;
+out vec3 v_Color;
 
-out vec3 v_WorldPosition;
+uniform vec3 u_Color;
 
 void main()
 {
-    vec4 worldPosition = u_Model * vec4(a_Position, 1.0);
+    vec4 worldPosition =
+        u_Model * vec4(a_Position, 1.0);
 
-    // Blago "življenje" kocke
-    worldPosition.y +=
-        sin(a_Position.x * 4.0 + u_time * 2.0) * 0.025;
+    FragPos = worldPosition.xyz;
 
-    v_WorldPosition = worldPosition.xyz;
+    v_Normal =
+        mat3(transpose(inverse(u_Model))) * a_Normal;
+
+    v_Color = u_Color;
 
     gl_Position =
         u_Projection *

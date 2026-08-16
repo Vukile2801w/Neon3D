@@ -35,6 +35,8 @@ namespace Neon
 
         void set(const std::string &name, MaterialProperty data);
 
+        glm::vec3 color;
+
     private:
         Shader &m_shader;
 

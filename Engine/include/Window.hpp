@@ -20,6 +20,8 @@ namespace Neon
         int getWidth();
         int getHeight();
 
+        float getAspectRatio();
+
     private:
         struct GLFWWindowDeleter
         {

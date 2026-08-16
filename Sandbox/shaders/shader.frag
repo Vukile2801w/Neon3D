@@ -1,34 +1,49 @@
-#version 330 core
+#version 420 core
 
-in vec3 v_WorldPosition;
-
-uniform float u_time;
-uniform vec3 u_color;
+in vec3 v_Normal;
+in vec3 FragPos;
+in vec3 v_Color;
 
 out vec4 FragColor;
 
+struct Light
+{
+    vec3 pos;
+    vec3 color;
+};
+
+#define MAX_LIGHTS 32
+
+uniform Light lights[MAX_LIGHTS];
+uniform int lightCount;
+
+vec3 calculateLight(Light light)
+{
+    vec3 norm = normalize(v_Normal);
+
+    vec3 lightDir =
+        normalize(light.pos - FragPos);
+
+    float diff =
+        max(dot(norm, lightDir), 0.0);
+
+    return diff * light.color;
+}
+
 void main()
 {
-    // Horizontalne skenirajuće linije
-    float scan = sin(
-        v_WorldPosition.y * 35.0 -
-        u_time * 5.0
-    );
+    // Jedan ambient za celu scenu
+    float ambient = 0.3f;
 
-    scan = scan * 0.5 + 0.5;
+    vec3 result =
+        ambient * v_Color;
 
-    // Pulsiranje
-    float pulse =
-        sin(u_time * 3.0) * 0.5 + 0.5;
+    // Sva svetla
+    for (int i = 0; i < lightCount; ++i)
+    {
+        result +=
+            calculateLight(lights[i]) * v_Color;
+    }
 
-    // Kombinacija
-    float intensity =
-        0.35 +
-        scan * 0.35 +
-        pulse * 0.2;
-
-    vec3 color =
-        u_color * intensity;
-
-    FragColor = vec4(color, 1.0);
+    FragColor = vec4(result, 1.0);
 }
