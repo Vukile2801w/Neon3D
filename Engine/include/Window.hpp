@@ -22,6 +22,11 @@ namespace Neon
 
         float getAspectRatio();
 
+        GLFWwindow *getGlfwWindow()
+        {
+            return m_window.get();
+        }
+
     private:
         struct GLFWWindowDeleter
         {

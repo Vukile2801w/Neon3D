@@ -9,6 +9,8 @@ add_library(Engine
     src/Logging.cpp
     src/Transform.cpp
     src/Camera.cpp
+    src/Time.cpp
+    src/Input.cpp
     # Mesh implementations
     src/Mesh/VertexArray.cpp
     src/Mesh/VertexBuffer.cpp

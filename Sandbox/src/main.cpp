@@ -1,6 +1,8 @@
 #include <iterator>
 #include <chrono>
 
+#include "gtc/matrix_transform.hpp"
+
 #include "Logging.hpp"
 #include "Material.hpp"
 #include "Window.hpp"
@@ -9,22 +11,15 @@
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"
+#include "Time.hpp"
+#include "Input.hpp"
 
 // Enums
+using Neon::Input;
 using Neon::Logging;
 using Neon::ShaderDataType;
 using Neon::TextureFilter;
 
-float getTime()
-{
-    using namespace std::chrono;
-
-    static const auto start = high_resolution_clock::now();
-
-    auto now = high_resolution_clock::now();
-
-    return duration<float>(now - start).count();
-}
 float cubeVertices[] = {
     // Front (+Z)
     -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
@@ -90,12 +85,14 @@ struct Light
 {
     glm::vec3 position;
     glm::vec3 color;
+
+    float intensity;
 };
 
 class Cube
 {
 public:
-    Cube(glm::vec3 pos, glm::vec3 scale)
+    Cube(glm::vec3 pos, glm::vec3 scale, bool isLightSource)
         : m_shader(
               "C:/Users/wukbg/programing/C++/Neon3D/Sandbox/shaders/shader.vert",
               "C:/Users/wukbg/programing/C++/Neon3D/Sandbox/shaders/shader.frag"),
@@ -110,6 +107,8 @@ public:
     {
         transform.position = pos;
         transform.scale = scale;
+
+        m_isLightSource = isLightSource;
     }
 
     void render(
@@ -126,6 +125,10 @@ public:
 
         m_mat.set("u_Color", m_mat.color);
 
+        m_mat.set("u_ViewPos", camera.position);
+        m_mat.set("u_Shininess", 16.0f);
+        m_mat.set("u_IsLightSource", m_isLightSource);
+
         m_mat.set("lightCount", lightCount);
 
         for (int i = 0; i < lightCount; ++i)
@@ -139,6 +142,10 @@ public:
             m_mat.set(
                 "lights[" + index + "].color",
                 lights[i].color);
+
+            m_mat.set(
+                "lights[" + index + "].intensity",
+                lights[i].intensity);
         }
 
         m_mesh.draw();
@@ -152,6 +159,7 @@ public:
     Neon::Transform transform;
 
 private:
+    bool m_isLightSource;
     Neon::Shader m_shader;
     Neon::Material m_mat;
     Neon::Mesh m_mesh;
@@ -162,29 +170,126 @@ int main()
     std::unique_ptr<Neon::Window> window =
         std::make_unique<Neon::Window>(); // Kreiranje prozora
 
+    Neon::Input input = Neon::Input(window.get());
+
+    auto time = Neon::Time();
+
     Neon::Camera camera;
     camera.position.y = 1.3f;
-    camera.rotation.x = glm::radians(-20.0f);
     camera.FOV = 60;
 
-    Cube cube = Cube({0.0f, 0.0f, -1.0f}, {1.0f, 1.0f, 1.0f});
-    cube.setColor({0.0f, 1.0f, 0.0f});
+    Cube cube = Cube({0.0f, 0.0f, -1.0f}, {1.0f, 1.0f, 1.0f}, false);
+    cube.setColor({0.3f, 0.0f, 1.0f});
 
-    Cube light = Cube({1.0f, 1.0f, 1.0f}, {0.3f, 0.3f, 0.3f});
-    light.setColor({1.0f, 0.0f, 0.0f});
-    Cube light1 = Cube({-1.0f, 1.0f, 1.0f}, {0.3f, 0.3f, 0.3f});
-    light1.setColor({0.0f, 1.0f, 0.0f});
+    Cube light = Cube({1.0f, 1.0f, -1.0f}, {0.3f, 0.3f, 0.3f}, true);
+    light.setColor({1.0f, 1.0f, 0.0f});
 
-    Light lights[] = {{{1.0f, 1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}}, {{-1.0f, 1.0f, 1.0f}, {0.0f, 1.0f, 0.0f}}};
+    Light lights[] = {
+        {light.transform.position,
+         {1.0f, 1.0f, 1.0f},
+         2.0f},
+        {cube.transform.position,
+         {1.0f, 1.0f, 1.0f},
+         1.0f},
+    };
 
-    float cTime = getTime();
-    float lTime;
     while (!window->shoudWindowsClose())
     {
-        lTime = cTime;
-        cTime = getTime();
+        time.beginFrame();
+        input.handleInput();
 
-        cube.transform.rotation.y += cTime - lTime;
+        float dt = time.getDeltaTime();
+
+        float moveSpeed = 5.0f;
+        float rotationSpeed = glm::radians(40.0f); // 90°/s
+
+        // =====================
+        // Movement
+        // =====================
+
+        if (input.isKeyDown(Input::Key::KEY_W))
+            camera.position += camera.getForward() * moveSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_S))
+            camera.position -= camera.getForward() * moveSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_A))
+            camera.position -= camera.getRight() * moveSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_D))
+            camera.position += camera.getRight() * moveSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_SHIFT))
+            camera.position.y += moveSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_CTRL))
+            camera.position.y -= moveSpeed * dt;
+
+        // =====================
+        // Camera rotation
+        // =====================
+
+        if (input.isKeyDown(Input::Key::KEY_UP))
+            camera.rotation.x += rotationSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_DOWN))
+            camera.rotation.x -= rotationSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_LEFT))
+            camera.rotation.y += rotationSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_RIGHT))
+            camera.rotation.y -= rotationSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_ESCAPE))
+            camera.rotation = {0.0f, 0.0f, 0.0f};
+
+        // =====================
+        // Camera roll
+        // =====================
+
+        if (input.isKeyDown(Input::Key::KEY_Q))
+            camera.rotation.z += rotationSpeed * dt;
+
+        if (input.isKeyDown(Input::Key::KEY_E))
+            camera.rotation.z -= rotationSpeed * dt;
+
+        float t = static_cast<float>(time.sinceStart());
+
+        float radius = 2.0f;
+
+        float angle = t * 1.5f;
+
+        glm::vec3 orbit(
+            glm::cos(angle) * radius,
+            0.0f,
+            glm::sin(angle) * radius);
+
+        glm::mat4 rotation(1.0f);
+
+        rotation = glm::rotate(
+            rotation,
+            t * 0.4f,
+            glm::vec3(1.0f, 0.0f, 0.0f));
+
+        rotation = glm::rotate(
+            rotation,
+            t * 0.3f,
+            glm::vec3(0.0f, 1.0f, 0.0f));
+
+        rotation = glm::rotate(
+            rotation,
+            t * 0.2f,
+            glm::vec3(0.0f, 0.0f, 1.0f));
+
+        orbit =
+            glm::vec3(rotation * glm::vec4(orbit, 1.0f));
+
+        light.transform.position =
+            cube.transform.position + orbit;
+
+        lights[0].position =
+            light.transform.position;
 
         cube.render(
             camera,
@@ -197,14 +302,8 @@ int main()
             window->getAspectRatio(),
             lights,
             sizeof(lights) / sizeof(lights[0]));
-        light1.render(
-            camera,
-            window->getAspectRatio(),
-            lights,
-            sizeof(lights) / sizeof(lights[0]));
 
         window->render(); // Osvezavanje ekrana
     }
-
     return 0;
 }

@@ -14,6 +14,9 @@ namespace Neon
 
         glm::mat4 getViewMatrix() const;
         glm::mat4 getProjectionMatrix(float aspectRatio) const;
+
+        glm::vec3 getForward() const;
+        glm::vec3 getRight() const;
     };
 }
 

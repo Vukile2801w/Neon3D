@@ -83,10 +83,8 @@ namespace Neon
     void Window::render()
     {
         glfwSwapBuffers(m_window.get());
-        glfwPollEvents();
 
         glClearColor(44 / 250.0f, 44 / 250.0f, 44 / 250.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 

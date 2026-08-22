@@ -7,11 +7,12 @@ uniform mat4 u_Model;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
+
+uniform vec3 u_Color;
+
 out vec3 v_Normal;
 out vec3 FragPos;
 out vec3 v_Color;
-
-uniform vec3 u_Color;
 
 void main()
 {
