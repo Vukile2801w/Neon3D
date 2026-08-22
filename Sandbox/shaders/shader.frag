@@ -87,6 +87,9 @@ vec3 calculateLight(Light light)
 }
 void main()
 {
+    if (dot(v_Normal, u_ViewPos - FragPos) < 0)
+        return;
+
     if (u_IsLightSource){
         FragColor = vec4(v_Color, 1.0f);
         return;

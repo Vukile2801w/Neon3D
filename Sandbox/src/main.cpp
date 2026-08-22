@@ -142,7 +142,7 @@ public:
         m_mat.set("u_Color", m_mat.color);
 
         m_mat.set("u_ViewPos", camera.position);
-        m_mat.set("u_Shininess", 16.0f);
+        m_mat.set("u_Shininess", 4.0f);
         m_mat.set("u_IsLightSource", m_isLightSource);
 
         m_mat.set("lightCount", lightCount);
@@ -205,7 +205,7 @@ int main()
     Light lights[] = {
         {light.transform.position,
          {1.0f, 1.0f, 0.0f},
-         2.0f},
+         10.0f},
         {cube.transform.position,
          {1.0f, 1.0f, 1.0f},
          1.0f},
@@ -274,7 +274,7 @@ int main()
 
         float t = static_cast<float>(time.sinceStart());
 
-        float radius = 2.0f;
+        float radius = 20.0f;
 
         float angle = t * 1.5f;
 
