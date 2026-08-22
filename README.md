@@ -50,7 +50,7 @@ int main()
     Neon::Input input(&window);
     Neon::Time time;
 
-    while (!window.shouldWindowClose())
+    while (!window.shouldWindowsClose())
     {
         time.beginFrame();
         input.handleInput();
@@ -74,7 +74,9 @@ Owns the GLFW window and OpenGL context. Creating a `Window` initializes GLFW, c
 Window();
 Window(unsigned int xSize, unsigned int ySize);
 ```
-Constructs and opens a window titled `"Neon3D"`. The no-argument overload defaults to **800×600**. If GLFW/GLAD initialization fails, an error is logged and the window is left in an unusable state (check `shouldWindowClose()`).
+Constructs and opens a window titled `"Neon3D"`. The no-argument overload defaults to **800×600**. If GLFW/GLAD initialization fails, an error is logged and the window is left in an unusable state (check `shouldWindowsClose()`).
+
+In addition to depth testing, the constructor now enables **back-face culling** (`GL_CULL_FACE`, cull `GL_BACK`, front face `GL_CCW`) — meshes must use counter-clockwise winding order for their front-facing triangles, or they'll be invisible.
 
 ```cpp
 void render();
@@ -82,7 +84,7 @@ void render();
 Swaps the front/back buffers and clears the color + depth buffers for the next frame. Call this **once per frame, after** your draw calls.
 
 ```cpp
-bool shouldWindowClose();
+bool shouldWindowsClose();
 ```
 
 ```cpp
@@ -353,8 +355,6 @@ static std::string nameSpace;   // shown as "[nameSpace][LEVEL] - message"
 
 Default tag is `"Neon"`, default level is `Info`. Output is ANSI-colored (green/yellow/red) — best viewed in a terminal that supports ANSI escape codes.
 
-> **Known issue:** `Logging::Error` currently checks `level > LoggingLevel::Info` instead of `level > LoggingLevel::Error`, so errors are suppressed under the same threshold as info messages rather than always showing at `Warning` level and below.
-
 ---
 
 ## Full Example
@@ -382,7 +382,7 @@ Neon::Mesh mesh(vertices, sizeof(vertices), indices, sizeof(indices),
 
 Neon::Transform transform;
 
-while (!window.shouldWindowClose())
+while (!window.shouldWindowsClose())
 {
     time.beginFrame();
     input.handleInput();
