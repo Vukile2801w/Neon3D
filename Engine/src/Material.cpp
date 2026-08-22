@@ -13,16 +13,20 @@ namespace Neon
     {
         m_shader.bind();
 
+        unsigned int slot = 0;
+
         for (const auto &tex : m_textures)
         {
-            tex.texture->bind(tex.slot);
-            m_shader.setInt(tex.name, tex.slot);
+            tex.texture->bind(slot);
+            m_shader.setInt(tex.name, slot);
+
+            slot++;
         }
     }
 
-    void Material::setTexture(const std::string &name, Texture &texture, unsigned int slot)
+    void Material::setTexture(const std::string &name, Texture &texture)
     {
-        m_textures.emplace_back(name, &texture, slot);
+        m_textures.emplace_back(name, &texture);
     }
 
     void Material::set(

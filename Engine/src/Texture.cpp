@@ -69,6 +69,7 @@ namespace Neon
             Logging::Error("Failed to load texture: " + path.string());
             return;
         }
+        Logging::Info("Texture loaded: " + path.string());
 
         GLenum format = GL_RGB;
 

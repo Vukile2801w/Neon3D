@@ -15,7 +15,7 @@ namespace Neon
         ~Window();
 
         void render();
-        bool shoudWindowsClose();
+        bool shouldWindowsClose();
 
         int getWidth();
         int getHeight();

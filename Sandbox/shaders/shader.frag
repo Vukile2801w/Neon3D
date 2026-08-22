@@ -3,8 +3,14 @@
 in vec3 v_Normal;
 in vec3 FragPos;
 in vec3 v_Color;
+uniform sampler2D T_Color;
+uniform sampler2D T_Normal;
+
+in vec2 v_TexCoord;
 
 out vec4 FragColor;
+
+in mat3 v_TBN;
 
 struct Light
 {
@@ -26,31 +32,21 @@ uniform bool u_IsLightSource;
 vec3 calculateLight(Light light)
 {
     vec3 norm =
-        normalize(v_Normal);
+    texture(T_Normal, v_TexCoord).rgb;
 
-    // ==================================
-    // Direction to light
-    // ==================================
+    norm =
+        norm * 2.0 - 1.0;
 
-    vec3 toLight =
-        light.pos - FragPos;
+    norm =
+        normalize(v_TBN * norm);
 
-    float distance =
-        length(toLight);
+    vec3 toLight = light.pos - FragPos;
 
-    vec3 lightDir =
-        normalize(toLight);
+    float distance = length(toLight);
 
-    // ==================================
-    // Diffuse
-    // ==================================
+    vec3 lightDir = normalize(toLight);
 
-    float diff =
-        max(dot(norm, lightDir), 0.0);
-
-    // ==================================
-    // Attenuation
-    // ==================================
+    float diff = max(dot(norm, lightDir), 0.0);
 
     float attenuation =
         1.0 /
@@ -65,10 +61,6 @@ vec3 calculateLight(Light light)
         light.color *
         light.intensity *
         attenuation;
-
-    // ==================================
-    // Specular
-    // ==================================
 
     vec3 viewDir =
         normalize(u_ViewPos - FragPos);
@@ -88,9 +80,11 @@ vec3 calculateLight(Light light)
         light.intensity *
         attenuation;
 
-    return diffuse * v_Color + specular;
-}
+    vec3 albedo =
+        texture(T_Color, v_TexCoord).rgb;
 
+    return diffuse * albedo + specular;
+}
 void main()
 {
     if (u_IsLightSource){
@@ -104,8 +98,11 @@ void main()
 
     float ambient = 0.3;
 
+    vec3 albedo =
+        texture(T_Color, v_TexCoord).rgb;
+
     vec3 result =
-        ambient * v_Color;
+        ambient * albedo;
 
     // ==================================
     // Lights

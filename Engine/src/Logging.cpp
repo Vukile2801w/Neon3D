@@ -22,20 +22,20 @@ namespace Neon
         std::cout << "\033[32m" << "[" << nameSpace << "][INFO] - " << message << "\033[0m\n";
     }
 
-    void Logging::Warrning(std::string message)
+    void Logging::Warning(std::string message)
     {
-        if (level > LoggingLevel::Warrning)
+        if (level > LoggingLevel::Warning)
             return; // If curent logging level is
                     // greater than Info then just skipp logg
 
-        std::cout << "\033[93m" << "[" << nameSpace << "][WARRNING] - " << message << "\033[0m\n";
+        std::cout << "\033[93m" << "[" << nameSpace << "][WARNING] - " << message << "\033[0m\n";
     }
 
     void Logging::Error(std::string message)
     {
-        if (level > LoggingLevel::Info)
+        if (level > LoggingLevel::Error)
             return; // If curent logging level is
-                    // greater than Info then just skipp logg
+                    // greater than Error then just skipp logg
 
         std::cout << "\033[31m" << "[" << nameSpace << "][ERROR] - " << message << "\033[0m\n";
     }

@@ -8,7 +8,7 @@ namespace Neon
     enum class LoggingLevel
     {
         Info,
-        Warrning,
+        Warning,
         Error,
         None
     };
@@ -19,7 +19,7 @@ namespace Neon
         static void Init(std::string _nameSpace);
 
         static void Info(std::string message);
-        static void Warrning(std::string message);
+        static void Warning(std::string message);
         static void Error(std::string message);
 
         static LoggingLevel level;

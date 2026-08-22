@@ -30,8 +30,7 @@ namespace Neon
 
         void setTexture(
             const std::string &name,
-            Texture &texture,
-            unsigned int slot);
+            Texture &texture);
 
         void set(const std::string &name, MaterialProperty data);
 
@@ -44,7 +43,6 @@ namespace Neon
         {
             std::string name;
             Texture *texture;
-            unsigned int slot;
         };
 
         std::vector<TextureSlot> m_textures;

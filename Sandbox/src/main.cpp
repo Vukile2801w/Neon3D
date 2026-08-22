@@ -22,40 +22,41 @@ using Neon::TextureFilter;
 
 float cubeVertices[] = {
     // Front (+Z)
-    -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-    0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-    0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-    -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
+    // Position          Normal            UV          Tangent
+    -0.5f, -0.5f, 0.5f, 0, 0, 1, 0, 0, 1, 0, 0,
+    0.5f, -0.5f, 0.5f, 0, 0, 1, 1, 0, 1, 0, 0,
+    0.5f, 0.5f, 0.5f, 0, 0, 1, 1, 1, 1, 0, 0,
+    -0.5f, 0.5f, 0.5f, 0, 0, 1, 0, 1, 1, 0, 0,
 
     // Back (-Z)
-    0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-    -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
-    0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f, 0, 0, -1, 1, 0, -1, 0, 0,
+    -0.5f, 0.5f, -0.5f, 0, 0, -1, 1, 1, -1, 0, 0,
+    0.5f, 0.5f, -0.5f, 0, 0, -1, 0, 1, -1, 0, 0,
+    0.5f, -0.5f, -0.5f, 0, 0, -1, 0, 0, -1, 0, 0,
 
     // Left (-X)
-    -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f,
+    -0.5f, -0.5f, -0.5f, -1, 0, 0, 0, 0, 0, 0, 1,
+    -0.5f, -0.5f, 0.5f, -1, 0, 0, 1, 0, 0, 0, 1,
+    -0.5f, 0.5f, 0.5f, -1, 0, 0, 1, 1, 0, 0, 1,
+    -0.5f, 0.5f, -0.5f, -1, 0, 0, 0, 1, 0, 0, 1,
 
     // Right (+X)
-    0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
-    0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f,
-    0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f,
+    0.5f, -0.5f, 0.5f, 1, 0, 0, 0, 0, 0, 0, -1,
+    0.5f, -0.5f, -0.5f, 1, 0, 0, 1, 0, 0, 0, -1,
+    0.5f, 0.5f, -0.5f, 1, 0, 0, 1, 1, 0, 0, -1,
+    0.5f, 0.5f, 0.5f, 1, 0, 0, 0, 1, 0, 0, -1,
 
     // Top (+Y)
-    -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f,
-    0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-    -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+    -0.5f, 0.5f, 0.5f, 0, 1, 0, 0, 0, 1, 0, 0,
+    0.5f, 0.5f, 0.5f, 0, 1, 0, 1, 0, 1, 0, 0,
+    0.5f, 0.5f, -0.5f, 0, 1, 0, 1, 1, 1, 0, 0,
+    -0.5f, 0.5f, -0.5f, 0, 1, 0, 0, 1, 1, 0, 0,
 
     // Bottom (-Y)
-    -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f,
-    0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f,
-    -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f};
+    -0.5f, -0.5f, -0.5f, 0, -1, 0, 0, 0, 1, 0, 0,
+    0.5f, -0.5f, -0.5f, 0, -1, 0, 1, 0, 1, 0, 0,
+    0.5f, -0.5f, 0.5f, 0, -1, 0, 1, 1, 1, 0, 0,
+    -0.5f, -0.5f, 0.5f, 0, -1, 0, 0, 1, 1, 0, 0};
 unsigned int cubeIndices[] = {
     // Front
     0, 1, 2,
@@ -80,7 +81,6 @@ unsigned int cubeIndices[] = {
     // Bottom
     20, 21, 22,
     22, 23, 20};
-
 struct Light
 {
     glm::vec3 position;
@@ -103,12 +103,28 @@ public:
               cubeIndices,
               sizeof(cubeIndices),
               {{3, ShaderDataType::Float},
+               {3, ShaderDataType::Float},
+               {2, ShaderDataType::Float},
                {3, ShaderDataType::Float}})
     {
         transform.position = pos;
         transform.scale = scale;
 
         m_isLightSource = isLightSource;
+
+        m_texture =
+            new Neon::Texture("Sandbox/assets/brick.jpg");
+        m_normalMap =
+            new Neon::Texture("Sandbox/assets/brickNormal.png");
+
+        m_mat.setTexture("T_Color", *m_texture);
+        m_mat.setTexture("T_Normal", *m_normalMap);
+    }
+
+    ~Cube()
+    {
+        delete m_texture;
+        delete m_normalMap;
     }
 
     void render(
@@ -160,6 +176,8 @@ public:
 
 private:
     bool m_isLightSource;
+    Neon::Texture *m_normalMap;
+    Neon::Texture *m_texture;
     Neon::Shader m_shader;
     Neon::Material m_mat;
     Neon::Mesh m_mesh;
@@ -186,14 +204,14 @@ int main()
 
     Light lights[] = {
         {light.transform.position,
-         {1.0f, 1.0f, 1.0f},
+         {1.0f, 1.0f, 0.0f},
          2.0f},
         {cube.transform.position,
          {1.0f, 1.0f, 1.0f},
          1.0f},
     };
 
-    while (!window->shoudWindowsClose())
+    while (!window->shouldWindowsClose())
     {
         time.beginFrame();
         input.handleInput();
