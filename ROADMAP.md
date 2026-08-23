@@ -41,7 +41,7 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
   - [x] Distinguish debug-only asserts from always-on runtime checks
 - [x] Add a build-config header (`NEON_DEBUG` / `NEON_RELEASE` macros driven by CMake)
 - [x] Add basic engine-wide error/result type (or exceptions policy) — decide once, document it, use it consistently (currently mixed: some failures just log and continue, e.g. `Window` constructor)
-- [ ] Write a `CONTRIBUTING.md` / coding-conventions doc (naming, ownership rules, header style) — needed because current code mixes styles (`m_` prefix in `Window`/`Camera` but not consistently elsewhere)
+- [x] Write a `CONTRIBUTING.md` / coding-conventions doc (naming, ownership rules, header style) — needed because current code mixes styles (`m_` prefix in `Window`/`Camera` but not consistently elsewhere)
 - [ ] Set up a second compiler target (Linux/GCC or Clang) even if not fully working yet, to start surfacing portability issues early
 
 **Definition of Done:** New contributors (including future-you) can build, get readable logs, and see clear pass/fail from assertions — without reading source to understand conventions.
