@@ -1,5 +1,5 @@
-#ifndef NEON_ASSERT
-#define NEON_ASSERT
+#ifndef NEON_ASSERT_HPP
+#define NEON_ASSERT_HPP
 
 #include <cstdlib>
 

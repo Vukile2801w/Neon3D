@@ -222,6 +222,7 @@ namespace Neon
         Input(const Input &) = delete;
         Input &operator=(const Input &) = delete;
 
+        static GLFWwindow *getWindowHandle(Window *window);
         GLFWwindow *m_window;
     };
     inline std::ostream &operator<<(std::ostream &os, Input::Key key)

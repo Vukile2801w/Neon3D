@@ -178,15 +178,26 @@ The macro (`Engine/include/.../Assert.hpp`, wherever it lives in your tree):
 ```cpp
 #ifdef NEON_DEBUG
 #define NEON_ASSERT(condition, message)    \
-    do {                                    \
-        if (!(condition)) {                 \
-            Neon::Logging::Error(message);  \
-            assert(condition);              \
-        }                                   \
+    do                                     \
+    {                                      \
+        if (!(condition))                  \
+        {                                  \
+            Logging::Error(                \
+                std::string("[ASSERT] ") + \
+                __FILE__ +                 \
+                ":" +                      \
+                std::to_string(__LINE__) + \
+                ": " +                     \
+                message);                  \
+            std::abort();                  \
+        }                                  \
     } while (false)
 #else
 #define NEON_ASSERT(condition, message) \
-    do { (void)sizeof(condition); } while (false)
+    do                                  \
+    {                                   \
+        (void)sizeof(condition);        \
+    } while (false)
 #endif
 ```
 
@@ -256,9 +267,10 @@ VertexBuffer / VertexArray / IndexBuffer — depend on GLAD/GLFW + Logging
 - **`Time`** — ✅ already correctly agnostic. Built entirely on `<chrono>`; doesn't know GLFW exists, despite GLFW having its own timing functions it could have used instead. Keep it this way.
 - **`Logging`** — ✅ already correctly agnostic. Pure `<string>`/`<iostream>`, no GLFW dependency.
 
-**Where backend leakage currently exists (be honest about this, don't pretend it's fixed):**
-- **`Window`** exposes `GLFWwindow *getGlfwWindow()` directly in its public header (`Window.hpp`). This means any code that includes `Window.hpp` and calls this method can reach raw GLFW state — the abstraction is not airtight. `Input`'s constructor is the one legitimate internal consumer of this today (`Input.cpp`: `m_window(window->getGlfwWindow())`). **Intended rule going forward:** don't add *new* public call sites that reach through `getGlfwWindow()` — if a new system needs GLFW access, that's a sign it should either go through `Window`/`Input`'s existing API, or that `Window`'s API needs to grow a proper abstraction for whatever's missing, not another consumer of the raw handle.
-- **`Input.hpp`** stores `GLFWwindow *m_window` as a private member and includes `Window.hpp`, which pulls the GLFW dependency chain in transitively. This is existing, accepted debt (see the project roadmap for the planned fix) — not something to replicate in new systems, but not something this document is asking you to fix as a side effect of unrelated work either.
+**Current backend coupling:**
+- **`Input`** depends on `Window` to access the window associated with input handling. This is an intentional dependency between the two systems, but the underlying GLFW handle should remain an implementation detail of the engine rather than being exposed through `Window`'s public API.
+- **`Window`** owns and manages the GLFW window internally. New code should not expose `GLFWwindow*` or other GLFW implementation details through public engine APIs. If another engine system requires functionality currently provided only through GLFW, prefer extending the engine-level abstraction rather than exposing the raw GLFW handle.
+- **`Input`** may use GLFW internally because it is responsible for translating platform input into the engine's input API. This GLFW dependency should remain confined to `Input`'s implementation and should not leak into unrelated engine systems.
 
 **Rule for all new code:** if you're writing a system that isn't inherently about windowing or GPU submission (math, timing, logic, future scene/gameplay code), it should not include `glad/glad.h`, `glfw/glfw3.h`, or any OpenGL type in its **public header**. OpenGL/GLFW calls belong in `.cpp` files (see §8) or in the systems whose entire job is talking to the backend (`Window`, `Shader`, `Texture`, `Mesh`/buffer classes).
 
@@ -516,32 +528,3 @@ Even for a primarily solo/small-team project, a quick self-review checklist befo
 - [ ] `Engine/CMakeLists.txt` updated for any new/removed source file
 - [ ] `Sandbox` still runs correctly against the change
 - [ ] Public API changes are reflected here if they establish a new convention or break an existing one
-
----
-
-## Repository Findings Used
-
-Concrete, verified findings from the actual codebase that this document is based on:
-
-- **No root `CMakeLists.txt`** was present in the inspected snapshot — only `Engine/CMakeLists.txt` and `Sandbox/CMakeLists.txt`.
-- **`NEON_DEBUG` is defined nowhere** in either `CMakeLists.txt` — `NEON_ASSERT` currently no-ops in every build configuration.
-- **`GLFWwindow*` leaks through `Window::getGlfwWindow()`** in the public header, and `Input.hpp` stores a raw `GLFWwindow* m_window` — the one confirmed backend-leakage point in an otherwise clean public-header boundary.
-- **`Camera`, `Transform`, `Time`, `Logging`** are all confirmed genuinely backend-agnostic — no GL/GLFW includes anywhere in their headers or implementations.
-- **`enum` vs. `enum class` inconsistency:** `Input::Key`/`Input::MouseButton` are unscoped `enum`; `ShaderDataType`, `TextureFilter`, `TextureWrap`, `LoggingLevel` are `enum class`.
-- **Enum value casing inconsistency:** `Input`'s enum values are `UPPER_SNAKE_CASE` (GLFW-style); every other enum's values are `PascalCase`.
-- **Member-variable prefix inconsistency:** `Input`'s protected members `keyData`/`mouseStatus` lack the `m_` prefix used by every other non-public member in the codebase (including `Input`'s own private `m_window`).
-- **Include-guard naming inconsistency:** `Input.hpp` uses `INPUT_HPP`; all 12 other headers use `NEON_<NAME>`.
-- **Include-order inconsistency across `.cpp` files**, verified file-by-file: `Window.cpp` (own header, then engine header, then third-party), `Shader.cpp` (engine header before own header), `Input.cpp`/`Mesh.cpp` (third-party before own header), `Material.cpp` (std lib before own header), `VertexBuffer.cpp` (engine header before own header) — no single consistent pattern currently exists.
-- **`const`-qualification inconsistency:** `Window`'s and `Input`'s read-only getter/query methods are not `const`-qualified, while equivalent methods in `Shader`, `Texture`, `Camera`, `Transform`, `Mesh`, and the buffer classes are.
-- **`std::unique_ptr` is used exactly once** in the entire codebase (`Window::m_window`, with a custom `GLFWWindowDeleter`). No `std::shared_ptr` or `std::weak_ptr` usage exists anywhere.
-- **Manual `new`/`delete` exists in exactly one place:** `Sandbox/main.cpp`'s `Cube` class, managing `Texture*` ownership — inconsistent with the RAII pattern used everywhere in `Engine/`.
-- **No copy-constructor/assignment guards** on `Shader`, `Texture`, `VertexBuffer`, `VertexArray`, `IndexBuffer`, or `Mesh` — all rely on the compiler-generated (bitwise) copy, which would double-own/double-delete a GL handle if any of them were ever copied.
-- **`Shader` has no destructor** — never calls `glDeleteProgram`, unlike every other GL-resource-owning class in the codebase.
-- **Shader naming conventions confirmed from `Sandbox/shaders/shader.vert`/`shader.frag`:** `a_` for attributes, `v_` for varyings (with `FragPos` as the one exception that doesn't follow this), `u_` for ordinary uniforms, `T_` for sampler uniforms (matched on the C++ side in `Sandbox/main.cpp`'s `setTexture("T_Color", ...)` calls).
-- **Rotation-order difference between `Camera::getViewMatrix()` (Y→X→Z) and `Transform::getMatrix()` (X→Y→Z)**, confirmed by reading both implementations directly.
-- **`Window`'s constructor enables `GL_DEPTH_TEST`, `GL_CULL_FACE`/`GL_BACK`, and `GL_CCW` front-face winding** — meaning all mesh data (including the existing Sandbox cube) must use counter-clockwise front-facing winding.
-- **`uint32_t` appears exactly once** in the whole codebase (`VertexArray::addBuffer`'s local `index` variable); everywhere else uses `unsigned int`/`int` for GL-adjacent values.
-- **`Cube`'s shader path in `Sandbox/main.cpp` is a hardcoded absolute Windows path** (`C:/Users/wukbg/...`), confirmed by direct inspection — a portability problem, not a convention to follow.
-- **No `ResourceManager`/`AssetManager` exists** — confirmed by the absence of any such file in `Engine/include`/`Engine/src`, and by every `Shader`/`Texture` in `Sandbox/main.cpp` being constructed individually with no caching.
-- **No tests exist anywhere in the repository** — confirmed by the absence of any test-related file, framework reference, or test target in either `CMakeLists.txt`.
-- **Third-party dependency vendoring confirmed by directory inspection:** GLFW as a prebuilt `.a` (Windows-only), GLAD as source with its own `CMakeLists.txt`, GLM and stb_image as header-only.

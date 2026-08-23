@@ -7,17 +7,18 @@
 
 namespace Neon
 {
-    static GLFWwindow *getWindowHandle(Window *window)
+    GLFWwindow *Input::getWindowHandle(Window *window)
     {
         NEON_ASSERT(
             window != nullptr,
             "Input constructed with a null Window pointer");
 
-        return window->getGlfwWindow();
+        return window->m_window.get();
     }
 
     Input::Input(Window *window) : m_window(getWindowHandle(window))
     {
+
         for (int i = 1; i < Key::KEY_COUNT; i++)
         {
             m_keyData[i] = KeyData{static_cast<Key>(i),

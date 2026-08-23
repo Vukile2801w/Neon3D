@@ -56,7 +56,7 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] `Window`: creates GLFW window + OpenGL 4.6 core context, loads GLAD, enables depth test + back-face culling
 - [x] `Window`: framebuffer resize callback keeps width/height/aspect ratio in sync
 - [x] `Input`: polling-based keyboard + mouse button state (down/pressed/released)
-- [ ] **Remove `GLFWwindow*` from `Window`'s public API.** Replace `getGlfwWindow()` with an opaque native-handle accessor used only internally by `Input`, not exposed to application code
+- [x] **Remove `GLFWwindow*` from `Window`'s public API.** Replace `getGlfwWindow()` with an opaque native-handle accessor used only internally by `Input`, not exposed to application code
 - [ ] **Give `Input` its own ownership of platform callbacks instead of borrowing `Window`'s raw handle** — reduce coupling so `Input` depends on an abstraction, not a concrete GLFW pointer
 - [ ] Wire up mouse scroll (`scroll_callback` in `Input.cpp` is currently a stub / TODO — `getMouseScrollValue()` always returns 0)
 - [ ] Add mouse cursor mode control (normal / hidden / disabled) for FPS-style camera look, exposed through `Window` or `Input`, not raw GLFW calls
