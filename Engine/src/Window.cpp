@@ -1,4 +1,5 @@
 #include "Window.hpp"
+
 #include "Logging.hpp"
 
 #include "glad/glad.h"

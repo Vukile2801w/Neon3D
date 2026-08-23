@@ -1,5 +1,7 @@
 #include "Texture.hpp"
+
 #include "Logging.hpp"
+#include "Assert.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "glad/glad.h"
@@ -117,6 +119,7 @@ namespace Neon
 
     void Texture::setFilter(TextureFilter min, TextureFilter mag)
     {
+        NEON_ASSERT(m_id != 0, "Attempting to configure filter on an invalid texture");
         glBindTexture(GL_TEXTURE_2D, m_id);
 
         glTexParameteri(
@@ -132,7 +135,7 @@ namespace Neon
 
     void Texture::setWrap(TextureWrap s, TextureWrap t)
     {
-
+        NEON_ASSERT(m_id != 0, "Attempting to configure wrap mode on an invalid texture");
         glBindTexture(GL_TEXTURE_2D, m_id);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, toGLTextureWrap(s));
@@ -141,6 +144,8 @@ namespace Neon
 
     void Texture::bind(unsigned int slot) const
     {
+        NEON_ASSERT(m_id != 0, "Attempting to bind an invalid texture");
+
         glActiveTexture(GL_TEXTURE0 + slot);
         glBindTexture(GL_TEXTURE_2D, m_id);
     }

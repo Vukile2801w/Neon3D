@@ -1,5 +1,5 @@
-#ifndef INPUT_HPP
-#define INPUT_HPP
+#ifndef NEON_INPUT
+#define NEON_INPUT
 
 #include <array>
 #include <iostream>
@@ -215,8 +215,8 @@ namespace Neon
         float getMouseScrollValue();
 
     protected:
-        std::array<KeyData, KEY_COUNT> keyData;
-        MouseStatus mouseStatus;
+        std::array<KeyData, KEY_COUNT> m_keyData;
+        MouseStatus m_mouseStatus;
 
     private:
         Input(const Input &) = delete;

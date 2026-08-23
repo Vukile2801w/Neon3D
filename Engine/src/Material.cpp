@@ -1,6 +1,8 @@
+#include "Material.hpp"
+
 #include <variant>
 
-#include "Material.hpp"
+#include "Assert.hpp"
 
 namespace Neon
 {
@@ -87,6 +89,10 @@ namespace Neon
             const glm::mat4 &matrix = std::get<glm::mat4>(data);
 
             m_shader.setMat4(name, &matrix[0][0]);
+        }
+        else
+        {
+            NEON_ASSERT(false, "Unhandled MaterialProperty type in Material::set()");
         }
     }
 }

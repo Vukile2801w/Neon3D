@@ -6,4 +6,5 @@ add_executable(Sandbox
 target_link_libraries(Sandbox
     PRIVATE
         Engine
+        $<$<CONFIG:Debug>:NEON_DEBUG>
 )

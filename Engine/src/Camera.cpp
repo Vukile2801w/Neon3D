@@ -1,5 +1,7 @@
 #include "Camera.hpp"
 
+#include "Assert.hpp"
+
 #include "glm.hpp"
 #include "gtc/matrix_transform.hpp"
 
@@ -31,6 +33,10 @@ namespace Neon
 
     glm::mat4 Camera::getProjectionMatrix(float aspectRatio) const
     {
+        NEON_ASSERT(
+            aspectRatio > 0.0f,
+            "Camera aspect ratio must be greater than zero");
+
         return glm::perspective(
             glm::radians(FOV),
             aspectRatio,

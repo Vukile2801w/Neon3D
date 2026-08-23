@@ -1,9 +1,12 @@
+#include "VertexArray.hpp"
+
 #include <initializer_list>
 #include <cstdlib>
 
+#include "Assert.hpp"
 #include "Logging.hpp"
-#include "VertexArray.hpp"
 #include "Shader.hpp"
+
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
@@ -22,6 +25,10 @@ namespace Neon
 
         case ShaderDataType::Double:
             return sizeof(double);
+
+        default:
+            NEON_ASSERT(false, "Unknown ShaderDataType");
+            return 0;
         }
 
         return 0;
@@ -75,6 +82,12 @@ namespace Neon
         const VertexBuffer &buffer,
         std::initializer_list<BufferElement> elements)
     {
+        if (elements.size() == 0)
+        {
+            Logging::Warning(
+                "VertexArray::addBuffer() received an empty vertex layout");
+        }
+
         bind();
         buffer.bind();
 
@@ -96,6 +109,9 @@ namespace Neon
                 Logging::Error("Unknown type passed as attribute");
                 return;
             }
+
+            NEON_ASSERT(element.size >= 1 && element.size <= 4,
+                        "BufferElement size must be between 1 and 4 components");
 
             glVertexAttribPointer(
                 index,

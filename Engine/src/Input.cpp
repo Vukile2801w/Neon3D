@@ -1,25 +1,36 @@
+#include "Input.hpp"
+
+#include "Assert.hpp"
+
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
-#include "Input.hpp"
-
 namespace Neon
 {
-    Input::Input(Window *window) : m_window(window->getGlfwWindow())
+    static GLFWwindow *getWindowHandle(Window *window)
+    {
+        NEON_ASSERT(
+            window != nullptr,
+            "Input constructed with a null Window pointer");
+
+        return window->getGlfwWindow();
+    }
+
+    Input::Input(Window *window) : m_window(getWindowHandle(window))
     {
         for (int i = 1; i < Key::KEY_COUNT; i++)
         {
-            keyData[i] = KeyData{static_cast<Key>(i),
-                                 false,
-                                 false,
-                                 false};
+            m_keyData[i] = KeyData{static_cast<Key>(i),
+                                   false,
+                                   false,
+                                   false};
         }
         for (int i = 1; i < MouseButton::MOUSE_BUTTON_COUNT; i++)
         {
-            mouseStatus.buttons[i] = MouseButtonData{static_cast<MouseButton>(i),
-                                                     0.0f,
-                                                     false,
-                                                     false};
+            m_mouseStatus.buttons[i] = MouseButtonData{static_cast<MouseButton>(i),
+                                                       0.0f,
+                                                       false,
+                                                       false};
         }
     }
 
@@ -240,15 +251,15 @@ namespace Neon
             }
 
             bool currentlyDown = glfwGetKey(m_window, glfwKey) == GLFW_PRESS;
-            bool wasDown = keyData[i].isDown;
+            bool wasDown = m_keyData[i].isDown;
 
-            keyData[i].isPressed =
+            m_keyData[i].isPressed =
                 currentlyDown && !wasDown;
 
-            keyData[i].isReleased =
+            m_keyData[i].isReleased =
                 !currentlyDown && wasDown;
 
-            keyData[i].isDown =
+            m_keyData[i].isDown =
                 currentlyDown;
         }
 
@@ -282,15 +293,15 @@ namespace Neon
             }
 
             bool currentlyDown = glfwGetMouseButton(m_window, glfwButton) == GLFW_PRESS;
-            bool wasDown = mouseStatus.buttons[i].value;
+            bool wasDown = m_mouseStatus.buttons[i].value;
 
-            mouseStatus.buttons[i].isPressed =
+            m_mouseStatus.buttons[i].isPressed =
                 currentlyDown && !wasDown;
 
-            mouseStatus.buttons[i].isReleased =
+            m_mouseStatus.buttons[i].isReleased =
                 !currentlyDown && wasDown;
 
-            mouseStatus.buttons[i].value =
+            m_mouseStatus.buttons[i].value =
                 currentlyDown;
         }
     }
@@ -309,7 +320,7 @@ namespace Neon
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
 
-        return keyData[key].isDown;
+        return m_keyData[key].isDown;
     }
 
     bool Input::isKeyPressed(Key key)
@@ -317,7 +328,7 @@ namespace Neon
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
 
-        return keyData[key].isPressed;
+        return m_keyData[key].isPressed;
     }
 
     bool Input::isKeyReleased(Key key)
@@ -325,7 +336,7 @@ namespace Neon
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
 
-        return keyData[key].isReleased;
+        return m_keyData[key].isReleased;
     }
 
     // =============================== //
@@ -337,7 +348,7 @@ namespace Neon
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
 
-        return mouseStatus.buttons[static_cast<size_t>(key)].value > 0.0f ? true : false;
+        return m_mouseStatus.buttons[static_cast<size_t>(key)].value > 0.0f ? true : false;
     }
 
     bool Input::isMouseButtonPressed(MouseButton key)
@@ -345,7 +356,7 @@ namespace Neon
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
 
-        return mouseStatus.buttons[static_cast<size_t>(key)].isPressed;
+        return m_mouseStatus.buttons[static_cast<size_t>(key)].isPressed;
     }
 
     bool Input::isMouseButtonReleased(MouseButton key)
@@ -353,12 +364,11 @@ namespace Neon
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
 
-        return mouseStatus.buttons[static_cast<size_t>(key)].isReleased;
+        return m_mouseStatus.buttons[static_cast<size_t>(key)].isReleased;
     }
 
     float Input::getMouseScrollValue()
     {
-
-        return mouseStatus.scrool;
+        return m_mouseStatus.scrool;
     }
 }

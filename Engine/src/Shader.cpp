@@ -1,10 +1,13 @@
+#include "Shader.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 #include <string>
 
+#include "Assert.hpp"
 #include "Logging.hpp"
-#include "Shader.hpp"
+
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
@@ -152,6 +155,7 @@ namespace Neon
     }
     void Shader::bind() const
     {
+        NEON_ASSERT(m_program != 0, "Attempting to bind an invalid/unlinked shader");
         glUseProgram(m_program);
     }
     void Shader::unbind()
@@ -161,6 +165,8 @@ namespace Neon
 
     int Shader::getUniformLocation(const std::string &name) const
     {
+        NEON_ASSERT(m_program != 0, "Attempting to query a uniform on an invalid shader");
+
         return glGetUniformLocation(m_program, name.c_str());
     }
 

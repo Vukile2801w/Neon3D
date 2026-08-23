@@ -1,5 +1,7 @@
-#include "Logging.hpp"
 #include "VertexBuffer.hpp"
+
+#include "Logging.hpp"
+
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
