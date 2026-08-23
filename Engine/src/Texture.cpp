@@ -114,6 +114,7 @@ namespace Neon
 
     Texture::~Texture()
     {
+        Logging::Info("Texture deleted");
         glDeleteTextures(1, &m_id);
     }
 

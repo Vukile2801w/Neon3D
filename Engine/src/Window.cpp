@@ -65,6 +65,7 @@ namespace Neon
 
     Window::~Window()
     {
+        Logging::Info("Window deleted");
         m_window.reset();
         glfwTerminate();
     }

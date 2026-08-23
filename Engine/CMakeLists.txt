@@ -11,6 +11,7 @@ add_library(Engine
     src/Camera.cpp
     src/Time.cpp
     src/Input.cpp
+    src/Application.cpp
     # Mesh implementations
     src/Mesh/VertexArray.cpp
     src/Mesh/VertexBuffer.cpp
