@@ -192,8 +192,9 @@ namespace Neon
         struct MouseStatus
         {
             MouseButtonData buttons[MOUSE_BUTTON_COUNT];
-            glm::vec2 pos;
-            double scrool;
+
+            glm::vec2 pos{0.0f};
+            glm::vec2 scroll{0.0f};
         };
 
         Input(Window *window);
@@ -201,18 +202,19 @@ namespace Neon
 
         void handleInput();
 
-        bool isKeyDown(Key key);
-        bool isKeyPressed(Key key);
-        bool isKeyReleased(Key key);
+        bool isKeyDown(Key key) const;
+        bool isKeyPressed(Key key) const;
+        bool isKeyReleased(Key key) const;
 
-        // Can also be used for mouse wheel scroll wheel. True if scrolled in given direction, false if not.
-        bool isMouseButtonDown(MouseButton key);
-        // Can also be used for mouse wheel scroll wheel. True if scrolled in given direction this frame.
-        bool isMouseButtonPressed(MouseButton key);
-        // Can also be used for mouse wheel scroll wheel. True if stop scrolling in given direction this frame.
-        bool isMouseButtonReleased(MouseButton key);
+        bool isMouseButtonDown(MouseButton key) const;
+        bool isMouseButtonPressed(MouseButton key) const;
+        bool isMouseButtonReleased(MouseButton key) const;
 
-        float getMouseScrollValue();
+        glm::vec2 getMousePosition() const;
+
+        float getScrollX() const;
+        float getScrollY() const;
+        glm::vec2 getScroll() const;
 
     protected:
         std::array<KeyData, KEY_COUNT> m_keyData;
@@ -221,6 +223,16 @@ namespace Neon
     private:
         Input(const Input &) = delete;
         Input &operator=(const Input &) = delete;
+
+        static void scrollCallback(
+            GLFWwindow *window,
+            double xOffset,
+            double yOffset);
+
+        static void mouseMoveCallback(
+            GLFWwindow *window,
+            double xPos,
+            double yPos);
 
         static GLFWwindow *getWindowHandle(Window *window);
         GLFWwindow *m_window;

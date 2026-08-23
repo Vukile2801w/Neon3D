@@ -19,6 +19,10 @@ namespace Neon
     Input::Input(Window *window) : m_window(getWindowHandle(window))
     {
 
+        glfwSetWindowUserPointer(m_window, this);
+        glfwSetScrollCallback(m_window, Input::scrollCallback);
+        glfwSetCursorPosCallback(m_window, Input::mouseMoveCallback);
+
         for (int i = 1; i < Key::KEY_COUNT; i++)
         {
             m_keyData[i] = KeyData{static_cast<Key>(i),
@@ -42,6 +46,7 @@ namespace Neon
 
     void Input::handleInput()
     {
+        m_mouseStatus.scroll = {0.0f, 0.0f};
         glfwPollEvents();
 
         // Manual mapping from EcoSim Keys to Raylib Keys
@@ -307,16 +312,35 @@ namespace Neon
         }
     }
 
-    void scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
+    void Input::scrollCallback(GLFWwindow *window, double xOffset, double yOffset)
     {
-        // TODO
+        Input *input = static_cast<Input *>(
+            glfwGetWindowUserPointer(window));
+
+        if (input == nullptr)
+            return;
+
+        input->m_mouseStatus.scroll += glm::vec2(
+            static_cast<float>(xOffset),
+            static_cast<float>(yOffset));
+    }
+
+    void Input::mouseMoveCallback(GLFWwindow *window, double xPos, double yPos)
+    {
+        Input *input = static_cast<Input *>(
+            glfwGetWindowUserPointer(window));
+
+        if (input == nullptr)
+            return;
+
+        input->m_mouseStatus.pos = glm::vec2(xPos, yPos);
     }
 
     // ================================== //
     //      Keyboard Button Functions     //
     // ================================== //
 
-    bool Input::isKeyDown(Key key)
+    bool Input::isKeyDown(Key key) const
     {
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
@@ -324,7 +348,7 @@ namespace Neon
         return m_keyData[key].isDown;
     }
 
-    bool Input::isKeyPressed(Key key)
+    bool Input::isKeyPressed(Key key) const
     {
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
@@ -332,7 +356,7 @@ namespace Neon
         return m_keyData[key].isPressed;
     }
 
-    bool Input::isKeyReleased(Key key)
+    bool Input::isKeyReleased(Key key) const
     {
         if (key <= Key::KEY_UNKNOWN || key >= Key::KEY_COUNT)
             return false;
@@ -344,7 +368,7 @@ namespace Neon
     //      Mouse Button Functions     //
     // =============================== //
 
-    bool Input::isMouseButtonDown(MouseButton key)
+    bool Input::isMouseButtonDown(MouseButton key) const
     {
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
@@ -352,7 +376,7 @@ namespace Neon
         return m_mouseStatus.buttons[static_cast<size_t>(key)].value > 0.0f ? true : false;
     }
 
-    bool Input::isMouseButtonPressed(MouseButton key)
+    bool Input::isMouseButtonPressed(MouseButton key) const
     {
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
@@ -360,7 +384,7 @@ namespace Neon
         return m_mouseStatus.buttons[static_cast<size_t>(key)].isPressed;
     }
 
-    bool Input::isMouseButtonReleased(MouseButton key)
+    bool Input::isMouseButtonReleased(MouseButton key) const
     {
         if (key <= MouseButton::MOUSE_BUTTON_UNKNOWN || key >= MouseButton::MOUSE_BUTTON_COUNT)
             return false;
@@ -368,8 +392,13 @@ namespace Neon
         return m_mouseStatus.buttons[static_cast<size_t>(key)].isReleased;
     }
 
-    float Input::getMouseScrollValue()
+    glm::vec2 Input::getScroll() const
     {
-        return m_mouseStatus.scrool;
+        return m_mouseStatus.pos;
+    }
+
+    glm::vec2 Input::getMousePosition() const
+    {
+        return m_mouseStatus.pos;
     }
 }
