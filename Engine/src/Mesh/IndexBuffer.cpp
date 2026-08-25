@@ -1,4 +1,4 @@
-#include "IndexBuffer.hpp"
+#include "Mesh/IndexBuffer.hpp"
 
 #include "glad/glad.h"
 

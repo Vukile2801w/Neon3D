@@ -1,19 +1,29 @@
 #include "Window.hpp"
 
+#include "Input.hpp"
 #include "Logging.hpp"
+#include "Events/WindowClosedEvent.hpp"
+#include "Events/WindowFocusedEvent.hpp"
+#include "Events/WindowLostFocusEvent.hpp"
+#include "Events/WindowResizedEvent.hpp"
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
 
 namespace Neon
 {
-    Window::Window()
-        : Window(800, 600) {}
+    Window::Window(Input &input, EventBus &eventBus)
+        : Window(800, 600, input, eventBus) {}
 
-    Window::Window(unsigned int xSize, unsigned int ySize)
+    Window::Window(
+        unsigned int xSize, unsigned int ySize,
+        Input &input, EventBus &eventBus) : m_input(input), m_eventBus(eventBus)
     {
-        m_sizeX = xSize;
-        m_sizeY = ySize;
+        m_width = xSize;
+        m_framebufferWidth = xSize;
+
+        m_height = ySize;
+        m_framebufferHeight = ySize;
 
         if (!glfwInit())
         {
@@ -30,7 +40,7 @@ namespace Neon
         glfwWindowHint(GLFW_FOCUS_ON_SHOW, GLFW_TRUE);
         glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
 
-        m_window = std::unique_ptr<GLFWwindow, GLFWWindowDeleter>(glfwCreateWindow(m_sizeX, m_sizeY, "Neon3D", NULL, NULL));
+        m_window = std::unique_ptr<GLFWwindow, GLFWWindowDeleter>(glfwCreateWindow(m_width, m_height, "Neon3D", NULL, NULL));
         if (m_window == NULL)
         {
             Logging::Error("Failed to create GLFW window");
@@ -54,13 +64,22 @@ namespace Neon
             Logging::Info("GLAD initializedn");
         }
 
-        glViewport(0, 0, m_sizeX, m_sizeY);
-        glfwSetFramebufferSizeCallback(m_window.get(), framebuffer_size_callback);
+        glViewport(0, 0, m_width, m_height);
+        glfwSetFramebufferSizeCallback(m_window.get(), framebufferSizeCallback);
         glEnable(GL_DEPTH_TEST);
 
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glFrontFace(GL_CCW);
+
+        glfwSetKeyCallback(m_window.get(), keysCallback);
+        glfwSetCursorPosCallback(m_window.get(), mouseMovmentCallback);
+        glfwSetMouseButtonCallback(m_window.get(), mouseButtonCallback);
+        glfwSetScrollCallback(m_window.get(), mouseScrollCallback);
+
+        glfwSetWindowSizeCallback(m_window.get(), windowResizedCallback);
+        glfwSetWindowCloseCallback(m_window.get(), windowClosedCallback);
+        glfwSetWindowFocusCallback(m_window.get(), windowFocusedCallback);
     }
 
     Window::~Window()
@@ -76,12 +95,12 @@ namespace Neon
             glfwDestroyWindow(window);
     }
 
-    void Window::framebuffer_size_callback(GLFWwindow *window, int width, int height)
+    void Window::framebufferSizeCallback(GLFWwindow *window, int width, int height)
     {
         Window *self = static_cast<Window *>(glfwGetWindowUserPointer(window));
 
-        self->m_sizeX = width;
-        self->m_sizeY = height;
+        self->m_framebufferWidth = width;
+        self->m_framebufferHeight = height;
 
         glViewport(0, 0, width, height);
     }
@@ -104,17 +123,70 @@ namespace Neon
 
     int Window::getHeight()
     {
-        return m_sizeY;
+        return m_height;
     }
 
     float Window::getAspectRatio()
     {
-        return static_cast<float>(m_sizeX) / static_cast<float>(m_sizeY);
+        return static_cast<float>(m_width) / static_cast<float>(m_height);
     }
 
     int Window::getWidth()
     {
-        return m_sizeX;
+        return m_width;
+    }
+
+    void Window::keysCallback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        window->m_input.onKey(key, scancode, action, mods);
+    }
+
+    void Window::mouseMovmentCallback(GLFWwindow *glfwWindow, double x, double y)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        window->m_input.onMouseMovement(x, y);
+    }
+
+    void Window::mouseButtonCallback(GLFWwindow *glfwWindow, int button, int action, int mods)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        window->m_input.onMouseButton(button, action, mods);
+    }
+    void Window::mouseScrollCallback(GLFWwindow *glfwWindow, double xOffset, double yOffset)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        window->m_input.onMouseScroll(xOffset, yOffset);
+    }
+
+    void Window::windowResizedCallback(GLFWwindow *glfwWindow, int width, int height)
+    {
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+
+        window->m_width = width;
+        window->m_height = height;
+
+        window->m_eventBus.emit(WindowResizedEvent({width, height}));
+    }
+    void Window::windowClosedCallback(GLFWwindow *glfwWindow)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        window->m_eventBus.emit(WindowClosedEvent());
+    }
+
+    void Window::windowFocusedCallback(GLFWwindow *glfwWindow, int focused)
+    {
+
+        Window *window = static_cast<Window *>(glfwGetWindowUserPointer(glfwWindow));
+        if (focused)
+            window->m_eventBus.emit(WindowFocusedEvent());
+        else
+            window->m_eventBus.emit(WindowLostFocusEvent());
     }
 
 } // namespace Neon

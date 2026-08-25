@@ -1,23 +1,27 @@
 #include <iterator>
 #include <chrono>
+#include <sstream>
 
 #include "Cube.hpp"
 
 #include "gtc/matrix_transform.hpp"
 
+#include "Events/EventBus.hpp"
 #include "Logging.hpp"
 #include "Material.hpp"
 #include "Window.hpp"
 #include "Shader.hpp"
-#include "Mesh.hpp"
+#include "Mesh/Mesh.hpp"
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"
 #include "Time.hpp"
 #include "Input.hpp"
 #include "Application.hpp"
+#include "Events/KeyPressedEvent.hpp"
 
 // Enums
+using Neon::EventBus;
 using Neon::Input;
 using Neon::Logging;
 using Neon::ShaderDataType;
@@ -63,55 +67,70 @@ protected:
         float moveSpeed = 5.0f;
         float rotationSpeed = glm::radians(40.0f); // 90°/s
 
+        Input &input = getInput();
+        EventBus &eventBus = getEventBus();
+
         // =====================
         // Movement
         // =====================
 
-        if (getInput().isKeyDown(Input::Key::KEY_W))
+        eventBus.subscribe<Neon::KeyPressedEvent>(
+            [](const Neon::KeyPressedEvent &event)
+            {
+                Input::Key key =
+                    static_cast<Input::Key>(event.getData().key);
+
+                std::ostringstream msg;
+                msg << "Key Pressed: " << key;
+
+                // Logging::Info(msg.str());
+            });
+
+        if (input.isKeyDown(Input::Key::KeyW))
             m_camera.position += m_camera.getForward() * moveSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_S))
+        if (input.isKeyDown(Input::Key::KeyS))
             m_camera.position -= m_camera.getForward() * moveSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_A))
+        if (input.isKeyDown(Input::Key::KeyA))
             m_camera.position -= m_camera.getRight() * moveSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_D))
+        if (input.isKeyDown(Input::Key::KeyD))
             m_camera.position += m_camera.getRight() * moveSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_SHIFT))
+        if (input.isKeyDown(Input::Key::KeyShift))
             m_camera.position.y += moveSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_CTRL))
+        if (input.isKeyDown(Input::Key::KeyCtrl))
             m_camera.position.y -= moveSpeed * dt;
 
         // =====================
         // m_camera rotation
         // =====================
 
-        if (getInput().isKeyDown(Input::Key::KEY_UP))
+        if (input.isKeyDown(Input::Key::KeyUp))
             m_camera.rotation.x += rotationSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_DOWN))
+        if (input.isKeyDown(Input::Key::KeyDown))
             m_camera.rotation.x -= rotationSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_LEFT))
+        if (input.isKeyDown(Input::Key::KeyLeft))
             m_camera.rotation.y += rotationSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_RIGHT))
+        if (input.isKeyDown(Input::Key::KeyRight))
             m_camera.rotation.y -= rotationSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_ESCAPE))
+        if (input.isKeyDown(Input::Key::KeyEscape))
             m_camera.rotation = {m_camera.rotation.x, m_camera.rotation.y, 0.0f};
 
         // =====================
         // m_camera roll
         // =====================
 
-        if (getInput().isKeyDown(Input::Key::KEY_Q))
+        if (input.isKeyDown(Input::Key::KeyQ))
             m_camera.rotation.z += rotationSpeed * dt;
 
-        if (getInput().isKeyDown(Input::Key::KEY_E))
+        if (input.isKeyDown(Input::Key::KeyE))
             m_camera.rotation.z -= rotationSpeed * dt;
 
         float t = static_cast<float>(getTime().sinceStart());

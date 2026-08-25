@@ -1,4 +1,4 @@
-#include "VertexArray.hpp"
+#include "Mesh/VertexArray.hpp"
 
 #include <initializer_list>
 #include <cstdlib>

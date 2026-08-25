@@ -57,10 +57,10 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] `Window`: framebuffer resize callback keeps width/height/aspect ratio in sync
 - [x] `Input`: polling-based keyboard + mouse button state (down/pressed/released)
 - [x] **Remove `GLFWwindow*` from `Window`'s public API.** Replace `getGlfwWindow()` with an opaque native-handle accessor used only internally by `Input`, not exposed to application code
-- [ ] **Give `Input` its own ownership of platform callbacks instead of borrowing `Window`'s raw handle** — reduce coupling so `Input` depends on an abstraction, not a concrete GLFW pointer
+- [x] **Give `Input` its own ownership of platform callbacks instead of borrowing `Window`'s raw handle** — reduce coupling so `Input` depends on an abstraction, not a concrete GLFW pointer
 - [x] Wire up mouse scroll (`scrollCallback` in `Input.cpp` is currently a stub / TODO — `getMouseScrollValue()` always returns 0)
 - [ ] Add mouse cursor mode control (normal / hidden / disabled) for FPS-style camera look, exposed through `Window` or `Input`, not raw GLFW calls
-- [ ] Design a minimal event system (e.g. `WindowResizeEvent`, `KeyEvent`, `MouseMoveEvent`) with a simple dispatcher/callback registration — needed before Phase 2's renderer needs to react to resizes, and before any UI/editor work in Phase 8
+- [x] Design a minimal event system (e.g. `WindowResizeEvent`, `KeyEvent`, `MouseMoveEvent`) with a simple dispatcher/callback registration — needed before Phase 2's renderer needs to react to resizes, and before any UI/editor work in Phase 8
 - [x] Introduce an `Application` class that owns `Window` + `Input` + `Time` and runs the main loop, so `Sandbox/main.cpp` stops hand-rolling `while (!window.shouldWindowsClose())` boilerplate
   - [x] `Application::run()` drives `beginFrame()` / `handleInput()` / user update callback / `render()`
   - [x] Expose an overridable `onUpdate(float dt)` hook for consumer code

@@ -3,6 +3,9 @@
 
 #include <memory>
 
+#include "Input.hpp"
+#include "Events/EventBus.hpp"
+
 struct GLFWwindow;
 
 namespace Neon
@@ -10,8 +13,8 @@ namespace Neon
     class Window
     {
     public:
-        Window(unsigned int xSize, unsigned int ySize);
-        Window();
+        Window(unsigned int xSize, unsigned int ySize, Input &input, EventBus &eventBus);
+        Window(Input &input, EventBus &eventBus);
         ~Window();
 
         void render();
@@ -23,18 +26,35 @@ namespace Neon
         float getAspectRatio();
 
     private:
-        friend class Input;
-
         struct GLFWWindowDeleter
         {
             void operator()(GLFWwindow *window);
         };
-        static void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+        static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
         std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_window;
 
-        int m_sizeX = 800;
-        int m_sizeY = 600;
+        // ==== EVENTS === //
+
+        static void keysCallback(GLFWwindow *glfwWindow, int key, int scancode, int action, int mods);
+        static void mouseMovmentCallback(GLFWwindow *glfwWindow, double x, double y);
+        static void mouseButtonCallback(GLFWwindow *glfwWindow, int button, int action, int mods);
+        static void mouseScrollCallback(GLFWwindow *glfwWindow, double xOffset, double yOffset);
+
+        // --------------- //
+
+        static void windowResizedCallback(GLFWwindow *window, int width, int height);
+        static void windowClosedCallback(GLFWwindow *window);
+        static void windowFocusedCallback(GLFWwindow *window, int focused);
+
+        int m_width = 800;
+        int m_height = 600;
+
+        int m_framebufferWidth = 800;
+        int m_framebufferHeight = 600;
+
+        Input &m_input;
+        EventBus &m_eventBus;
     };
 }
 

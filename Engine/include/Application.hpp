@@ -4,6 +4,7 @@
 #include "Window.hpp"
 #include "Time.hpp"
 #include "Input.hpp"
+#include "Events/EventBus.hpp"
 
 namespace Neon
 {
@@ -30,7 +31,11 @@ namespace Neon
         Time &getTime() { return m_time; }
         const Time &getTime() const { return m_time; }
 
+        EventBus &getEventBus() { return m_eventBus; }
+        const EventBus &getEventBus() const { return m_eventBus; }
+
     private:
+        EventBus m_eventBus;
         Window m_window;
         Input m_input;
         Time m_time;

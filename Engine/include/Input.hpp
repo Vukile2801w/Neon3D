@@ -4,9 +4,9 @@
 #include <array>
 #include <iostream>
 
-#include "glm.hpp"
+#include "Events/EventBus.hpp"
 
-#include "Window.hpp"
+#include "glm.hpp"
 
 namespace Neon
 {
@@ -15,142 +15,142 @@ namespace Neon
     public:
         enum Key
         {
-            KEY_UNKNOWN,
-            KEY_A,
-            KEY_B,
-            KEY_C,
-            KEY_D,
-            KEY_E,
-            KEY_F,
-            KEY_G,
-            KEY_H,
-            KEY_I,
-            KEY_J,
-            KEY_K,
-            KEY_L,
-            KEY_M,
-            KEY_N,
-            KEY_O,
-            KEY_P,
-            KEY_Q,
-            KEY_R,
-            KEY_S,
-            KEY_T,
-            KEY_U,
-            KEY_V,
-            KEY_W,
-            KEY_X,
-            KEY_Y,
-            KEY_Z,
-            KEY_0,
-            KEY_1,
-            KEY_2,
-            KEY_3,
-            KEY_4,
-            KEY_5,
-            KEY_6,
-            KEY_7,
-            KEY_8,
-            KEY_9,
-            KEY_SPACE,
-            KEY_ENTER,
-            KEY_TAB,
-            KEY_BACKSPACE,
-            KEY_DELETE,
-            KEY_ESCAPE,
-            KEY_SHIFT,
-            KEY_CTRL,
-            KEY_ALT,
-            KEY_UP,
-            KEY_DOWN,
-            KEY_LEFT,
-            KEY_RIGHT,
-            KEY_HOME,
-            KEY_END,
-            KEY_PAGE_UP,
-            KEY_PAGE_DOWN,
-            KEY_F1,
-            KEY_F2,
-            KEY_F3,
-            KEY_F4,
-            KEY_F5,
-            KEY_F6,
-            KEY_F7,
-            KEY_F8,
-            KEY_F9,
-            KEY_F10,
-            KEY_F11,
-            KEY_F12,
+            KeyUnknown,
+            KeyA,
+            KeyB,
+            KeyC,
+            KeyD,
+            KeyE,
+            KeyF,
+            KeyG,
+            KeyH,
+            KeyI,
+            KeyJ,
+            KeyK,
+            KeyL,
+            KeyM,
+            KeyN,
+            KeyO,
+            KeyP,
+            KeyQ,
+            KeyR,
+            KeyS,
+            KeyT,
+            KeyU,
+            KeyV,
+            KeyW,
+            KeyX,
+            KeyY,
+            KeyZ,
+            Key0,
+            Key1,
+            Key2,
+            Key3,
+            Key4,
+            Key5,
+            Key6,
+            Key7,
+            Key8,
+            Key9,
+            KeySpace,
+            KeyEnter,
+            KeyTab,
+            KeyBackspace,
+            KeyDelete,
+            KeyEscape,
+            KeyShift,
+            KeyCtrl,
+            KeyAlt,
+            KeyUp,
+            KeyDown,
+            KeyLeft,
+            KeyRight,
+            KeyHome,
+            KeyEnd,
+            KeyPageUp,
+            KeyPageDOWN,
+            KeyF1,
+            KeyF2,
+            KeyF3,
+            KeyF4,
+            KeyF5,
+            KeyF6,
+            KeyF7,
+            KeyF8,
+            KeyF9,
+            KeyF10,
+            KeyF11,
+            KeyF12,
 
-            KEY_COUNT
+            KeyCount
         };
-        static constexpr std::array<const char *, KEY_COUNT> keyName = {
-            "KEY_UNKNOWN",   // 0
-            "KEY_A",         // 1
-            "KEY_B",         // 2
-            "KEY_C",         // 3
-            "KEY_D",         // 4
-            "KEY_E",         // 5
-            "KEY_F",         // 6
-            "KEY_G",         // 7
-            "KEY_H",         // 8
-            "KEY_I",         // 9
-            "KEY_J",         // 10
-            "KEY_K",         // 11
-            "KEY_L",         // 12
-            "KEY_M",         // 13
-            "KEY_N",         // 14
-            "KEY_O",         // 15
-            "KEY_P",         // 16
-            "KEY_Q",         // 17
-            "KEY_R",         // 18
-            "KEY_S",         // 19
-            "KEY_T",         // 20
-            "KEY_U",         // 21
-            "KEY_V",         // 22
-            "KEY_W",         // 23
-            "KEY_X",         // 24
-            "KEY_Y",         // 25
-            "KEY_Z",         // 26
-            "KEY_0",         // 27
-            "KEY_1",         // 28
-            "KEY_2",         // 29
-            "KEY_3",         // 30
-            "KEY_4",         // 31
-            "KEY_5",         // 32
-            "KEY_6",         // 33
-            "KEY_7",         // 34
-            "KEY_8",         // 35
-            "KEY_9",         // 36
-            "KEY_SPACE",     // 37
-            "KEY_ENTER",     // 38
-            "KEY_TAB",       // 39
-            "KEY_BACKSPACE", // 40
-            "KEY_DELETE",    // 41
-            "KEY_ESCAPE",    // 42
-            "KEY_SHIFT",     // 43
-            "KEY_CTRL",      // 44
-            "KEY_ALT",       // 45
-            "KEY_UP",        // 46
-            "KEY_DOWN",      // 47
-            "KEY_LEFT",      // 48
-            "KEY_RIGHT",     // 49
-            "KEY_HOME",      // 50
-            "KEY_END",       // 51
-            "KEY_PAGE_UP",   // 52
-            "KEY_PAGE_DOWN", // 53
-            "KEY_F1",        // 54
-            "KEY_F2",        // 55
-            "KEY_F3",        // 56
-            "KEY_F4",        // 57
-            "KEY_F5",        // 58
-            "KEY_F6",        // 59
-            "KEY_F7",        // 60
-            "KEY_F8",        // 61
-            "KEY_F9",        // 62
-            "KEY_F10",       // 63
-            "KEY_F11",       // 64
-            "KEY_F12"        // 65
+        static constexpr std::array<const char *, KeyCount> keyName = {
+            "KeyUnknown",   // 0
+            "KeyA",         // 1
+            "KeyB",         // 2
+            "KeyC",         // 3
+            "KeyD",         // 4
+            "KeyE",         // 5
+            "KeyF",         // 6
+            "KeyG",         // 7
+            "KeyH",         // 8
+            "KeyI",         // 9
+            "KeyJ",         // 10
+            "KeyK",         // 11
+            "KeyL",         // 12
+            "KeyM",         // 13
+            "KeyN",         // 14
+            "KeyO",         // 15
+            "KeyP",         // 16
+            "KeyQ",         // 17
+            "KeyR",         // 18
+            "KeyS",         // 19
+            "KeyT",         // 20
+            "KeyU",         // 21
+            "KeyV",         // 22
+            "KeyW",         // 23
+            "KeyX",         // 24
+            "KeyY",         // 25
+            "KeyZ",         // 26
+            "Key0",         // 27
+            "Key1",         // 28
+            "Key2",         // 29
+            "Key3",         // 30
+            "Key4",         // 31
+            "Key5",         // 32
+            "Key6",         // 33
+            "Key7",         // 34
+            "Key8",         // 35
+            "Key9",         // 36
+            "KeySpace",     // 37
+            "KeyEnter",     // 38
+            "KeyTab",       // 39
+            "KeyBackspace", // 40
+            "KeyDelete",    // 41
+            "KeyEscape",    // 42
+            "KeyShift",     // 43
+            "KeyCtrl",      // 44
+            "KeyAlt",       // 45
+            "KeyUp",        // 46
+            "KeyDown",      // 47
+            "KeyLeft",      // 48
+            "KeyRight",     // 49
+            "KeyHome",      // 50
+            "KeyEnd",       // 51
+            "KeyPageUp",    // 52
+            "KeyPageDOWN",  // 53
+            "KeyF1",        // 54
+            "KeyF2",        // 55
+            "KeyF3",        // 56
+            "KeyF4",        // 57
+            "KeyF5",        // 58
+            "KeyF6",        // 59
+            "KeyF7",        // 60
+            "KeyF8",        // 61
+            "KeyF9",        // 62
+            "KeyF10",       // 63
+            "KeyF11",       // 64
+            "KeyF12"        // 65
         };
 
         struct KeyData
@@ -164,41 +164,41 @@ namespace Neon
 
         enum MouseButton
         {
-            MOUSE_BUTTON_UNKNOWN,
-            MOUSE_BUTTON_LEFT,
-            MOUSE_BUTTON_RIGHT,
-            MOUSE_BUTTON_MIDDLE,
-            MOUSE_BUTTON_4,
-            MOUSE_BUTTON_5,
-            MOUSE_BUTTON_COUNT
+            MouseButtonUnknown,
+            MouseButtonLeft,
+            MouseButtonRight,
+            MouseButtonMiddle,
+            MouseButton4,
+            MouseButton5,
+            MouseButtonCount
         };
-        static constexpr std::array<const char *, MOUSE_BUTTON_COUNT> mouseButtonName = {
-            "MOUSE_BUTTON_UNKNOWN", // 0
-            "MOUSE_BUTTON_LEFT",    // 1
-            "MOUSE_BUTTON_RIGHT",   // 2
-            "MOUSE_BUTTON_MIDDLE",  // 3
-            "MOUSE_SCROLL_UP",      // 4
-            "MOUSE_SCROLL_DOWN"     // 5
+        static constexpr std::array<const char *, MouseButtonCount> mouseButtonName = {
+            "MouseButtonUNKNOWN", // 0
+            "MouseButtonLEFT",    // 1
+            "MouseButtonRIGHT",   // 2
+            "MouseButtonMIDDLE",  // 3
+            "MOUSE_SCROLL_UP",    // 4
+            "MOUSE_SCROLL_DOWN"   // 5
         };
 
         struct MouseButtonData
         {
             MouseButton button;
-            float value;     // 0 or 1 for buttons, or scroll amount for scroll wheel
+            bool isDown;     // 0 or 1 for buttons
             bool isPressed;  // scroll wheel doesn't have pressed/released, but for buttons it does
             bool isReleased; // same as above
         };
 
         struct MouseStatus
         {
-            MouseButtonData buttons[MOUSE_BUTTON_COUNT];
+            MouseButtonData buttons[MouseButtonCount];
 
             glm::vec2 pos{0.0f};
             glm::vec2 scroll{0.0f};
         };
 
-        Input(Window *window);
-        ~Input();
+        Input(EventBus &eventBus);
+        ~Input() = default;
 
         void handleInput();
 
@@ -216,26 +216,26 @@ namespace Neon
         float getScrollY() const;
         glm::vec2 getScroll() const;
 
+        void onKey(int key, int scancode, int action, int mods); // WARNING : Only engine internal use intended
+        void onMouseMovement(double x, double y);                // WARNING : Only engine internal use intended
+        void onMouseButton(int button, int action, int mods);    // WARNING : Only engine internal use intended
+        void onMouseScroll(double xOffset, double yOffset);      // WARNING : Only engine internal use intended
+
     protected:
-        std::array<KeyData, KEY_COUNT> m_keyData;
+        std::array<KeyData, KeyCount> m_keyData;
         MouseStatus m_mouseStatus;
 
     private:
         Input(const Input &) = delete;
         Input &operator=(const Input &) = delete;
 
-        static void scrollCallback(
-            GLFWwindow *window,
-            double xOffset,
-            double yOffset);
+        static int toGLFWKey(Key key);
+        static Key fromGLFWKey(int key);
 
-        static void mouseMoveCallback(
-            GLFWwindow *window,
-            double xPos,
-            double yPos);
+        static int toGLFWMouseButton(MouseButton button);
+        static MouseButton fromGLFWMouseButton(int button);
 
-        static GLFWwindow *getWindowHandle(Window *window);
-        GLFWwindow *m_window;
+        EventBus &m_eventBus;
     };
     inline std::ostream &operator<<(std::ostream &os, Input::Key key)
     {

@@ -5,7 +5,7 @@
 #include "Material.hpp"
 #include "Window.hpp"
 #include "Shader.hpp"
-#include "Mesh.hpp"
+#include "Mesh/Mesh.hpp"
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"

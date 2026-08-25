@@ -1,4 +1,4 @@
-#include "VertexBuffer.hpp"
+#include "Mesh/VertexBuffer.hpp"
 
 #include "Logging.hpp"
 
