@@ -8,6 +8,8 @@
 
 #include "Shader.hpp"
 #include "Texture.hpp"
+#include "Transform.hpp"
+#include "Camera.hpp"
 
 namespace Neon
 {
@@ -24,17 +26,23 @@ namespace Neon
     class Material
     {
     public:
-        Material(Shader &shader);
+        explicit Material(Shader &shader);
 
         void bind() const;
+
+        void setProperty(
+            const std::string &name,
+            MaterialProperty value);
+
+        MaterialProperty getProperty(const std::string &name) const;
+
+        void setUniform(
+            const std::string &name,
+            const MaterialProperty &property) const;
 
         void setTexture(
             const std::string &name,
             Texture &texture);
-
-        void set(const std::string &name, MaterialProperty data);
-
-        glm::vec3 color;
 
     private:
         Shader &m_shader;
@@ -46,6 +54,8 @@ namespace Neon
         };
 
         std::vector<TextureSlot> m_textures;
+
+        std::unordered_map<std::string, MaterialProperty> m_properties;
     };
 }
 

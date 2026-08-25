@@ -82,10 +82,10 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] `Camera`: view/projection matrices, FOV, forward/right vectors (pure GLM, correctly decoupled from OpenGL)
 - [x] `Transform`: position/rotation/scale → model matrix (correctly decoupled)
 - [x] Depth testing and back-face culling enabled at window/context creation
-- [ ] Introduce a `Renderer` class that owns the frame lifecycle: `beginScene(camera)` → `submit(mesh, material, transform)` → `endScene()`
-  - [ ] Decide now whether submission is immediate-mode (call `draw()` directly, simplest) or queued (collect draw calls, sort, then flush) — **recommend starting immediate-mode**, revisit only if profiling shows a need
-- [ ] Move camera/view/projection uniform-setting out of `Sandbox/main.cpp` and into `Renderer::beginScene`, so materials don't each need `set("u_View", ...)` boilerplate
-- [ ] Add a basic `RenderAPI`-style seam even if OpenGL is the only backend for now — i.e., keep raw `gl*` calls confined to `.cpp` files (already mostly true) and never leak `GLenum`/GL types into public headers (already mostly true — verify and lock this in with a lint/review pass)
+- [x] Introduce a `Renderer` class that owns the frame lifecycle: `beginScene(camera)` → `submit(mesh, material, transform)` → `endScene()`
+- [x] Decide now whether submission is immediate-mode (call `draw()` directly, simplest) or queued (collect draw calls, sort, then flush) — **recommend starting immediate-mode**, revisit only if profiling shows a need
+- [x] Move camera/view/projection uniform-setting out of `Sandbox/main.cpp` and into `Renderer::beginScene`, so materials don't each need `set("u_View", ...)` boilerplate
+- [x] Add a basic `RenderAPI`-style seam even if OpenGL is the only backend for now — i.e., keep raw `gl*` calls confined to `.cpp` files (already mostly true) and never leak `GLenum`/GL types into public headers (already mostly true — verify and lock this in with a lint/review pass)
 - [ ] Framebuffer/render-target abstraction (needed later for post-processing, shadow maps, editor viewport) — **not urgent yet**, defer until Phase 9 unless Phase 8 (editor viewport) needs it sooner
 - [ ] Basic lighting is currently hardcoded per-shader in `Sandbox/shaders/shader.frag` (e.g. the recent back-face lighting-skip fix) — extract common lighting uniform names/conventions (`u_ViewPos`, light structs) into a documented Material/Shader convention so future shaders are consistent
 - [ ] Render-pass concept (opaque pass, transparent pass, etc.) — defer to Phase 9, not needed for a single-mesh sandbox today

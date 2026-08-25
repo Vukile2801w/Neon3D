@@ -113,6 +113,9 @@ public:
 
         m_mat.setTexture("T_Color", *m_texture);
         m_mat.setTexture("T_Normal", *m_normalMap);
+
+        m_mat.setProperty("u_Shininess", 4.0f);
+        m_mat.setProperty("u_IsLightSource", m_isLightSource);
     }
 
     ~Cube()
@@ -121,50 +124,14 @@ public:
         delete m_normalMap;
     }
 
-    void render(
-        const Neon::Camera &camera,
-        float aspect,
-        const Light *lights,
-        int lightCount)
-    {
-        m_mat.bind();
-
-        m_mat.set("u_Model", transform.getMatrix());
-        m_mat.set("u_View", camera.getViewMatrix());
-        m_mat.set("u_Projection", camera.getProjectionMatrix(aspect));
-
-        m_mat.set("u_Color", m_mat.color);
-
-        m_mat.set("u_ViewPos", camera.position);
-        m_mat.set("u_Shininess", 4.0f);
-        m_mat.set("u_IsLightSource", m_isLightSource);
-
-        m_mat.set("lightCount", lightCount);
-
-        for (int i = 0; i < lightCount; ++i)
-        {
-            std::string index = std::to_string(i);
-
-            m_mat.set(
-                "lights[" + index + "].pos",
-                lights[i].position);
-
-            m_mat.set(
-                "lights[" + index + "].color",
-                lights[i].color);
-
-            m_mat.set(
-                "lights[" + index + "].intensity",
-                lights[i].intensity);
-        }
-
-        m_mesh.draw();
-    }
-
     void setColor(glm::vec3 color)
     {
-        m_mat.color = color;
+        m_mat.setProperty("u_Color", color);
     }
+
+    Neon::Material &getMaterial() { return m_mat; }
+    Neon::Mesh &getMesh() { return m_mesh; }
+    Neon::Transform &getTransform() { return transform; }
 
     Neon::Transform transform;
 

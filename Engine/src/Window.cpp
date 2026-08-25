@@ -142,7 +142,7 @@ namespace Neon
 
     float Window::getAspectRatio()
     {
-        return static_cast<float>(m_width) / static_cast<float>(m_height);
+        return static_cast<float>(m_framebufferWidth) / static_cast<float>(m_framebufferHeight);
     }
 
     int Window::getWidth()

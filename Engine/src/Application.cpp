@@ -4,7 +4,7 @@
 
 namespace Neon
 {
-    Application::Application() : m_input(m_eventBus), m_window(m_input, m_eventBus), m_time()
+    Application::Application() : m_input(m_eventBus), m_window(m_input, m_eventBus), m_time(), m_camera(), m_renderer(m_camera, m_window)
     {
     }
 

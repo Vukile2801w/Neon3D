@@ -24,6 +24,11 @@ namespace Neon
 
             slot++;
         }
+
+        for (const auto &[name, property] : m_properties)
+        {
+            setUniform(name, property);
+        }
     }
 
     void Material::setTexture(const std::string &name, Texture &texture)
@@ -31,46 +36,58 @@ namespace Neon
         m_textures.emplace_back(name, &texture);
     }
 
-    void Material::set(
+    void Material::setProperty(
         const std::string &name,
         MaterialProperty data)
     {
-        if (std::holds_alternative<bool>(data))
+        m_properties[name] = std::move(data);
+    }
+
+    MaterialProperty Material::getProperty(const std::string &name) const
+    {
+        return m_properties.at(name);
+    }
+
+    void Material::setUniform(
+        const std::string &name,
+        const MaterialProperty &property) const
+    {
+        if (std::holds_alternative<bool>(property))
         {
-            m_shader.setBool(name, std::get<bool>(data));
+            m_shader.setBool(name, std::get<bool>(property));
         }
-        else if (std::holds_alternative<int>(data))
+        else if (std::holds_alternative<int>(property))
         {
-            m_shader.setInt(name, std::get<int>(data));
+            m_shader.setInt(name, std::get<int>(property));
         }
-        else if (std::holds_alternative<unsigned int>(data))
+        else if (std::holds_alternative<unsigned int>(property))
         {
-            m_shader.setUInt(name, std::get<unsigned int>(data));
+            m_shader.setUInt(name, std::get<unsigned int>(property));
         }
-        else if (std::holds_alternative<float>(data))
+        else if (std::holds_alternative<float>(property))
         {
-            m_shader.setFloat(name, std::get<float>(data));
+            m_shader.setFloat(name, std::get<float>(property));
         }
-        else if (std::holds_alternative<glm::vec2>(data))
+        else if (std::holds_alternative<glm::vec2>(property))
         {
-            const auto &value = std::get<glm::vec2>(data);
+            const auto &value = std::get<glm::vec2>(property);
 
             m_shader.setVec2(name,
                              value.x,
                              value.y);
         }
-        else if (std::holds_alternative<glm::vec3>(data))
+        else if (std::holds_alternative<glm::vec3>(property))
         {
-            const auto &value = std::get<glm::vec3>(data);
+            const auto &value = std::get<glm::vec3>(property);
 
             m_shader.setVec3(name,
                              value.x,
                              value.y,
                              value.z);
         }
-        else if (std::holds_alternative<glm::vec4>(data))
+        else if (std::holds_alternative<glm::vec4>(property))
         {
-            const auto &value = std::get<glm::vec4>(data);
+            const auto &value = std::get<glm::vec4>(property);
 
             m_shader.setVec4(name,
                              value.x,
@@ -78,15 +95,15 @@ namespace Neon
                              value.z,
                              value.w);
         }
-        else if (std::holds_alternative<glm::mat3>(data))
+        else if (std::holds_alternative<glm::mat3>(property))
         {
-            const glm::mat3 &matrix = std::get<glm::mat3>(data);
+            const glm::mat3 &matrix = std::get<glm::mat3>(property);
 
             m_shader.setMat3(name, &matrix[0][0]);
         }
-        else if (std::holds_alternative<glm::mat4>(data))
+        else if (std::holds_alternative<glm::mat4>(property))
         {
-            const glm::mat4 &matrix = std::get<glm::mat4>(data);
+            const glm::mat4 &matrix = std::get<glm::mat4>(property);
 
             m_shader.setMat4(name, &matrix[0][0]);
         }

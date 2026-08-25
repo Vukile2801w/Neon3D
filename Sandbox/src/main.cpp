@@ -30,11 +30,12 @@ using Neon::TextureFilter;
 class Sandbox : public Neon::Application
 {
 public:
-    Sandbox() {}
+    Sandbox() : m_camera(getRenderer().getCamera()) {}
 
 protected:
     void onStart() override
     {
+
         m_camera.position.y = 1.3f;
         m_camera.FOV = 60;
 
@@ -52,11 +53,11 @@ protected:
             true);
         m_cubes[1].setColor({1.0f, 1.0f, 0.0f});
 
-        m_lights.push_back(
+        getRenderer().addLight(
             {m_cubes[0].transform.position,
              {1.0f, 1.0f, 1.0f},
              1.0f});
-        m_lights.push_back(
+        getRenderer().addLight(
             {m_cubes[1].transform.position,
              {1.0f, 1.0f, 0.0f},
              10.0f});
@@ -65,7 +66,7 @@ protected:
     void onUpdate(float dt) override
     {
         float moveSpeed = 5.0f;
-        float rotationSpeed = glm::radians(40.0f); // 90°/s
+        float rotationSpeed = glm::radians(90.0f); // 90°/s
 
         Input &input = getInput();
         EventBus &eventBus = getEventBus();
@@ -174,27 +175,23 @@ protected:
         m_cubes[1].transform.position =
             m_cubes[0].transform.position + orbit;
 
-        m_lights[1].position =
+        getRenderer().getLight(1).position =
             m_cubes[1].transform.position;
     }
 
     void onRender() override
     {
+        Neon::Renderer &renderer = getRenderer();
         for (auto &cube : m_cubes)
         {
-            cube.render(
-                m_camera,
-                getWindow().getAspectRatio(),
-                m_lights.data(),
-                m_lights.size());
+            renderer.draw(cube.getMesh(), cube.getMaterial(), cube.getTransform());
         }
     }
 
 private:
     std::vector<Cube> m_cubes;
-    std::vector<Light> m_lights;
 
-    Neon::Camera m_camera;
+    Neon::Camera &m_camera;
 };
 
 int main()

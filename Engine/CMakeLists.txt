@@ -12,6 +12,7 @@ add_library(Engine
     src/Time.cpp
     src/Input.cpp
     src/Application.cpp
+    src/Renderer.cpp
 
     # Mesh implementations
     src/Mesh/VertexArray.cpp
