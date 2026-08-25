@@ -138,7 +138,7 @@ namespace Neon
             "KeyHome",      // 50
             "KeyEnd",       // 51
             "KeyPageUp",    // 52
-            "KeyPageDOWN",  // 53
+            "KeyPageDown",  // 53
             "KeyF1",        // 54
             "KeyF2",        // 55
             "KeyF3",        // 56
@@ -173,13 +173,23 @@ namespace Neon
             MouseButtonCount
         };
         static constexpr std::array<const char *, MouseButtonCount> mouseButtonName = {
-            "MouseButtonUNKNOWN", // 0
-            "MouseButtonLEFT",    // 1
-            "MouseButtonRIGHT",   // 2
-            "MouseButtonMIDDLE",  // 3
-            "MOUSE_SCROLL_UP",    // 4
-            "MOUSE_SCROLL_DOWN"   // 5
+            "MouseButtonUnknown", // 0
+            "MouseButtonLeft",    // 1
+            "MouseButtonRight",   // 2
+            "MouseButtonMiddle",  // 3
+            "MouseButton4",       // 4
+            "MouseButton5"        // 5
         };
+
+        static const char *toString(MouseButton mouseButton)
+        {
+            return mouseButtonName[mouseButton];
+        }
+
+        static const char *toString(Key key)
+        {
+            return keyName[key];
+        }
 
         struct MouseButtonData
         {
@@ -195,6 +205,13 @@ namespace Neon
 
             glm::vec2 pos{0.0f};
             glm::vec2 scroll{0.0f};
+        };
+
+        enum class CursorMode
+        {
+            Normal,
+            Hidden,
+            Disabled
         };
 
         Input(EventBus &eventBus);
@@ -221,6 +238,9 @@ namespace Neon
         void onMouseButton(int button, int action, int mods);    // WARNING : Only engine internal use intended
         void onMouseScroll(double xOffset, double yOffset);      // WARNING : Only engine internal use intended
 
+        void setCursorMode(CursorMode mode) { m_cursorMode = mode; };
+        CursorMode getCursorMode() const { return m_cursorMode; };
+
     protected:
         std::array<KeyData, KeyCount> m_keyData;
         MouseStatus m_mouseStatus;
@@ -236,15 +256,9 @@ namespace Neon
         static MouseButton fromGLFWMouseButton(int button);
 
         EventBus &m_eventBus;
+
+        CursorMode m_cursorMode = CursorMode::Normal;
     };
-    inline std::ostream &operator<<(std::ostream &os, Input::Key key)
-    {
-        return os << Input::keyName[static_cast<int>(key)];
-    }
-    inline std::ostream &operator<<(std::ostream &os, Input::MouseButton key)
-    {
-        return os << Input::mouseButtonName[static_cast<int>(key)];
-    }
 }
 
 #endif // INPUT_HPP

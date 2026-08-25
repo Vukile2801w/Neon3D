@@ -18,7 +18,7 @@
 #include "Time.hpp"
 #include "Input.hpp"
 #include "Application.hpp"
-#include "Events/KeyPressedEvent.hpp"
+#include "Events/MouseButtonPressedEvent.hpp"
 
 // Enums
 using Neon::EventBus;
@@ -74,16 +74,23 @@ protected:
         // Movement
         // =====================
 
-        eventBus.subscribe<Neon::KeyPressedEvent>(
-            [](const Neon::KeyPressedEvent &event)
+        eventBus.subscribe<Neon::MouseButtonPressedEvent>(
+            [this](const Neon::MouseButtonPressedEvent &event)
             {
-                Input::Key key =
-                    static_cast<Input::Key>(event.getData().key);
+                Input::MouseButton btn = static_cast<Input::MouseButton>(event.getData().button);
 
-                std::ostringstream msg;
-                msg << "Key Pressed: " << key;
-
-                // Logging::Info(msg.str());
+                if (btn == Input::MouseButtonLeft)
+                {
+                    getInput().setCursorMode(Input::CursorMode::Hidden);
+                }
+                else if (btn == Input::MouseButtonRight)
+                {
+                    getInput().setCursorMode(Input::CursorMode::Disabled);
+                }
+                else if (btn == Input::MouseButton4)
+                {
+                    getInput().setCursorMode(Input::CursorMode::Normal);
+                }
             });
 
         if (input.isKeyDown(Input::Key::KeyW))

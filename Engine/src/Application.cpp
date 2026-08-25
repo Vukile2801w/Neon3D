@@ -23,6 +23,7 @@ namespace Neon
 
             m_time.beginFrame();
             m_input.handleInput();
+            m_window.update();
 
             onUpdate(m_time.getDeltaTime());
 

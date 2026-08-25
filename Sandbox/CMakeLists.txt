@@ -7,9 +7,12 @@ target_include_directories(Sandbox
         include
 )
 
-
 target_link_libraries(Sandbox
     PRIVATE
         Engine
+)
+
+target_compile_definitions(Sandbox
+    PRIVATE
         $<$<CONFIG:Debug>:NEON_DEBUG>
 )

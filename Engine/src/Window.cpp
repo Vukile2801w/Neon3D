@@ -1,5 +1,6 @@
 #include "Window.hpp"
 
+#include "Assert.hpp"
 #include "Input.hpp"
 #include "Logging.hpp"
 #include "Events/WindowClosedEvent.hpp"
@@ -113,6 +114,19 @@ namespace Neon
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
+    void Window::update()
+    {
+        if (m_input.getCursorMode() != m_cursorMode)
+        {
+            m_cursorMode = m_input.getCursorMode();
+
+            glfwSetInputMode(
+                m_window.get(),
+                GLFW_CURSOR,
+                toGlfwCursorMode(m_cursorMode));
+        }
+    }
+
     bool Window::shouldWindowsClose()
     {
         if (!m_window)
@@ -187,6 +201,28 @@ namespace Neon
             window->m_eventBus.emit(WindowFocusedEvent());
         else
             window->m_eventBus.emit(WindowLostFocusEvent());
+    }
+
+    int Window::toGlfwCursorMode(Input::CursorMode mode)
+    {
+        int glfwMode;
+        switch (mode)
+        {
+        case Input::CursorMode::Normal:
+            glfwMode = GLFW_CURSOR_NORMAL;
+            break;
+        case Input::CursorMode::Hidden:
+            glfwMode = GLFW_CURSOR_HIDDEN;
+            break;
+        case Input::CursorMode::Disabled:
+            glfwMode = GLFW_CURSOR_DISABLED;
+            break;
+        default:
+            NEON_ASSERT(false, "Invalid Cursor mode passed");
+            break;
+        }
+
+        return glfwMode;
     }
 
 } // namespace Neon

@@ -17,6 +17,8 @@ namespace Neon
         Window(Input &input, EventBus &eventBus);
         ~Window();
 
+        void update();
+
         void render();
         bool shouldWindowsClose();
 
@@ -33,6 +35,8 @@ namespace Neon
         static void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
         std::unique_ptr<GLFWwindow, GLFWWindowDeleter> m_window;
+
+        int toGlfwCursorMode(Input::CursorMode mode);
 
         // ==== EVENTS === //
 
@@ -52,6 +56,8 @@ namespace Neon
 
         int m_framebufferWidth = 800;
         int m_framebufferHeight = 600;
+
+        Input::CursorMode m_cursorMode;
 
         Input &m_input;
         EventBus &m_eventBus;
