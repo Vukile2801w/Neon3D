@@ -12,36 +12,44 @@ namespace Neon
     {
     }
 
-    void Renderer::draw(Mesh &mesh, Material &material, Transform &transform)
+    void Renderer::drawGameObject(GameObject &gameObject)
     {
-        material.bind();
+        NEON_ASSERT(gameObject.material == nullptr, "Passed gameObject without material");
+        NEON_ASSERT(gameObject.mesh == nullptr, "Passed gameObject without mesh");
 
-        material.setUniform("u_Model", transform.getMatrix());
-        material.setUniform("u_View", m_camera.getViewMatrix());
-        material.setUniform("u_Projection", m_camera.getProjectionMatrix(m_window.getAspectRatio()));
-        material.setUniform("u_ViewPos", m_camera.position);
+        gameObject.material->bind();
+
+        gameObject.material->setUniform("u_Model", gameObject.getWorldMatrix());
+        gameObject.material->setUniform("u_View", m_camera.getViewMatrix());
+        gameObject.material->setUniform("u_Projection", m_camera.getProjectionMatrix(m_window.getAspectRatio()));
+        gameObject.material->setUniform("u_ViewPos", m_camera.position);
 
         int lightCount = static_cast<int>(m_lights.size());
-        material.setUniform("lightCount", lightCount);
+        gameObject.material->setUniform("lightCount", lightCount);
 
         for (int i = 0; i < lightCount; ++i)
         {
-            std::string index = std::to_string(i);
-
-            material.setUniform(
-                "lights[" + index + "].pos",
-                m_lights[i].position);
-
-            material.setUniform(
-                "lights[" + index + "].color",
-                m_lights[i].color);
-
-            material.setUniform(
-                "lights[" + index + "].intensity",
-                m_lights[i].intensity);
+            gameObject.material->setUniform("lights", MaterialLight{&m_lights[i], i});
         }
 
-        mesh.draw();
+        gameObject.mesh->draw();
+    }
+
+    void Renderer::draw(GameObject &gameObject, bool warnIfNotRenderable)
+    {
+        if (gameObject.mesh && gameObject.material)
+            drawGameObject(gameObject);
+        else if (warnIfNotRenderable)
+            Neon::Logging::Warning("Manualy passed non-renderable GameObject (null mesh or null material)");
+    }
+
+    void Renderer::draw(Scene &scene)
+    {
+        for (const auto &gameObject : scene.getGameObjects())
+        {
+            if (gameObject)
+                draw(*gameObject);
+        }
     }
 
     void Renderer::addLight(const Light &light)

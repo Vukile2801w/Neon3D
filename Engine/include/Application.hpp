@@ -18,12 +18,6 @@ namespace Neon
 
         void run();
 
-    protected:
-        virtual void onStart() {};
-        virtual void onUpdate(float dt) {};
-        virtual void onRender() {};
-        virtual void onEnd() {};
-
         Window &getWindow() { return m_window; }
         const Window &getWindow() const { return m_window; }
 
@@ -38,6 +32,12 @@ namespace Neon
 
         Renderer &getRenderer() { return m_renderer; }
         const Renderer &getRenderer() const { return m_renderer; }
+
+    protected:
+        virtual void onStart() {};
+        virtual void onUpdate(float dt) {};
+        virtual void onRender() {};
+        virtual void onEnd() {};
 
     private:
         Renderer m_renderer;

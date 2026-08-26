@@ -87,7 +87,7 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] Move camera/view/projection uniform-setting out of `Sandbox/main.cpp` and into `Renderer::beginScene`, so materials don't each need `set("u_View", ...)` boilerplate
 - [x] Add a basic `RenderAPI`-style seam even if OpenGL is the only backend for now — i.e., keep raw `gl*` calls confined to `.cpp` files (already mostly true) and never leak `GLenum`/GL types into public headers (already mostly true — verify and lock this in with a lint/review pass)
 - [ ] Framebuffer/render-target abstraction (needed later for post-processing, shadow maps, editor viewport) — **not urgent yet**, defer until Phase 9 unless Phase 8 (editor viewport) needs it sooner
-- [ ] Basic lighting is currently hardcoded per-shader in `Sandbox/shaders/shader.frag` (e.g. the recent back-face lighting-skip fix) — extract common lighting uniform names/conventions (`u_ViewPos`, light structs) into a documented Material/Shader convention so future shaders are consistent
+- [x] Basic lighting is currently hardcoded per-shader in `Sandbox/shaders/shader.frag` (e.g. the recent back-face lighting-skip fix) — extract common lighting uniform names/conventions (`u_ViewPos`, light structs) into a documented Material/Shader convention so future shaders are consistent
 - [ ] Render-pass concept (opaque pass, transparent pass, etc.) — defer to Phase 9, not needed for a single-mesh sandbox today
 
 **Definition of Done:** Sandbox code calls `renderer.submit(...)` per object instead of manually binding materials, setting camera uniforms, and calling `mesh.draw()` itself.
@@ -99,9 +99,9 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 **Why it matters:** Nothing exists here yet — no entity concept, no hierarchy, no scene container. This blocks any real game content.
 **Dependencies:** Phase 2 (Renderer must exist to iterate a scene and submit draw calls).
 
-- [ ] Decide ECS vs. simple scene-graph vs. hybrid — **recommendation: start with a simple `GameObject { Transform, Mesh*, Material* }` list**, not a full ECS. A full ECS is over-engineering at this project size; revisit only if object count/perf demands it
-- [ ] `Scene` class: owns a list of objects, exposes `addObject`/`removeObject`, iterates for update + render submission
-- [ ] Optional parent/child transform hierarchy — **note:** `Transform::getMatrix()` currently has no parent concept at all; adding hierarchy means either a `Transform* parent` pointer or moving hierarchy into `Scene`/`GameObject` instead of into `Transform` itself (keep `Transform` a pure local-space math object)
+- [x] Decide ECS vs. simple scene-graph vs. hybrid — **recommendation: start with a simple `GameObject { Transform, Mesh*, Material* }` list**, not a full ECS. A full ECS is over-engineering at this project size; revisit only if object count/perf demands it
+- [x] `Scene` class: owns a list of objects, exposes `addObject`/`removeObject`, iterates for update + render submission
+- [x] Optional parent/child transform hierarchy — **note:** `Transform::getMatrix()` currently has no parent concept at all; adding hierarchy means either a `Transform* parent` pointer or moving hierarchy into `Scene`/`GameObject` instead of into `Transform` itself (keep `Transform` a pure local-space math object)
 - [ ] Basic scene serialization (start with a simple custom text/JSON format — do not build a generic reflection system yet)
 - [ ] Scene loading/unloading lifecycle hooks
 

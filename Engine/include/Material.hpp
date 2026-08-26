@@ -10,9 +10,16 @@
 #include "Texture.hpp"
 #include "Transform.hpp"
 #include "Camera.hpp"
+#include "Light.hpp"
 
 namespace Neon
 {
+
+    struct MaterialLight
+    {
+        Light *light;
+        int index;
+    };
     using MaterialProperty = std::variant<
         bool,
         int,
@@ -22,7 +29,8 @@ namespace Neon
         glm::vec3,
         glm::vec4,
         glm::mat3,
-        glm::mat4>;
+        glm::mat4,
+        MaterialLight>;
     class Material
     {
     public:

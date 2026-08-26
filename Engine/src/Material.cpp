@@ -107,6 +107,22 @@ namespace Neon
 
             m_shader.setMat4(name, &matrix[0][0]);
         }
+        else if (std::holds_alternative<MaterialLight>(property))
+        {
+            const MaterialLight light = std::get<MaterialLight>(property);
+
+            setUniform(
+                name + "[" + std::to_string(light.index) + "].pos",
+                light.light->position);
+
+            setUniform(
+                name + "[" + std::to_string(light.index) + "].color",
+                light.light->color);
+
+            setUniform(
+                name + "[" + std::to_string(light.index) + "].intensity",
+                light.light->intensity);
+        }
         else
         {
             NEON_ASSERT(false, "Unhandled MaterialProperty type in Material::set()");

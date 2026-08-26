@@ -31,6 +31,11 @@ add_library(Engine
     src/Events/WindowResizedEvent.cpp
     src/Events/WindowFocusedEvent.cpp
     src/Events/WindowLostFocusEvent.cpp
+
+    # Scene
+    src/Scene/Behavior.cpp
+    src/Scene/GameObject.cpp
+    src/Scene/Scene.cpp
 )
 
 

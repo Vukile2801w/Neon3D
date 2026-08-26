@@ -14,6 +14,7 @@ namespace Neon
 
     void Application::run()
     {
+        Logging::Init("Neon");
         Logging::Info("Application starting");
         onStart();
         Logging::Info("onStart finished");

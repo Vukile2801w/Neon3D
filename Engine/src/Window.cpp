@@ -72,6 +72,7 @@ namespace Neon
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
         glFrontFace(GL_CCW);
+        glfwSwapInterval(0);
 
         glfwSetKeyCallback(m_window.get(), keysCallback);
         glfwSetCursorPosCallback(m_window.get(), mouseMovmentCallback);
@@ -142,6 +143,12 @@ namespace Neon
 
     float Window::getAspectRatio()
     {
+        if (m_framebufferWidth == 0 ||
+            m_framebufferHeight == 0)
+        {
+            return 1.0f;
+        }
+
         return static_cast<float>(m_framebufferWidth) / static_cast<float>(m_framebufferHeight);
     }
 
