@@ -6,11 +6,12 @@
 
 #include "glm.hpp"
 
-#include "Shader.hpp"
-#include "Texture.hpp"
+#include "Rendering/Shader.hpp"
+#include "Rendering/Texture.hpp"
+#include "Rendering/Light.hpp"
+
 #include "Transform.hpp"
 #include "Camera.hpp"
-#include "Light.hpp"
 
 namespace Neon
 {

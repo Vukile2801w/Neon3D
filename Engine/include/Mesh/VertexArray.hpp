@@ -1,8 +1,8 @@
 #ifndef NEON_VERTEX_ARRAY
 #define NEON_VERTEX_ARRAY
 
+#include "Rendering/Shader.hpp"
 #include "VertexBuffer.hpp"
-#include "Shader.hpp"
 
 namespace Neon
 {

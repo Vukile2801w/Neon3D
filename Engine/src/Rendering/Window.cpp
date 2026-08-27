@@ -1,4 +1,4 @@
-#include "Window.hpp"
+#include "Rendering/Window.hpp"
 
 #include "Assert.hpp"
 #include "Input.hpp"

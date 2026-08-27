@@ -1,15 +1,16 @@
 #ifndef SANDBOX_CUBE
 #define SANDBOX_CUBE
 
+#include "Rendering/Material.hpp"
+#include "Rendering/Texture.hpp"
+#include "Rendering/Shader.hpp"
+
 #include "Scene/GameObject.hpp"
 #include "Scene/Behavior.hpp"
 
 #include "Application.hpp"
-#include "Logging.hpp"
-#include "Material.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
 #include "Mesh/Mesh.hpp"
+#include "Logging.hpp"
 
 struct Light
 {

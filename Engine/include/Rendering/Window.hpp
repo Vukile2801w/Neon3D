@@ -3,8 +3,8 @@
 
 #include <memory>
 
-#include "Input.hpp"
 #include "Events/EventBus.hpp"
+#include "Input.hpp"
 
 struct GLFWwindow;
 

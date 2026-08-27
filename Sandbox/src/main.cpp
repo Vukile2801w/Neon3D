@@ -7,25 +7,26 @@
 
 #include "gtc/matrix_transform.hpp"
 
+#include "Events/MouseButtonPressedEvent.hpp"
+#include "Events/EventBus.hpp"
+
+#include "Rendering/Material.hpp"
+#include "Rendering/Renderer.hpp"
+#include "Rendering/Shader.hpp"
+#include "Rendering/Texture.hpp"
+#include "Rendering/Window.hpp"
+
 #include "Scene/Scene.hpp"
 #include "Scene/Scene.hpp"
 
 #include "Mesh/Mesh.hpp"
 
-#include "Events/EventBus.hpp"
-#include "Events/MouseButtonPressedEvent.hpp"
-
 #include "Application.hpp"
 #include "Camera.hpp"
 #include "Input.hpp"
 #include "Logging.hpp"
-#include "Material.hpp"
-#include "Renderer.hpp"
-#include "Shader.hpp"
-#include "Texture.hpp"
 #include "Time.hpp"
 #include "Transform.hpp"
-#include "Window.hpp"
 
 // Enums
 using Neon::EventBus;

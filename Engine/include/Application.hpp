@@ -1,12 +1,14 @@
 #ifndef NEON_APPLICATION
 #define NEON_APPLICATION
 
-#include "Window.hpp"
-#include "Time.hpp"
-#include "Input.hpp"
+#include "Rendering/Renderer.hpp"
+#include "Rendering/Window.hpp"
+
 #include "Events/EventBus.hpp"
-#include "Renderer.hpp"
+
 #include "Camera.hpp"
+#include "Input.hpp"
+#include "Time.hpp"
 
 namespace Neon
 {

@@ -1,4 +1,4 @@
-#include "Texture.hpp"
+#include "Rendering/Texture.hpp"
 
 #include "Logging.hpp"
 #include "Assert.hpp"

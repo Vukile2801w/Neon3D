@@ -3,9 +3,9 @@
 #include <initializer_list>
 #include <cstdlib>
 
+#include "Rendering/Shader.hpp"
 #include "Assert.hpp"
 #include "Logging.hpp"
-#include "Shader.hpp"
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"

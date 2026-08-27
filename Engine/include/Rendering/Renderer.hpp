@@ -1,14 +1,17 @@
 #ifndef NEON_RENDERER
 #define NEON_RENDERER
 
+#include "Rendering/Material.hpp"
+#include "Rendering/Light.hpp"
+
+#include "Scene/GameObject.hpp"
+#include "Scene/Scene.hpp"
+
 #include "Mesh/Mesh.hpp"
-#include "Material.hpp"
+
 #include "Transform.hpp"
 #include "Camera.hpp"
 #include "Window.hpp"
-#include "Light.hpp"
-#include "Scene/GameObject.hpp"
-#include "Scene/Scene.hpp"
 
 #include <memory>
 

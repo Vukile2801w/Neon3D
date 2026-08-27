@@ -4,10 +4,10 @@
 #include <memory>
 #include <vector>
 
-#include "Transform.hpp"
-#include "Mesh/Mesh.hpp"
-#include "Material.hpp"
+#include "Rendering/Material.hpp"
 #include "Scene/Behavior.hpp"
+#include "Mesh/Mesh.hpp"
+#include "Transform.hpp"
 
 #include "glm.hpp"
 

@@ -2,24 +2,19 @@ add_subdirectory(lib/glad)
 
 
 add_library(Engine
-    src/Window.cpp
-    src/Shader.cpp
-    src/Texture.cpp
-    src/Material.cpp
     src/Logging.cpp
     src/Transform.cpp
     src/Camera.cpp
     src/Time.cpp
     src/Input.cpp
     src/Application.cpp
-    src/Renderer.cpp
-
+    
     # Mesh implementations
     src/Mesh/VertexArray.cpp
     src/Mesh/VertexBuffer.cpp
     src/Mesh/IndexBuffer.cpp
     src/Mesh/Mesh.cpp
-
+    
     # Events
     src/Events/MouseMovedEvent.cpp
     src/Events/MouseButtonPressedEvent.cpp
@@ -31,11 +26,19 @@ add_library(Engine
     src/Events/WindowResizedEvent.cpp
     src/Events/WindowFocusedEvent.cpp
     src/Events/WindowLostFocusEvent.cpp
-
+    
     # Scene
     src/Scene/Behavior.cpp
     src/Scene/GameObject.cpp
     src/Scene/Scene.cpp
+    
+    # Rendering
+    src/Rendering/Renderer.cpp
+    src/Rendering/Shader.cpp
+    src/Rendering/Material.cpp
+    src/Rendering/Window.cpp
+    src/Rendering/Texture.cpp
+
 )
 
 
