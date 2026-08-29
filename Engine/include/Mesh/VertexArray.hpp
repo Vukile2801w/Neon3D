@@ -1,6 +1,8 @@
 #ifndef NEON_VERTEX_ARRAY
 #define NEON_VERTEX_ARRAY
 
+#include <vector>
+
 #include "Rendering/Shader.hpp"
 #include "VertexBuffer.hpp"
 
@@ -23,7 +25,7 @@ namespace Neon
 
         void addBuffer(
             const VertexBuffer &buffer,
-            std::initializer_list<BufferElement> elements);
+            const std::vector<BufferElement> &elements);
 
     private:
         unsigned int m_id;

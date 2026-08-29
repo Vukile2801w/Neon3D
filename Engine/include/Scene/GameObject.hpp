@@ -21,8 +21,11 @@ namespace Neon
     // Behavior, per the "simple GameObject list" decision over a full ECS.
     //
     // Ownership:
-    //   - Mesh*/Material* are non-owning - borrowed from wherever they're loaded
-    //     (there's no resource manager yet, see CONTRIBUTING §10).
+    //   - Mesh is a Ref<Mesh> (shared ownership) - GameObjects can share the same
+    //     underlying Mesh without worrying about which one "owns" it.
+    //   - Material* is non-owning - borrowed from wherever it's constructed
+    //     (there's no resource manager wiring Material lifetime yet, see
+    //     CONTRIBUTING §10).
     //   - Behavior is owned via std::unique_ptr (single owner: this GameObject).
     //   - parent/children are non-owning raw pointers - they describe the hierarchy,
     //     they don't control lifetime. Every GameObject's actual lifetime is owned by
@@ -39,11 +42,16 @@ namespace Neon
         explicit GameObject(Scene *scene, GameObject *parent = nullptr);
         ~GameObject();
 
+        virtual std::string getTypeName()
+        {
+            return "GameObject";
+        }
+
         // Local-space transform, relative to the parent (or to world space, for a
         // top-level object with no parent). Freely mutable, like Camera/Transform's own
         // convention - see getWorldMatrix() below for why that means no matrix caching.
         Transform transform;
-        Mesh *mesh{nullptr};
+        Ref<Mesh> mesh{nullptr};
         Material *material{nullptr};
 
         template <typename T, typename... Args>

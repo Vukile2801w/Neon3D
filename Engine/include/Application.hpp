@@ -1,6 +1,8 @@
 #ifndef NEON_APPLICATION
 #define NEON_APPLICATION
 
+#include "Assets/AssetManager.hpp"
+
 #include "Rendering/Renderer.hpp"
 #include "Rendering/Window.hpp"
 
@@ -35,6 +37,9 @@ namespace Neon
         Renderer &getRenderer() { return m_renderer; }
         const Renderer &getRenderer() const { return m_renderer; }
 
+        AssetManager &getAssetManager() { return m_assetManager; }
+        const AssetManager &getAssetManager() const { return m_assetManager; }
+
     protected:
         virtual void onStart() {};
         virtual void onUpdate(float dt) {};
@@ -48,6 +53,7 @@ namespace Neon
         Camera m_camera;
         Input m_input;
         Time m_time;
+        AssetManager m_assetManager;
     };
 }
 

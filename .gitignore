@@ -37,3 +37,8 @@
 # Custom
 build/
 .aider*
+*.zip
+
+# Temp
+SceneSerializer.*
+nlohmann/

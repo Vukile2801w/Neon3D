@@ -80,7 +80,7 @@ namespace Neon
 
     void VertexArray::addBuffer(
         const VertexBuffer &buffer,
-        std::initializer_list<BufferElement> elements)
+        const std::vector<BufferElement> &elements)
     {
         if (elements.size() == 0)
         {

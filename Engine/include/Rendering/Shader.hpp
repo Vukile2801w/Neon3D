@@ -1,6 +1,11 @@
 #ifndef NEON_SHADER
 #define NEON_SHADER
+
 #include <filesystem>
+
+#include "Rendering/ShaderStage.hpp"
+#include "Assets/AssetLoader.hpp"
+#include "Ref.hpp"
 
 namespace Neon
 {
@@ -12,18 +17,23 @@ namespace Neon
         Double
     };
 
+    // The linked, bindable GL program - built from a vertex ShaderStage and a
+    // fragment ShaderStage (see ShaderStage.hpp for why a program can't be loaded
+    // from a single path). Not itself an AssetLoader<T> target for that reason;
+    // build one directly once both stages are loaded/available:
+    //
+    //   Ref<ShaderStage> vertex   = assetManager.load<ShaderStage>("foo.vert");
+    //   Ref<ShaderStage> fragment = assetManager.load<ShaderStage>("foo.frag");
+    //   Ref<Shader> shader        = std::make_shared<Shader>(vertex, fragment);
     class Shader
     {
     public:
-        enum class ShaderType
-        {
-            FragmentShader,
-            VertexShader
-        };
-
+        // Pass a ShaderStage constructed with an empty path (see ShaderStage's own
+        // constructor) for either argument to fall back to the built-in default
+        // vertex/fragment source, matching the previous "pass empty path" behavior.
         Shader(
-            const std::filesystem::path &vertex,
-            const std::filesystem::path &fragment); // Pass empty path string for default shader
+            Ref<ShaderStage> vertex,
+            Ref<ShaderStage> fragment);
 
         void bind() const;
         static void unbind();
@@ -54,11 +64,22 @@ namespace Neon
     private:
         int getUniformLocation(const std::string &name) const;
 
-        const char *readFile(const std::filesystem::path &path);
-        unsigned int compileShader(const std::filesystem::path &path, Shader::ShaderType type);
         unsigned int linkProgram(unsigned int vertexShader, unsigned int fragmentShader);
 
         unsigned int m_program{};
+    };
+
+    template <>
+    struct AssetLoader<Shader>
+    {
+        static Ref<Shader> load(
+            const Ref<ShaderStage> &vertex,
+            const Ref<ShaderStage> &fragment)
+        {
+            return std::make_shared<Shader>(
+                vertex,
+                fragment);
+        }
     };
 }
 

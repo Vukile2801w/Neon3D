@@ -12,6 +12,7 @@
 
 #include "Transform.hpp"
 #include "Camera.hpp"
+#include "Ref.hpp"
 
 namespace Neon
 {
@@ -35,7 +36,7 @@ namespace Neon
     class Material
     {
     public:
-        explicit Material(Shader &shader);
+        explicit Material(Ref<Shader> shader);
 
         void bind() const;
 
@@ -51,15 +52,15 @@ namespace Neon
 
         void setTexture(
             const std::string &name,
-            Texture &texture);
+            Ref<Texture> texture);
 
     private:
-        Shader &m_shader;
+        Ref<Shader> m_shader;
 
         struct TextureSlot
         {
             std::string name;
-            Texture *texture;
+            Ref<Texture> texture;
         };
 
         std::vector<TextureSlot> m_textures;

@@ -115,11 +115,11 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 **Dependencies:** Phase 2 (needs `Shader`/`Texture`/`Mesh` to exist, which they do) — can proceed in parallel with Phase 3.
 
 - [x] `Texture` and `Shader` are already RAII-correct individually (own their GL handles, clean up in destructors)
-- [ ] `ResourceManager`/`AssetManager`: load-by-path with caching so the same texture/shader isn't loaded twice
-- [ ] Reference counting or handle-based access (`Ref<Texture>` style) instead of raw ownership by application code
-- [ ] Model/mesh loading from a real file format (currently `Mesh` only takes raw vertex/index arrays hardcoded in `Sandbox/main.cpp` — no `.obj`/`.gltf` loader exists at all)
+- [x] `ResourceManager`/`AssetManager`: load-by-path with caching so the same texture/shader isn't loaded twice
+- [x] Reference counting or handle-based access (`Ref<Texture>` style) instead of raw ownership by application code
+- [x] Model/mesh loading from a real file format (currently `Mesh` only takes raw vertex/index arrays hardcoded in `Sandbox/main.cpp` — no `.obj`/`.gltf` loader exists at all)
 - [ ] Shader hot-reload (watch file, recompile on change) — quality-of-life, not a blocker for anything else
-- [ ] Texture/asset caching keyed by path + load parameters (filter/wrap settings)
+- [x] Texture/asset caching keyed by path + load parameters (filter/wrap settings)
 
 **Definition of Done:** Loading the same texture or shader twice from two different objects returns a shared resource, and a basic 3D model file can be loaded into a `Mesh` without hand-writing vertex arrays.
 

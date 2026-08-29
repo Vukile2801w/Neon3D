@@ -1,79 +1,11 @@
 #ifndef SANDBOX_CUBE
 #define SANDBOX_CUBE
 
-#include "Rendering/Material.hpp"
-#include "Rendering/Texture.hpp"
-#include "Rendering/Shader.hpp"
+#include "Neon.hpp"
 
-#include "Scene/GameObject.hpp"
-#include "Scene/Behavior.hpp"
+using Neon::Ref;
 
-#include "Application.hpp"
-#include "Mesh/Mesh.hpp"
-#include "Logging.hpp"
-
-struct Light
-{
-    glm::vec3 position;
-    glm::vec3 color;
-    float intensity;
-};
-
-float cubeVertices[] = {
-    // Front (+Z)
-    -0.5f, -0.5f, 0.5f, 0, 0, 1, 0, 0, 1, 0, 0,
-    0.5f, -0.5f, 0.5f, 0, 0, 1, 1, 0, 1, 0, 0,
-    0.5f, 0.5f, 0.5f, 0, 0, 1, 1, 1, 1, 0, 0,
-    -0.5f, 0.5f, 0.5f, 0, 0, 1, 0, 1, 1, 0, 0,
-
-    // Back (-Z)
-    -0.5f, -0.5f, -0.5f, 0, 0, -1, 1, 0, -1, 0, 0,
-    -0.5f, 0.5f, -0.5f, 0, 0, -1, 1, 1, -1, 0, 0,
-    0.5f, 0.5f, -0.5f, 0, 0, -1, 0, 1, -1, 0, 0,
-    0.5f, -0.5f, -0.5f, 0, 0, -1, 0, 0, -1, 0, 0,
-
-    // Left (-X)
-    -0.5f, -0.5f, -0.5f, -1, 0, 0, 0, 0, 0, 0, 1,
-    -0.5f, -0.5f, 0.5f, -1, 0, 0, 1, 0, 0, 0, 1,
-    -0.5f, 0.5f, 0.5f, -1, 0, 0, 1, 1, 0, 0, 1,
-    -0.5f, 0.5f, -0.5f, -1, 0, 0, 0, 1, 0, 0, 1,
-
-    // Right (+X)
-    0.5f, -0.5f, 0.5f, 1, 0, 0, 0, 0, 0, 0, -1,
-    0.5f, -0.5f, -0.5f, 1, 0, 0, 1, 0, 0, 0, -1,
-    0.5f, 0.5f, -0.5f, 1, 0, 0, 1, 1, 0, 0, -1,
-    0.5f, 0.5f, 0.5f, 1, 0, 0, 0, 1, 0, 0, -1,
-
-    // Top (+Y)
-    -0.5f, 0.5f, 0.5f, 0, 1, 0, 0, 0, 1, 0, 0,
-    0.5f, 0.5f, 0.5f, 0, 1, 0, 1, 0, 1, 0, 0,
-    0.5f, 0.5f, -0.5f, 0, 1, 0, 1, 1, 1, 0, 0,
-    -0.5f, 0.5f, -0.5f, 0, 1, 0, 0, 1, 1, 0, 0,
-
-    // Bottom (-Y)
-    -0.5f, -0.5f, -0.5f, 0, -1, 0, 0, 0, 1, 0, 0,
-    0.5f, -0.5f, -0.5f, 0, -1, 0, 1, 0, 1, 0, 0,
-    0.5f, -0.5f, 0.5f, 0, -1, 0, 1, 1, 1, 0, 0,
-    -0.5f, -0.5f, 0.5f, 0, -1, 0, 0, 1, 1, 0, 0};
-
-unsigned int cubeIndices[] = {
-    0, 1, 2,
-    2, 3, 0,
-
-    4, 5, 6,
-    6, 7, 4,
-
-    8, 9, 10,
-    10, 11, 8,
-
-    12, 13, 14,
-    14, 15, 12,
-
-    16, 17, 18,
-    18, 19, 16,
-
-    20, 21, 22,
-    22, 23, 20};
+#include <memory>
 
 class CubeBehavior : public Neon::Behavior
 {
@@ -107,24 +39,41 @@ class Cube : public Neon::GameObject
 {
 
 public:
+    Ref<Neon::Shader> helper(Neon::AssetManager &assetManager)
+    {
+        Ref<Neon::ShaderStage> vert =
+            assetManager.load<Neon::ShaderStage>(
+                "Sandbox/assets/shaders/shader.vert");
+
+        Ref<Neon::ShaderStage> frag =
+            assetManager.load<Neon::ShaderStage>(
+                "Sandbox/assets/shaders/shader.frag");
+
+        Ref<Neon::Shader> shader =
+            assetManager.load(vert, frag);
+
+        return shader;
+    }
+
     Cube(
         Neon::Scene *scene,
         GameObject *parent,
         glm::vec3 pos,
         glm::vec3 scale,
+        Neon::AssetManager &assetManager,
         bool isLightSource)
         : Neon::GameObject(scene, parent),
-          m_shader(
-              "Sandbox\\assets\\shaders\\shader.vert",
-              "Sandbox\\assets\\shaders\\shader.frag"),
+          m_shader(helper(assetManager)),
           m_mat(m_shader),
-          m_texture("Sandbox\\assets\\brick.jpg"),
-          m_normalMap("Sandbox\\assets\\brickNormal.png")
+          m_texture(assetManager.load<Neon::Texture>("Sandbox\\assets\\brick.jpg")),
+          m_normalMap(assetManager.load<Neon::Texture>("Sandbox\\assets\\brickNormal.png"))
     {
+
         transform.position = pos;
         transform.scale = scale;
 
-        mesh = &getCubeMesh();
+        mesh = assetManager.load<Neon::Mesh>("Sandbox\\assets\\cube.obj");
+
         material = &m_mat;
 
         m_mat.setTexture("T_Color", m_texture);
@@ -137,32 +86,22 @@ public:
             setBehavior<CubeBehavior>();
     }
 
+    std::string getTypeName() override
+    {
+        return "Cube";
+    }
+
     void setColor(glm::vec3 color)
     {
         m_mat.setProperty("u_Color", color);
     }
 
 private:
-    Neon::Shader m_shader;
+    Ref<Neon::Shader> m_shader;
     Neon::Material m_mat;
 
-    Neon::Texture m_texture;
-    Neon::Texture m_normalMap;
-
-    static Neon::Mesh &getCubeMesh()
-    {
-        static Neon::Mesh mesh(
-            cubeVertices,
-            sizeof(cubeVertices),
-            cubeIndices,
-            sizeof(cubeIndices),
-            {{3, Neon::ShaderDataType::Float},
-             {3, Neon::ShaderDataType::Float},
-             {2, Neon::ShaderDataType::Float},
-             {3, Neon::ShaderDataType::Float}});
-
-        return mesh;
-    }
+    Ref<Neon::Texture> m_texture;
+    Ref<Neon::Texture> m_normalMap;
 };
 
 #endif

@@ -34,7 +34,7 @@ namespace Neon
         size_t vertexSize,
         const unsigned int *indices,
         size_t indexSize,
-        std::initializer_list<BufferElement> layout)
+        const std::vector<BufferElement> &layout)
         : m_vertexBuffer(
               vertices,
               validateVertexSize(vertexSize, vertices)),

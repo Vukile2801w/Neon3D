@@ -3,32 +3,13 @@
 #include <sstream>
 #include <random>
 
-#include "Cube.hpp"
-
+#include "Neon.hpp"
 #include "gtc/matrix_transform.hpp"
 
-#include "Events/MouseButtonPressedEvent.hpp"
-#include "Events/EventBus.hpp"
-
-#include "Rendering/Material.hpp"
-#include "Rendering/Renderer.hpp"
-#include "Rendering/Shader.hpp"
-#include "Rendering/Texture.hpp"
-#include "Rendering/Window.hpp"
-
-#include "Scene/Scene.hpp"
-#include "Scene/Scene.hpp"
-
-#include "Mesh/Mesh.hpp"
-
-#include "Application.hpp"
-#include "Camera.hpp"
-#include "Input.hpp"
-#include "Logging.hpp"
-#include "Time.hpp"
-#include "Transform.hpp"
+#include "Cube.hpp"
 
 // Enums
+using Neon::AssetManager;
 using Neon::EventBus;
 using Neon::Input;
 using Neon::Logging;
@@ -46,28 +27,19 @@ public:
 protected:
     void onStart() override
     {
+        EventBus &eventBus = getEventBus();
+        AssetManager &assetManager = getAssetManager();
+
         m_camera.position.y = 1.3f;
         m_camera.FOV = 60;
 
-        m_cube = m_scene.createGameObject<Cube>(
-            nullptr,
-            glm::vec3(0.0f, 0.0f, -1.0f),
-            glm::vec3(1.0f),
-            false);
-
-        Logging::level = LoggingLevel::Warning;
-        spawnCubes(50);
-        Logging::level = LoggingLevel::Info;
-
-        getRenderer().addLight(
-            {m_cube->transform.position,
-             {1.0f, 1.0f, 1.0f},
-             1.0f});
+        spawnCubes(121);
 
         m_lightCube = m_scene.createGameObject<Cube>(
             nullptr,
             glm::vec3(-5.0f, 10.0f, -1.0f),
             glm::vec3(0.3f, 0.3f, 0.3f),
+            assetManager,
             true);
         m_lightCube->setColor({1.0f, 1.0f, 0.0f});
 
@@ -75,6 +47,42 @@ protected:
             {m_lightCube->transform.position,
              {1.0f, 1.0f, 1.0f},
              3.0f});
+        eventBus.subscribe<Neon::MouseMovedEvent>([this](const Neon::MouseMovedEvent &event)
+                                                  { inputCallback(event); });
+
+        eventBus.subscribe<Neon::KeyPressedEvent>([this](const Neon::KeyPressedEvent &event)
+                                                  {
+            if (event.getData().key == Input::KeyAlt)
+            getInput().setCursorMode(Input::CursorMode::Normal); });
+
+        eventBus.subscribe<Neon::KeyReleasedEvent>([this](const Neon::KeyReleasedEvent &event)
+                                                   {
+            if (event.getData().key == Input::KeyAlt)
+            getInput().setCursorMode(Input::CursorMode::Disabled); });
+
+        getInput().setCursorMode(Input::CursorMode::Disabled);
+    }
+
+    void inputCallback(const Neon::MouseMovedEvent &event)
+    {
+        if (getInput().getCursorMode() == Input::CursorMode::Normal)
+            return;
+
+        const auto &data = event.getData();
+
+        // Pitch (X) - clamp [-90°, +90°]
+        m_camera.rotation.x -=
+            data.delta.y * getTime().getDeltaTime();
+
+        m_camera.rotation.x =
+            glm::clamp(
+                m_camera.rotation.x,
+                -glm::half_pi<float>(),
+                glm::half_pi<float>());
+
+        // Yaw (Y) - unlimited
+        m_camera.rotation.y -=
+            data.delta.x * getTime().getDeltaTime();
     }
 
     void onUpdate(float dt) override
@@ -85,7 +93,6 @@ protected:
         float rotationSpeed = glm::radians(90.0f); // 90°/s
 
         Input &input = getInput();
-        EventBus &eventBus = getEventBus();
 
         // =====================
         // Movement
@@ -126,7 +133,7 @@ protected:
             m_camera.rotation.y -= rotationSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyEscape))
-            m_camera.rotation = {m_camera.rotation.x, m_camera.rotation.y, 0.0f};
+            m_camera.rotation = {0.0f, 0.0f, 0.0f};
 
         // =====================
         // m_camera roll
@@ -147,7 +154,8 @@ protected:
 private:
     void spawnCubes(int count)
     {
-        constexpr int width = 5;
+        const int width =
+            static_cast<int>(std::sqrt(count));
 
         Cube *previousCube = nullptr;
         Cube *previousRowFirst = nullptr;
@@ -170,27 +178,28 @@ private:
                 // Prvi Cube novog reda:
                 // parent je prvi Cube prethodnog reda
                 parent = previousRowFirst;
-                position = glm::vec3(0.0f, 0.0f, 1.0f);
+                position = glm::vec3(0.0f, 0.0f, 2.0f);
             }
             else
             {
                 // Ostali Cube-ovi u redu:
                 // parent je prethodni Cube
                 parent = previousCube;
-                position = glm::vec3(1.0f, 0.0f, 0.0f);
+                position = glm::vec3(2.0f, 0.0f, 0.0f);
             }
 
             Cube *cube = m_scene.createGameObject<Cube>(
                 parent,
                 position,
                 glm::vec3(1.0f),
+                getAssetManager(),
                 false);
 
-            // Zapamti prvi Cube trenutnog reda
+            // Prvi Cube trenutnog reda
             if (x == 0)
                 previousRowFirst = cube;
 
-            // Zapamti prethodni Cube
+            // Poslednji Cube
             previousCube = cube;
 
             if (i % 10 == 0)
@@ -204,7 +213,6 @@ private:
         }
     }
 
-    Cube *m_cube;
     Cube *m_lightCube;
     Cube *m_lightCube1;
 

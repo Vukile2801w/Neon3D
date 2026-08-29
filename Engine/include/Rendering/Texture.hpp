@@ -1,9 +1,14 @@
 #ifndef NEON_TEXTURE2D
 #define NEON_TEXTURE2D
+
 #include <filesystem>
+
+#include "Ref.hpp"
+#include "Assets/AssetLoader.hpp"
 
 namespace Neon
 {
+
     enum class TextureFilter
     {
         Linear,
@@ -44,6 +49,38 @@ namespace Neon
         int m_height{};
         int m_channels{};
     };
+
+    struct TextureLoadOptions
+    {
+        TextureFilter minFilter = TextureFilter::Linear;
+        TextureFilter magFilter = TextureFilter::Linear;
+
+        TextureWrap wrapS = TextureWrap::Repeat;
+        TextureWrap wrapT = TextureWrap::Repeat;
+    };
+
+    template <>
+    struct AssetLoader<Texture>
+    {
+
+        static Ref<Texture> load(
+            const std::filesystem::path &path,
+            const TextureLoadOptions &options = {})
+        {
+            Ref<Texture> tex = std::make_shared<Texture>(path);
+
+            tex->setFilter(
+                options.minFilter,
+                options.magFilter);
+
+            tex->setWrap(
+                options.wrapS,
+                options.wrapT);
+
+            return tex;
+        }
+    };
+
 }
 
 #endif
