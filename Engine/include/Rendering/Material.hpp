@@ -36,6 +36,12 @@ namespace Neon
     class Material
     {
     public:
+        struct TextureSlot
+        {
+            std::string name;
+            Ref<Texture> texture;
+        };
+
         explicit Material(Ref<Shader> shader);
 
         void bind() const;
@@ -43,8 +49,6 @@ namespace Neon
         void setProperty(
             const std::string &name,
             MaterialProperty value);
-
-        MaterialProperty getProperty(const std::string &name) const;
 
         void setUniform(
             const std::string &name,
@@ -54,14 +58,14 @@ namespace Neon
             const std::string &name,
             Ref<Texture> texture);
 
+        const std::unordered_map<std::string, MaterialProperty> &getProperties() const;
+        MaterialProperty getProperty(const std::string &name) const;
+
+        const std::vector<TextureSlot> getTextures() const;
+        Ref<Shader> getShader() const;
+
     private:
         Ref<Shader> m_shader;
-
-        struct TextureSlot
-        {
-            std::string name;
-            Ref<Texture> texture;
-        };
 
         std::vector<TextureSlot> m_textures;
 

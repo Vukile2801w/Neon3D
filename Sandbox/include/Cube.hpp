@@ -2,42 +2,12 @@
 #define SANDBOX_CUBE
 
 #include "Neon.hpp"
+#include "json.hpp"
 
 using Neon::Ref;
 
-#include <memory>
-
-class CubeBehavior : public Neon::Behavior
-{
-public:
-    CubeBehavior(
-        Neon::GameObject *gameObject,
-        Neon::Scene *scene,
-        Neon::Application *application)
-        : Neon::Behavior(gameObject, scene, application),
-          m_startPosition(gameObject->transform.position)
-    {
-    }
-
-    void update(float dt) override
-    {
-        float t = m_application->getTime().sinceStart();
-
-        m_gameObject->transform.position =
-            m_startPosition +
-            glm::vec3(
-                0.0f,
-                std::sin(t),
-                0.0f);
-    }
-
-private:
-    glm::vec3 m_startPosition;
-};
-
 class Cube : public Neon::GameObject
 {
-
 public:
     Ref<Neon::Shader> helper(Neon::AssetManager &assetManager)
     {
@@ -49,10 +19,7 @@ public:
             assetManager.load<Neon::ShaderStage>(
                 "Sandbox/assets/shaders/shader.frag");
 
-        Ref<Neon::Shader> shader =
-            assetManager.load(vert, frag);
-
-        return shader;
+        return assetManager.load(vert, frag);
     }
 
     Cube(
@@ -65,14 +32,15 @@ public:
         : Neon::GameObject(scene, parent),
           m_shader(helper(assetManager)),
           m_mat(m_shader),
-          m_texture(assetManager.load<Neon::Texture>("Sandbox\\assets\\brick.jpg")),
-          m_normalMap(assetManager.load<Neon::Texture>("Sandbox\\assets\\brickNormal.png"))
+          m_texture(
+              assetManager.load<Neon::Texture>(
+                  "Sandbox\\assets\\teapot.png")),
+          m_normalMap(
+              assetManager.load<Neon::Texture>(
+                  "Sandbox\\assets\\teapot.png"))
     {
-
         transform.position = pos;
         transform.scale = scale;
-
-        mesh = assetManager.load<Neon::Mesh>("Sandbox\\assets\\cube.obj");
 
         material = &m_mat;
 
@@ -81,9 +49,6 @@ public:
 
         m_mat.setProperty("u_Shininess", 16.0f);
         m_mat.setProperty("u_IsLightSource", isLightSource);
-
-        if (!isLightSource)
-            setBehavior<CubeBehavior>();
     }
 
     std::string getTypeName() override
@@ -94,6 +59,19 @@ public:
     void setColor(glm::vec3 color)
     {
         m_mat.setProperty("u_Color", color);
+    }
+
+    static Neon::GameObject *create(
+        Neon::Scene &scene,
+        const nlohmann::json &node,
+        Neon::AssetManager &assetManager)
+    {
+        return scene.createGameObject<Cube>(
+            nullptr,
+            glm::vec3(0.0f),
+            glm::vec3(1.0f),
+            assetManager,
+            false);
     }
 
 private:

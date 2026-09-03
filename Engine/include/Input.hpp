@@ -81,6 +81,11 @@ namespace Neon
             KeyF10,
             KeyF11,
             KeyF12,
+            KeyNumPlus,
+            KeyNumMinus,
+            KeyNumSlash,
+            KeyNumAsterisk,
+            KeyNumEnter,
 
             KeyCount
         };
@@ -150,7 +155,13 @@ namespace Neon
             "KeyF9",        // 62
             "KeyF10",       // 63
             "KeyF11",       // 64
-            "KeyF12"        // 65
+            "KeyF12",       // 65
+
+            "KeyNumPlus",
+            "KeyNumMinus",
+            "KeyNumSlash",
+            "KeyNumAsterisk",
+            "KeyNumEnter",
         };
 
         struct KeyData

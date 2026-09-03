@@ -42,12 +42,16 @@ namespace Neon
         int width() const;
         int height() const;
 
+        const std::string getPath();
+
     private:
         unsigned int m_id{};
 
         int m_width{};
         int m_height{};
         int m_channels{};
+
+        std::string m_path;
     };
 
     struct TextureLoadOptions

@@ -10,6 +10,7 @@
 #include "Transform.hpp"
 
 #include "glm.hpp"
+#include "json_fwd.hpp"
 
 namespace Neon
 {
@@ -47,12 +48,34 @@ namespace Neon
             return "GameObject";
         }
 
+        // Called by SceneSerializer::save(), after it has already written the base
+        // fields (type/name/transform/mesh/parent) into 'out'. A subclass overrides
+        // this to add whatever *extra* fields its own GameObjectFactory-registered
+        // constructor function will need back (e.g. Cube writes "isLightSource" and
+        // "color"). Default does nothing, so a plain GameObject needs no override.
+        // 'out' is the same JSON object representing this GameObject as a whole -
+        // don't overwrite the reserved base keys ("type", "name", "transform",
+        // "mesh", "parent"). See GameObjectFactory.hpp for the loading side.
+        virtual void onSerialize(nlohmann::json &out) const {}
+
         // Local-space transform, relative to the parent (or to world space, for a
         // top-level object with no parent). Freely mutable, like Camera/Transform's own
         // convention - see getWorldMatrix() below for why that means no matrix caching.
         Transform transform;
         Ref<Mesh> mesh{nullptr};
         Material *material{nullptr};
+
+        // Optional label, purely for the scene file / debugging - never required to
+        // be unique, never used to resolve parent links (those use array indices,
+        // see SceneSerializer.cpp).
+        std::string name;
+
+        // The AssetManager path 'mesh' was loaded from, if any. Set by whoever
+        // assigns 'mesh' (e.g. Cube's constructor, or SceneSerializer::load() when a
+        // scene file specifies a "mesh" path). Exists solely so SceneSerializer::save()
+        // can write a mesh reference back out - there's no reverse path lookup from a
+        // Ref<Mesh> through AssetManager today. Empty means "no mesh reference to save".
+        std::string meshPath;
 
         template <typename T, typename... Args>
         void setBehavior(Args &&...args)

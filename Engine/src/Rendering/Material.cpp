@@ -43,9 +43,24 @@ namespace Neon
         m_properties[name] = std::move(data);
     }
 
+    const std::unordered_map<std::string, MaterialProperty> &Material::getProperties() const
+    {
+        return m_properties;
+    }
+
     MaterialProperty Material::getProperty(const std::string &name) const
     {
         return m_properties.at(name);
+    }
+
+    Ref<Shader> Material::getShader() const
+    {
+        return m_shader;
+    }
+
+    const std::vector<Material::TextureSlot> Material::getTextures() const
+    {
+        return m_textures;
     }
 
     void Material::setUniform(

@@ -23,6 +23,10 @@ public:
     Sandbox() : m_camera(getRenderer().getCamera()), m_scene(this)
     {
     }
+    ~Sandbox()
+    {
+        onSave();
+    }
 
 protected:
     void onStart() override
@@ -30,30 +34,22 @@ protected:
         EventBus &eventBus = getEventBus();
         AssetManager &assetManager = getAssetManager();
 
+        Neon::GameObjectFactory::registerType(
+            "Cube",
+            &Cube::create);
+
         m_camera.position.y = 1.3f;
         m_camera.FOV = 60;
 
-        spawnCubes(121);
+        // spawnCubes(121);
 
-        m_lightCube = m_scene.createGameObject<Cube>(
-            nullptr,
-            glm::vec3(-5.0f, 10.0f, -1.0f),
-            glm::vec3(0.3f, 0.3f, 0.3f),
-            assetManager,
-            true);
-        m_lightCube->setColor({1.0f, 1.0f, 0.0f});
+        Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene.neon", assetManager, getRenderer());
 
-        getRenderer().addLight(
-            {m_lightCube->transform.position,
-             {1.0f, 1.0f, 1.0f},
-             3.0f});
         eventBus.subscribe<Neon::MouseMovedEvent>([this](const Neon::MouseMovedEvent &event)
                                                   { inputCallback(event); });
 
         eventBus.subscribe<Neon::KeyPressedEvent>([this](const Neon::KeyPressedEvent &event)
-                                                  {
-            if (event.getData().key == Input::KeyAlt)
-            getInput().setCursorMode(Input::CursorMode::Normal); });
+                                                  { this->inputCallback(event); });
 
         eventBus.subscribe<Neon::KeyReleasedEvent>([this](const Neon::KeyReleasedEvent &event)
                                                    {
@@ -82,15 +78,59 @@ protected:
 
         // Yaw (Y) - unlimited
         m_camera.rotation.y -=
-            data.delta.x * getTime().getDeltaTime();
+            data.delta.x * getTime().getDeltaTime() * m_rotationSpeed;
+    }
+    void inputCallback(const Neon::KeyPressedEvent &event)
+    {
+        if (getInput().getCursorMode() == Input::CursorMode::Normal)
+            return;
+
+        const auto &data = event.getData();
+
+        switch (data.key)
+        {
+        case Input::KeyAlt:
+            getInput().setCursorMode(Input::CursorMode::Normal);
+            break;
+
+        case Input::KeyNumPlus:
+            m_moveSpeed += 5.0f;
+            if (m_moveSpeed <= 5.0f)
+                m_moveSpeed = 5.0f;
+            Logging::Info("MoveSpeed: " + std::to_string(m_moveSpeed));
+            break;
+
+        case Input::KeyNumMinus:
+            m_moveSpeed -= 5.0f;
+
+            if (m_moveSpeed <= 5.0f)
+                m_moveSpeed = 5.0f;
+            Logging::Info("MoveSpeed: " + std::to_string(m_moveSpeed));
+            break;
+
+        case Input::KeyNumAsterisk:
+            m_rotationSpeed += 0.2f;
+            Logging::Info("RotationSpeed: " + std::to_string(m_rotationSpeed));
+            break;
+
+        case Input::KeyNumSlash:
+            m_rotationSpeed -= 0.2f;
+
+            Logging::Info("RotationSpeed: " + std::to_string(m_rotationSpeed));
+            break;
+
+        case Input::KeyF5:
+            onSave();
+            break;
+
+        default:
+            break;
+        }
     }
 
     void onUpdate(float dt) override
     {
         m_scene.update(dt);
-
-        float moveSpeed = 5.0f;
-        float rotationSpeed = glm::radians(90.0f); // 90°/s
 
         Input &input = getInput();
 
@@ -99,51 +139,27 @@ protected:
         // =====================
 
         if (input.isKeyDown(Input::Key::KeyW))
-            m_camera.position += m_camera.getForward() * moveSpeed * dt;
+            m_camera.position += m_camera.getForward() * m_moveSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyS))
-            m_camera.position -= m_camera.getForward() * moveSpeed * dt;
+            m_camera.position -= m_camera.getForward() * m_moveSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyA))
-            m_camera.position -= m_camera.getRight() * moveSpeed * dt;
+            m_camera.position -= m_camera.getRight() * m_moveSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyD))
-            m_camera.position += m_camera.getRight() * moveSpeed * dt;
+            m_camera.position += m_camera.getRight() * m_moveSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyShift))
-            m_camera.position.y += moveSpeed * dt;
+            m_camera.position.y += m_moveSpeed * dt;
 
         if (input.isKeyDown(Input::Key::KeyCtrl))
-            m_camera.position.y -= moveSpeed * dt;
+            m_camera.position.y -= m_moveSpeed * dt;
+    }
 
-        // =====================
-        // m_camera rotation
-        // =====================
-
-        if (input.isKeyDown(Input::Key::KeyUp))
-            m_camera.rotation.x += rotationSpeed * dt;
-
-        if (input.isKeyDown(Input::Key::KeyDown))
-            m_camera.rotation.x -= rotationSpeed * dt;
-
-        if (input.isKeyDown(Input::Key::KeyLeft))
-            m_camera.rotation.y += rotationSpeed * dt;
-
-        if (input.isKeyDown(Input::Key::KeyRight))
-            m_camera.rotation.y -= rotationSpeed * dt;
-
-        if (input.isKeyDown(Input::Key::KeyEscape))
-            m_camera.rotation = {0.0f, 0.0f, 0.0f};
-
-        // =====================
-        // m_camera roll
-        // =====================
-
-        if (input.isKeyDown(Input::Key::KeyQ))
-            m_camera.rotation.z += rotationSpeed * dt;
-
-        if (input.isKeyDown(Input::Key::KeyE))
-            m_camera.rotation.z -= rotationSpeed * dt;
+    void onSave()
+    {
+        Neon::SceneSerializer::save(m_scene, "Sandbox/assets/scene.neon");
     }
 
     void onRender() override
@@ -215,6 +231,9 @@ private:
 
     Cube *m_lightCube;
     Cube *m_lightCube1;
+
+    float m_moveSpeed = 5.0f;
+    float m_rotationSpeed = 1; // 90°/s
 
     Neon::Scene m_scene;
     Neon::Camera &m_camera;

@@ -50,6 +50,9 @@ namespace Neon
         }
 
         m_program = linkProgram(vertex->getId(), fragment->getId());
+
+        m_stagesPath[vertex->getType()] = vertex->getPath();
+        m_stagesPath[fragment->getType()] = fragment->getPath();
     }
 
     void Shader::bind() const
@@ -60,6 +63,11 @@ namespace Neon
     void Shader::unbind()
     {
         glUseProgram(0);
+    }
+
+    std::string Shader::getStageSourcePath(ShaderStage::Type type)
+    {
+        return m_stagesPath.at(type);
     }
 
     int Shader::getUniformLocation(const std::string &name) const

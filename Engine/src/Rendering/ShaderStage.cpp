@@ -102,6 +102,7 @@ namespace Neon
         }
 
         Logging::Info("Shader " + path.string() + " is compiled");
+        m_path = path.string();
     }
 
     ShaderStage::~ShaderStage()

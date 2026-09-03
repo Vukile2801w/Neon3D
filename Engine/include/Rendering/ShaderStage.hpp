@@ -2,6 +2,7 @@
 #define NEON_SHADER_STAGE
 
 #include <filesystem>
+#include <string>
 
 #include "Assets/AssetLoader.hpp"
 #include "Logging.hpp"
@@ -43,11 +44,14 @@ namespace Neon
         // still deletes it in its own destructor.
         unsigned int getId() const { return m_id; }
 
+        std::string getPath() const { return m_path; }
+
     private:
         const char *readFile(const std::filesystem::path &path);
 
         unsigned int m_id{};
         Type m_type;
+        std::string m_path;
     };
 
     template <>

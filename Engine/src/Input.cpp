@@ -380,6 +380,17 @@ namespace Neon
         case Key::KeyF12:
             return GLFW_KEY_F12;
 
+        case Key::KeyNumPlus:
+            return GLFW_KEY_KP_ADD;
+        case Key::KeyNumMinus:
+            return GLFW_KEY_KP_SUBTRACT;
+        case Key::KeyNumSlash:
+            return GLFW_KEY_KP_DIVIDE;
+        case Key::KeyNumAsterisk:
+            return GLFW_KEY_KP_MULTIPLY;
+        case Key::KeyNumEnter:
+            return GLFW_KEY_KP_ENTER;
+
         default:
             return -1;
         }
@@ -530,6 +541,16 @@ namespace Neon
         case GLFW_KEY_F12:
             return Key::KeyF12;
 
+        case GLFW_KEY_KP_ADD:
+            return Key::KeyNumPlus;
+        case GLFW_KEY_KP_SUBTRACT:
+            return Key::KeyNumMinus;
+        case GLFW_KEY_KP_DIVIDE:
+            return Key::KeyNumSlash;
+        case GLFW_KEY_KP_MULTIPLY:
+            return Key::KeyNumAsterisk;
+        case GLFW_KEY_KP_ENTER:
+            return Key::KeyNumEnter;
         default:
             return Key::KeyUnknown;
         }

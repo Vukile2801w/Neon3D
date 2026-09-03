@@ -30,6 +30,8 @@ add_library(Engine
     
     # Scene
     src/Scene/GameObject.cpp
+    src/Scene/GameObjectFactory.cpp
+    src/Scene/SceneSerializer.cpp
     src/Scene/Behavior.cpp
     src/Scene/Scene.cpp
     
@@ -54,14 +56,19 @@ add_library(Engine
 target_include_directories(Engine
     PUBLIC
         include
-        
+        # 'lib' holds nlohmann/json.hpp - moved from PRIVATE to PUBLIC because
+        # GameObject.hpp (a public header) now references nlohmann::json for the
+        # onSerialize() hook, and any consumer overriding it (e.g. Sandbox's Cube)
+        # needs the same include path. Treated the same way lib/glm already is:
+        # a third-party type a public header genuinely needs, not a backend to hide -
+        # see CONTRIBUTING.md §12.
+        lib/nlohmann
+        lib/fast_obj
+        lib/glm
+
     PRIVATE
         lib/glfw/include
         lib/stb
-        lib
-
-    PUBLIC
-        lib/glm
 )
 
 

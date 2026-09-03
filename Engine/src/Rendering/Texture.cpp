@@ -1,5 +1,7 @@
 #include "Rendering/Texture.hpp"
 
+#include <string>
+
 #include "Logging.hpp"
 #include "Assert.hpp"
 
@@ -110,6 +112,8 @@ namespace Neon
         glGenerateMipmap(GL_TEXTURE_2D);
 
         stbi_image_free(data);
+
+        m_path = path.string();
     }
 
     Texture::~Texture()
@@ -164,5 +168,9 @@ namespace Neon
     int Texture::height() const
     {
         return m_height;
+    }
+    const std::string Texture::getPath()
+    {
+        return m_path;
     }
 }

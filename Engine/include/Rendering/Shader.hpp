@@ -2,6 +2,7 @@
 #define NEON_SHADER
 
 #include <filesystem>
+#include <unordered_map>
 
 #include "Rendering/ShaderStage.hpp"
 #include "Assets/AssetLoader.hpp"
@@ -38,8 +39,9 @@ namespace Neon
         void bind() const;
         static void unbind();
 
-        // Adding uniforms uniforms
+        std::string getStageSourcePath(ShaderStage::Type type);
 
+        // Adding uniforms uniforms
         // Uniforms
         void setBool(const std::string &name, bool value) const;
         void setInt(const std::string &name, int value) const;
@@ -63,10 +65,10 @@ namespace Neon
 
     private:
         int getUniformLocation(const std::string &name) const;
-
         unsigned int linkProgram(unsigned int vertexShader, unsigned int fragmentShader);
-
         unsigned int m_program{};
+
+        std::unordered_map<ShaderStage::Type, std::string> m_stagesPath{};
     };
 
     template <>

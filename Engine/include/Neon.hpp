@@ -28,6 +28,8 @@
 
 // Scene
 #include "Scene/GameObject.hpp"
+#include "Scene/GameObjectFactory.hpp"
+#include "Scene/SceneSerializer.hpp"
 #include "Scene/Behavior.hpp"
 #include "Scene/Scene.hpp"
 
