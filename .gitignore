@@ -38,3 +38,6 @@
 build/
 .aider*
 *.zip
+*.png
+*.jpg
+*.obj

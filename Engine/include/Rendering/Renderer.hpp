@@ -19,6 +19,8 @@ namespace Neon
 {
     class Renderer
     {
+        class Skybox;
+
     public:
         Renderer(Camera &cam, Window &win);
         ~Renderer();

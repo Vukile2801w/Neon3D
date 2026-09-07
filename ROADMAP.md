@@ -102,7 +102,7 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] Decide ECS vs. simple scene-graph vs. hybrid — **recommendation: start with a simple `GameObject { Transform, Mesh*, Material* }` list**, not a full ECS. A full ECS is over-engineering at this project size; revisit only if object count/perf demands it
 - [x] `Scene` class: owns a list of objects, exposes `addObject`/`removeObject`, iterates for update + render submission
 - [x] Optional parent/child transform hierarchy — **note:** `Transform::getMatrix()` currently has no parent concept at all; adding hierarchy means either a `Transform* parent` pointer or moving hierarchy into `Scene`/`GameObject` instead of into `Transform` itself (keep `Transform` a pure local-space math object)
-- [ ] Basic scene serialization (start with a simple custom text/JSON format — do not build a generic reflection system yet)
+- [x] Basic scene serialization (start with a simple custom text/JSON format — do not build a generic reflection system yet)
 - [ ] Scene loading/unloading lifecycle hooks
 
 **Definition of Done:** Sandbox can load a scene file describing multiple objects with meshes/materials/transforms, and the engine renders all of them without per-object code in `main.cpp`.

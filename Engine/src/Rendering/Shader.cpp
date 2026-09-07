@@ -7,6 +7,7 @@
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
+#include "gtc/type_ptr.hpp"
 
 namespace Neon
 {
@@ -135,15 +136,13 @@ namespace Neon
             matrix);
     }
 
-    void Shader::setMat4(
-        const std::string &name,
-        const float *matrix) const
+    void Shader::setMat4(const std::string &name, const glm::mat4 &value) const
     {
         glUniformMatrix4fv(
             getUniformLocation(name),
             1,
             GL_FALSE,
-            matrix);
+            glm::value_ptr(value));
     }
 
 } // namespace Neon

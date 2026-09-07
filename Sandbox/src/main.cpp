@@ -25,10 +25,23 @@ public:
     }
     ~Sandbox()
     {
-        onSave();
     }
 
 protected:
+    Cube *m_monkey = nullptr;
+
+    void findMonkey()
+    {
+        for (const auto &object : m_scene.getGameObjects())
+        {
+            if (object->name == "Monkey")
+            {
+                m_monkey = dynamic_cast<Cube *>(object.get());
+                return;
+            }
+        }
+    }
+
     void onStart() override
     {
         EventBus &eventBus = getEventBus();
@@ -44,6 +57,7 @@ protected:
         // spawnCubes(121);
 
         Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene.neon", assetManager, getRenderer());
+        findMonkey();
 
         eventBus.subscribe<Neon::MouseMovedEvent>([this](const Neon::MouseMovedEvent &event)
                                                   { inputCallback(event); });
@@ -57,6 +71,28 @@ protected:
             getInput().setCursorMode(Input::CursorMode::Disabled); });
 
         getInput().setCursorMode(Input::CursorMode::Disabled);
+
+        // učitaj mesh
+        Ref<Neon::Mesh> mesh = assetManager.load<Neon::Mesh>(
+            "Sandbox/assets/skybox.obj");
+
+        // učitaj spojenu 2D skybox teksturu
+        Ref<Neon::Texture> texture = assetManager.load<Neon::Texture>(
+            "Sandbox/assets/skybox/skybox.png");
+
+        // shader
+        Ref<Neon::ShaderStage> vertex = assetManager.load<Neon::ShaderStage>(
+            "Sandbox/assets/shaders/skybox.vert");
+
+        Ref<Neon::ShaderStage> fragment = assetManager.load<Neon::ShaderStage>(
+            "Sandbox/assets/shaders/skybox.frag");
+
+        Ref<Neon::Shader> shader = assetManager.load(vertex, fragment);
+
+        m_skybox = std::make_shared<Neon::Skybox>(
+            mesh,
+            shader,
+            texture);
     }
 
     void inputCallback(const Neon::MouseMovedEvent &event)
@@ -68,7 +104,7 @@ protected:
 
         // Pitch (X) - clamp [-90°, +90°]
         m_camera.rotation.x -=
-            data.delta.y * getTime().getDeltaTime();
+            data.delta.y * getTime().getDeltaTime() * m_rotationSpeed;
 
         m_camera.rotation.x =
             glm::clamp(
@@ -122,6 +158,9 @@ protected:
         case Input::KeyF5:
             onSave();
             break;
+        case Input::KeyF9:
+            Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene.neon", getAssetManager(), getRenderer());
+            break;
 
         default:
             break;
@@ -155,6 +194,29 @@ protected:
 
         if (input.isKeyDown(Input::Key::KeyCtrl))
             m_camera.position.y -= m_moveSpeed * dt;
+
+        if (m_monkey)
+        {
+            const float rotationSpeed = glm::radians(90.0f);
+
+            if (input.isKeyDown(Input::KeyLeft))
+                m_monkey->transform.rotation.y += rotationSpeed * dt;
+
+            if (input.isKeyDown(Input::KeyRight))
+                m_monkey->transform.rotation.y -= rotationSpeed * dt;
+
+            if (input.isKeyDown(Input::KeyUp))
+                m_monkey->transform.rotation.x += rotationSpeed * dt;
+
+            if (input.isKeyDown(Input::KeyDown))
+                m_monkey->transform.rotation.x -= rotationSpeed * dt;
+
+            if (input.isKeyDown(Input::KeyPageUp))
+                m_monkey->transform.rotation.z += rotationSpeed * dt;
+
+            if (input.isKeyDown(Input::KeyPageDown))
+                m_monkey->transform.rotation.z -= rotationSpeed * dt;
+        }
     }
 
     void onSave()
@@ -164,6 +226,20 @@ protected:
 
     void onRender() override
     {
+        getWindow().setCulingDirection(
+            Neon::CulingDirection::Front);
+
+        getWindow().setDepthFunction(
+            Neon::DepthFunction::LessEqual);
+
+        m_skybox->render(m_camera, getWindow());
+
+        getWindow().setDepthFunction(
+            Neon::DepthFunction::Less);
+
+        getWindow().setCulingDirection(
+            Neon::CulingDirection::Back);
+
         getRenderer().draw(m_scene);
     }
 
@@ -229,8 +305,7 @@ private:
         }
     }
 
-    Cube *m_lightCube;
-    Cube *m_lightCube1;
+    Ref<Neon::Skybox> m_skybox;
 
     float m_moveSpeed = 5.0f;
     float m_rotationSpeed = 1; // 90°/s

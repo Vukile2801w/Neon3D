@@ -120,7 +120,7 @@ namespace Neon
         {
             const glm::mat4 &matrix = std::get<glm::mat4>(property);
 
-            m_shader->setMat4(name, &matrix[0][0]);
+            m_shader->setMat4(name, matrix);
         }
         else if (std::holds_alternative<MaterialLight>(property))
         {

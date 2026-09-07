@@ -68,7 +68,7 @@ namespace Neon
             KeyHome,
             KeyEnd,
             KeyPageUp,
-            KeyPageDOWN,
+            KeyPageDown,
             KeyF1,
             KeyF2,
             KeyF3,

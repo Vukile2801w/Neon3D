@@ -352,7 +352,7 @@ namespace Neon
             return GLFW_KEY_END;
         case Key::KeyPageUp:
             return GLFW_KEY_PAGE_UP;
-        case Key::KeyPageDOWN:
+        case Key::KeyPageDown:
             return GLFW_KEY_PAGE_DOWN;
 
         case Key::KeyF1:
@@ -514,7 +514,7 @@ namespace Neon
         case GLFW_KEY_PAGE_UP:
             return Key::KeyPageUp;
         case GLFW_KEY_PAGE_DOWN:
-            return Key::KeyPageDOWN;
+            return Key::KeyPageDown;
 
         case GLFW_KEY_F1:
             return Key::KeyF1;

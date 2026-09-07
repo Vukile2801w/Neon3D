@@ -436,7 +436,6 @@ namespace Neon
                     if (std::holds_alternative<bool>(property) &&
                         std::get<bool>(property))
                     {
-                        Logging::Info("Light!");
                         Light light;
                         light.position = obj->transform.position;
                         light.color = glm::vec3(1.0f);

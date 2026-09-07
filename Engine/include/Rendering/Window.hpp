@@ -10,6 +10,26 @@ struct GLFWwindow;
 
 namespace Neon
 {
+    enum class CulingDirection
+    {
+        Unknown,
+        Back,
+        Front,
+        Count
+    };
+
+    enum class DepthFunction
+    {
+        Less,
+        LessEqual,
+        Greater,
+        GreaterEqual,
+        Equal,
+        NotEqual,
+        Always,
+        Never
+    };
+
     class Window
     {
     public:
@@ -20,12 +40,15 @@ namespace Neon
         void update();
 
         void render();
-        bool shouldWindowsClose();
+        bool shouldWindowsClose() const;
 
-        int getWidth();
-        int getHeight();
+        int getWidth() const;
+        int getHeight() const;
 
-        float getAspectRatio();
+        float getAspectRatio() const;
+
+        void setCulingDirection(CulingDirection dir);
+        void setDepthFunction(DepthFunction function);
 
     private:
         struct GLFWWindowDeleter

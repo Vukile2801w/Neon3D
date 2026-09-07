@@ -109,7 +109,7 @@ namespace Neon
             GL_UNSIGNED_BYTE,
             data);
 
-        glGenerateMipmap(GL_TEXTURE_2D);
+        // glGenerateMipmap(GL_TEXTURE_2D);
 
         stbi_image_free(data);
 

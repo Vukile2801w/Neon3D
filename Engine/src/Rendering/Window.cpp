@@ -128,7 +128,7 @@ namespace Neon
         }
     }
 
-    bool Window::shouldWindowsClose()
+    bool Window::shouldWindowsClose() const
     {
         if (!m_window)
             return true;
@@ -136,12 +136,12 @@ namespace Neon
         return glfwWindowShouldClose(m_window.get());
     }
 
-    int Window::getHeight()
+    int Window::getHeight() const
     {
         return m_height;
     }
 
-    float Window::getAspectRatio()
+    float Window::getAspectRatio() const
     {
         if (m_framebufferWidth == 0 ||
             m_framebufferHeight == 0)
@@ -152,7 +152,71 @@ namespace Neon
         return static_cast<float>(m_framebufferWidth) / static_cast<float>(m_framebufferHeight);
     }
 
-    int Window::getWidth()
+    void Window::setCulingDirection(CulingDirection dir)
+    {
+        unsigned int glDir;
+        switch (dir)
+        {
+        case CulingDirection::Back:
+            glDir = GL_BACK;
+            break;
+
+        case CulingDirection::Front:
+            glDir = GL_FRONT;
+            break;
+
+        default:
+            break;
+        }
+        glCullFace(glDir);
+    }
+
+    void Window::setDepthFunction(DepthFunction function)
+    {
+        GLenum glFunction;
+
+        switch (function)
+        {
+        case DepthFunction::Less:
+            glFunction = GL_LESS;
+            break;
+
+        case DepthFunction::LessEqual:
+            glFunction = GL_LEQUAL;
+            break;
+
+        case DepthFunction::Greater:
+            glFunction = GL_GREATER;
+            break;
+
+        case DepthFunction::GreaterEqual:
+            glFunction = GL_GEQUAL;
+            break;
+
+        case DepthFunction::Equal:
+            glFunction = GL_EQUAL;
+            break;
+
+        case DepthFunction::NotEqual:
+            glFunction = GL_NOTEQUAL;
+            break;
+
+        case DepthFunction::Always:
+            glFunction = GL_ALWAYS;
+            break;
+
+        case DepthFunction::Never:
+            glFunction = GL_NEVER;
+            break;
+
+        default:
+            return;
+        }
+
+        glDepthFunc(glFunction);
+    }
+
+    int Window::getWidth() const
     {
         return m_width;
     }

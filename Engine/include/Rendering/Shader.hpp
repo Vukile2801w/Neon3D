@@ -8,6 +8,7 @@
 #include "Assets/AssetLoader.hpp"
 #include "Ref.hpp"
 
+#include "glm.hpp"
 namespace Neon
 {
 
@@ -60,8 +61,7 @@ namespace Neon
         void setMat3(const std::string &name,
                      const float *matrix) const;
 
-        void setMat4(const std::string &name,
-                     const float *matrix) const;
+        void setMat4(const std::string &name, const glm::mat4 &value) const;
 
     private:
         int getUniformLocation(const std::string &name) const;

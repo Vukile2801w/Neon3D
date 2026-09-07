@@ -42,7 +42,8 @@ add_library(Engine
     src/Rendering/Texture.cpp
     src/Rendering/Shader.cpp
     src/Rendering/Window.cpp
-
+    src/Rendering/Skybox.cpp
+    
     # Assets
     src/Assets/AssetManager.cpp
 

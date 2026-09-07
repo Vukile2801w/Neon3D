@@ -1,5 +1,6 @@
 #include "Rendering/Renderer.hpp"
 
+#include "Rendering/Skybox.hpp"
 #include "Assert.hpp"
 
 namespace Neon

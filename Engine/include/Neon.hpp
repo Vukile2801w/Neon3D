@@ -23,6 +23,7 @@
 #include "Rendering/Renderer.hpp"
 #include "Rendering/Texture.hpp"
 #include "Rendering/Shader.hpp"
+#include "Rendering/Skybox.hpp"
 #include "Rendering/Window.hpp"
 #include "Rendering/Light.hpp"
 
