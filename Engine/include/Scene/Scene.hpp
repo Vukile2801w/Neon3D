@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 
+#include "Rendering/Light.hpp"
 #include "Scene/GameObject.hpp"
 
 namespace Neon
@@ -37,12 +38,27 @@ namespace Neon
             return result;
         }
 
+        template <typename Type, typename... Args>
+        Type *createLight(Args &&...args)
+        {
+            auto light = std::make_unique<Type>(
+                this,
+                std::forward<Args>(args)...);
+
+            Type *result = light.get();
+
+            m_lights.push_back(std::move(light));
+
+            return result;
+        }
+
         // Marks 'gameObject' and its entire subtree (recursively) as pending-kill.
         // Does NOT erase anything immediately - safe to call from inside a
         // Behavior::update(), including a Behavior destroying its own owner or a
         // sibling, without invalidating the iteration update() is currently doing.
         // Actual removal happens at the end of the current/next update() call.
         void destroy(GameObject *gameObject);
+        void destroy(Light *gameObject);
 
         // Calls Behavior::update(dt) on every non-pending-kill GameObject that has a
         // Behavior attached, then sweeps every GameObject marked pending-kill (by
@@ -50,6 +66,7 @@ namespace Neon
         void update(float dt);
 
         const std::vector<std::unique_ptr<GameObject>> &getGameObjects() const;
+        const std::vector<std::unique_ptr<Light>> &getLights() const;
 
         Application &getApplication()
         {
@@ -61,6 +78,8 @@ namespace Neon
         void sweepPendingKill();
 
         std::vector<std::unique_ptr<GameObject>> m_gameObjects;
+        std::vector<std::unique_ptr<Light>> m_lights;
+
         Application *m_application;
     };
 }

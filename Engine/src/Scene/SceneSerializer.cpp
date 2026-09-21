@@ -10,11 +10,12 @@
 
 #include "Assets/AssetManager.hpp"
 #include "Mesh/Mesh.hpp"
+#include "Rendering/Light.hpp"
 #include "Scene/GameObject.hpp"
 #include "Scene/GameObjectFactory.hpp"
+#include "Scene/LightFactory.hpp"
 #include "Scene/Scene.hpp"
 #include "Rendering/Shader.hpp"
-#include "Rendering/Renderer.hpp"
 
 #include "json.hpp"
 
@@ -92,16 +93,6 @@ namespace Neon
 
                         return result;
                     }
-                    else if constexpr (std::is_same_v<T, MaterialLight>)
-                    {
-                        if (value.light == nullptr)
-                            return json{
-                                {"index", value.index}};
-
-                        return json{
-                            {"index", value.index},
-                            {"light", {{"position", {value.light->position.x, value.light->position.y, value.light->position.z}}, {"color", {value.light->color.x, value.light->color.y, value.light->color.z}}, {"intensity", value.light->intensity}}}};
-                    }
                     else
                     {
                         return value;
@@ -109,6 +100,7 @@ namespace Neon
                 },
                 property);
         }
+
         MaterialProperty jsonToMaterialProperty(const json &value)
         {
             if (value.is_boolean())
@@ -122,32 +114,6 @@ namespace Neon
 
             if (value.is_number_float())
                 return value.get<float>();
-
-            if (value.is_object() &&
-                value.contains("index") &&
-                value.contains("light"))
-            {
-                const auto &lightNode = value["light"];
-
-                if (!lightNode.is_object())
-                    return 0.0f;
-
-                auto light = std::make_unique<Light>();
-
-                light->position = jsonToVec3(
-                    lightNode.value("position", json()),
-                    glm::vec3(0.0f));
-
-                light->color = jsonToVec3(
-                    lightNode.value("color", json()),
-                    glm::vec3(1.0f));
-
-                light->intensity =
-                    lightNode.value("intensity", 1.0f);
-
-                // OVO još ne možeš vratiti kao MaterialLight.light
-                // jer Renderer još nije napravio Light.
-            }
 
             if (value.is_array())
             {
@@ -224,26 +190,47 @@ namespace Neon
             return 0.0f;
         }
 
+        // Splits a "<Category>/<TypeName>" entity type string into its two halves.
+        // This is the one place SceneSerializer knows the "GameObject/"/"Light/"
+        // prefix convention exists at all - GameObjectFactory/LightFactory registry
+        // keys never include it (see their own header comments).
+        struct EntityType
+        {
+            std::string category;
+            std::string typeName;
+        };
+
+        EntityType splitEntityType(const std::string &type)
+        {
+            size_t slash = type.find('/');
+
+            if (slash == std::string::npos)
+                return EntityType{std::string(), type};
+
+            return EntityType{type.substr(0, slash), type.substr(slash + 1)};
+        }
+
     }
 
     bool SceneSerializer::save(const Scene &scene, const std::string &path)
     {
         json root;
-        root["version"] = 1;
-        root["objects"] = json::array();
+        root["version"] = 2;
+        root["entities"] = json::array();
 
-        // Maps each already-written object to its index in the output array, so a
-        // child's "parent" field can reference it by index rather than by name (no
+        // Maps each already-written GameObject to its index in the output array, so
+        // a child's "parent" field can reference it by index rather than by name (no
         // uniqueness requirement on GameObject::name this way). Scene::createGameObject
         // requires a parent to already exist before a child can be constructed with it,
         // so getGameObjects() is guaranteed to list every parent before its children -
-        // a single forward pass is enough.
+        // a single forward pass is enough. Lights never participate in this map -
+        // they have no parent concept.
         std::unordered_map<const GameObject *, size_t> indexOf;
 
         for (const auto &obj : scene.getGameObjects())
         {
             json node;
-            node["type"] = obj->getTypeName();
+            node["type"] = "GameObject/" + obj->getTypeName();
             node["name"] = obj->name;
 
             node["transform"]["position"] = vec3ToJson(obj->transform.position);
@@ -305,13 +292,31 @@ namespace Neon
                 node["parent"] = parentIt->second;
             }
 
-            // Subclass-specific extra fields (error.g. Cube's isLightSource/color) go
-            // directly into 'node' alongside the base fields above - see
+            // Subclass-specific extra fields (e.g. a future GameObject subclass's own
+            // data) go directly into 'node' alongside the base fields above - see
             // GameObject::onSerialize()'s doc comment for the reserved-key caveat.
             obj->onSerialize(node);
 
-            indexOf[obj.get()] = root["objects"].size();
-            root["objects"].push_back(std::move(node));
+            indexOf[obj.get()] = root["entities"].size();
+            root["entities"].push_back(std::move(node));
+        }
+
+        // Written after every GameObject, so a GameObject's "parent" index (an
+        // absolute index into root["entities"]) always lands on another GameObject -
+        // Lights are never a valid parent target and are never assigned one.
+        for (const auto &light : scene.getLights())
+        {
+            json node;
+            node["type"] = "Light/" + light->getTypeName();
+            node["name"] = light->name;
+
+            // Every field beyond type/name (color/intensity, plus whatever the
+            // concrete type adds - position, direction, cone angles, ...) is the
+            // light's own responsibility - SceneSerializer never mentions a concrete
+            // Light subclass by name.
+            light->onSerialize(node);
+
+            root["entities"].push_back(std::move(node));
         }
 
         std::ofstream file(path);
@@ -327,7 +332,7 @@ namespace Neon
         return true;
     }
 
-    bool SceneSerializer::load(Scene &outScene, const std::string &path, AssetManager &assetManager, Renderer &renderer)
+    bool SceneSerializer::load(Scene &outScene, const std::string &path, AssetManager &assetManager)
     {
         std::ifstream file(path);
         if (!file.is_open())
@@ -347,30 +352,66 @@ namespace Neon
             return false;
         }
 
-        if (!root.contains("objects") || !root["objects"].is_array())
+        if (!root.contains("entities") || !root["entities"].is_array())
         {
-            Logging::Error("SceneSerializer::load - '" + path + "' has no 'objects' array");
+            Logging::Error("SceneSerializer::load - '" + path + "' has no 'entities' array");
             return false;
         }
 
-        // Every object is constructed top-level first (parent = nullptr); parent/child
-        // links are resolved in a second pass below via the public
+        // Every GameObject is constructed top-level first (parent = nullptr);
+        // parent/child links are resolved in a second pass below via the public
         // GameObject::setParent(), so a GameObjectFactory::CreateFn never needs to
-        // reason about hierarchy, and object order within the file doesn't matter.
-        std::vector<GameObject *> created;
-        created.reserve(root["objects"].size());
+        // reason about hierarchy. 'gameObjectByEntityIndex' maps each GameObject's
+        // absolute position in root["entities"] to the object created for it, so a
+        // "parent" field (also an absolute entities-array index, per save() above)
+        // can be resolved with a plain lookup even if Light entities are interleaved
+        // between GameObjects in the file. Light entities are never added here -
+        // they have no parent to resolve, and can never be a "parent" target.
+        std::unordered_map<size_t, GameObject *> gameObjectByEntityIndex;
 
-        for (const json &node : root["objects"])
+        for (size_t i = 0; i < root["entities"].size(); ++i)
         {
-            std::string typeName = node.value("type", std::string("GameObject"));
+            const json &node = root["entities"][i];
 
-            GameObject *obj = GameObjectFactory::create(typeName, outScene, node, assetManager);
+            std::string fullType = node.value("type", std::string("GameObject/GameObject"));
+            EntityType entityType = splitEntityType(fullType);
+
+            if (entityType.category == "Light")
+            {
+                Light *light = LightFactory::create(entityType.typeName, outScene, node);
+
+                if (light == nullptr)
+                {
+                    Logging::Warning(
+                        "SceneSerializer::load - unrecognized light type '" +
+                        entityType.typeName + "', skipping entity");
+                    continue;
+                }
+
+                light->name = node.value("name", std::string());
+
+                // LightFactory's CreateFn already read every field this light type
+                // needs (color/intensity plus its own concrete fields, see
+                // LightFactory.cpp) - unlike GameObject, there's no base
+                // transform/mesh/material to apply here, and no parent to resolve.
+                continue;
+            }
+
+            if (entityType.category != "GameObject")
+            {
+                Logging::Warning(
+                    "SceneSerializer::load - unrecognized entity category '" +
+                    entityType.category + "' for type '" + fullType + "', skipping entity");
+                continue;
+            }
+
+            GameObject *obj = GameObjectFactory::create(entityType.typeName, outScene, node, assetManager);
 
             if (obj == nullptr)
             {
-                if (typeName != "GameObject")
+                if (entityType.typeName != "GameObject")
                     Logging::Warning(
-                        "SceneSerializer::load - unrecognized type '" + typeName +
+                        "SceneSerializer::load - unrecognized type '" + fullType +
                         "', falling back to plain GameObject");
 
                 obj = outScene.createGameObject<GameObject>(nullptr);
@@ -430,44 +471,34 @@ namespace Neon
                                 material->setTexture(name, texture);
                         }
                     }
-
-                    auto property = material->getProperty("u_IsLightSource");
-
-                    if (std::holds_alternative<bool>(property) &&
-                        std::get<bool>(property))
-                    {
-                        Light light;
-                        light.position = obj->transform.position;
-                        light.color = glm::vec3(1.0f);
-                        light.intensity = 1.0f;
-
-                        renderer.addLight(light);
-                    }
                 }
             }
 
-            created.push_back(obj);
+            gameObjectByEntityIndex[i] = obj;
         }
 
-        for (size_t i = 0; i < created.size(); ++i)
+        for (const auto &[entityIndex, obj] : gameObjectByEntityIndex)
         {
-            const json &node = root["objects"][i];
+            const json &node = root["entities"][entityIndex];
             if (!node.contains("parent"))
                 continue;
 
             size_t parentIndex = node["parent"].get<size_t>();
-            if (parentIndex >= created.size())
+
+            auto it = gameObjectByEntityIndex.find(parentIndex);
+            if (it == gameObjectByEntityIndex.end())
             {
                 Logging::Warning(
                     "SceneSerializer::load - parent index " + std::to_string(parentIndex) +
-                    " out of range for object '" + created[i]->name + "'");
+                    " out of range for object '" + obj->name + "'");
                 continue;
             }
 
-            created[i]->setParent(created[parentIndex]);
+            obj->setParent(it->second);
         }
 
         Logging::Info("SceneSerializer::load - loaded scene from " + path);
         return true;
     }
+
 }

@@ -8,7 +8,6 @@
 
 #include "Rendering/Shader.hpp"
 #include "Rendering/Texture.hpp"
-#include "Rendering/Light.hpp"
 
 #include "Transform.hpp"
 #include "Camera.hpp"
@@ -17,11 +16,11 @@
 namespace Neon
 {
 
-    struct MaterialLight
-    {
-        Light *light;
-        int index;
-    };
+    // Material has no knowledge of Light (scene or otherwise) - see
+    // Rendering/Light.hpp's class comment and CONTRIBUTING.md's architecture rules.
+    // Anything light-related that needs to reach a shader goes through Renderer
+    // calling Material::setUniform() directly with plain values (see Renderer.cpp),
+    // the same way it already does for u_View/u_Projection/u_ViewPos.
     using MaterialProperty = std::variant<
         bool,
         int,
@@ -31,8 +30,7 @@ namespace Neon
         glm::vec3,
         glm::vec4,
         glm::mat3,
-        glm::mat4,
-        MaterialLight>;
+        glm::mat4>;
     class Material
     {
     public:

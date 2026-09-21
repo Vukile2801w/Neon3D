@@ -14,6 +14,7 @@
 #include "Window.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace Neon
 {
@@ -34,15 +35,13 @@ namespace Neon
         }
         const Camera &getCamera() const { return m_camera; }
 
-        void addLight(const Light &light);
-        Light &getLight(size_t index);
-        const Light &getLight(size_t index) const;
-        void clearLights();
-
     private:
-        void drawGameObject(GameObject &gameObject);
-
-        std::vector<Light> m_lights;
+        // 'lights' is a non-owning view into whichever Scene is being drawn (see
+        // Renderer::draw(Scene&)) - Renderer never owns Light data itself, Scene
+        // does (Scene::m_lights). When drawing a single GameObject with no Scene
+        // context (see the public draw(GameObject&, bool) overload), 'lights' is
+        // simply empty and lightCount comes out as 0.
+        void drawGameObject(GameObject &gameObject, const std::vector<std::unique_ptr<Light>> &lights);
 
         Camera &m_camera;
         Window &m_window;

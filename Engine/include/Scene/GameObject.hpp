@@ -51,8 +51,8 @@ namespace Neon
         // Called by SceneSerializer::save(), after it has already written the base
         // fields (type/name/transform/mesh/parent) into 'out'. A subclass overrides
         // this to add whatever *extra* fields its own GameObjectFactory-registered
-        // constructor function will need back (e.g. Cube writes "isLightSource" and
-        // "color"). Default does nothing, so a plain GameObject needs no override.
+        // constructor function will need back (e.g. Cube could write its own "color").
+        // Default does nothing, so a plain GameObject needs no override.
         // 'out' is the same JSON object representing this GameObject as a whole -
         // don't overwrite the reserved base keys ("type", "name", "transform",
         // "mesh", "parent"). See GameObjectFactory.hpp for the loading side.

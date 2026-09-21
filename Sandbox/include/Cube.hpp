@@ -27,8 +27,7 @@ public:
         GameObject *parent,
         glm::vec3 pos,
         glm::vec3 scale,
-        Neon::AssetManager &assetManager,
-        bool isLightSource)
+        Neon::AssetManager &assetManager)
         : Neon::GameObject(scene, parent),
           m_shader(helper(assetManager)),
           m_mat(m_shader),
@@ -48,7 +47,6 @@ public:
         m_mat.setTexture("T_Normal", m_normalMap);
 
         m_mat.setProperty("u_Shininess", 16.0f);
-        m_mat.setProperty("u_IsLightSource", isLightSource);
     }
 
     std::string getTypeName() override
@@ -70,8 +68,7 @@ public:
             nullptr,
             glm::vec3(0.0f),
             glm::vec3(1.0f),
-            assetManager,
-            false);
+            assetManager);
     }
 
 private:

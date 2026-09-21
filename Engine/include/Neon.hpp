@@ -26,10 +26,14 @@
 #include "Rendering/Skybox.hpp"
 #include "Rendering/Window.hpp"
 #include "Rendering/Light.hpp"
+#include "Rendering/PointLight.hpp"
+#include "Rendering/SpotLight.hpp"
+#include "Rendering/DirectionalLight.hpp"
 
 // Scene
 #include "Scene/GameObject.hpp"
 #include "Scene/GameObjectFactory.hpp"
+#include "Scene/LightFactory.hpp"
 #include "Scene/SceneSerializer.hpp"
 #include "Scene/Behavior.hpp"
 #include "Scene/Scene.hpp"

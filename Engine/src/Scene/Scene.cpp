@@ -20,7 +20,7 @@ namespace Neon
     }
 
     // Defined here (not defaulted in the header) because std::unique_ptr<GameObject>'s
-    // destructor needs GameObject's complete type.
+    // and std::unique_ptr<Light>'s destructors need their pointees' complete types.
     Scene::~Scene() = default;
 
     void Scene::destroy(GameObject *gameObject)
@@ -29,6 +29,14 @@ namespace Neon
             return;
 
         markSubtreePendingKill(gameObject);
+    }
+
+    void Scene::destroy(Light *light)
+    {
+        if (light == nullptr || light->isPendingKill())
+            return;
+
+        light->markPendingKill();
     }
 
     void Scene::markSubtreePendingKill(GameObject *gameObject)
@@ -77,10 +85,28 @@ namespace Neon
                                return gameObject->isPendingKill();
                            }),
             m_gameObjects.end());
+
+        // Lights have no children/parent and no Behavior to run, so there's no
+        // iteration-safety reason to defer their removal - but destroy(Light*) only
+        // marks pending-kill (see above), so the actual erase still has to happen
+        // somewhere. Doing it here, alongside the GameObject sweep, keeps a single
+        // "pending-kill objects are actually removed at the end of update()" rule for
+        // both owning containers instead of two different removal timings.
+        m_lights.erase(
+            std::remove_if(m_lights.begin(), m_lights.end(),
+                           [](const std::unique_ptr<Light> &light)
+                           {
+                               return light->isPendingKill();
+                           }),
+            m_lights.end());
     }
 
     const std::vector<std::unique_ptr<GameObject>> &Scene::getGameObjects() const
     {
         return m_gameObjects;
+    }
+    const std::vector<std::unique_ptr<Light>> &Scene::getLights() const
+    {
+        return m_lights;
     }
 }

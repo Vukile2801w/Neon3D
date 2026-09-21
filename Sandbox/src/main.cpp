@@ -56,7 +56,7 @@ protected:
 
         // spawnCubes(121);
 
-        Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene.neon", assetManager, getRenderer());
+        Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene2.neon", assetManager);
         findMonkey();
 
         eventBus.subscribe<Neon::MouseMovedEvent>([this](const Neon::MouseMovedEvent &event)
@@ -159,7 +159,7 @@ protected:
             onSave();
             break;
         case Input::KeyF9:
-            Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene.neon", getAssetManager(), getRenderer());
+            Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene2.neon", getAssetManager());
             break;
 
         default:
@@ -284,8 +284,7 @@ private:
                 parent,
                 position,
                 glm::vec3(1.0f),
-                getAssetManager(),
-                false);
+                getAssetManager());
 
             // Prvi Cube trenutnog reda
             if (x == 0)

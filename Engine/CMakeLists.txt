@@ -31,6 +31,7 @@ add_library(Engine
     # Scene
     src/Scene/GameObject.cpp
     src/Scene/GameObjectFactory.cpp
+    src/Scene/LightFactory.cpp
     src/Scene/SceneSerializer.cpp
     src/Scene/Behavior.cpp
     src/Scene/Scene.cpp
@@ -43,6 +44,9 @@ add_library(Engine
     src/Rendering/Shader.cpp
     src/Rendering/Window.cpp
     src/Rendering/Skybox.cpp
+    src/Rendering/PointLight.cpp
+    src/Rendering/SpotLight.cpp
+    src/Rendering/DirectionalLight.cpp
     
     # Assets
     src/Assets/AssetManager.cpp

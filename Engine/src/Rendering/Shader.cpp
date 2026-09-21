@@ -75,7 +75,15 @@ namespace Neon
     {
         NEON_ASSERT(m_program != 0, "Attempting to query a uniform on an invalid shader");
 
-        return glGetUniformLocation(m_program, name.c_str());
+        const int location = glGetUniformLocation(m_program, name.c_str());
+
+        if (location == -1)
+        {
+            Logging::Warning(
+                "Uniform not found: " + name);
+        }
+
+        return location;
     }
 
     void Shader::setBool(const std::string &name, bool value) const

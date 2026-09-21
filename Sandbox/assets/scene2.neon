@@ -296,17 +296,101 @@
             "type": "Light/Point",
             "name": "Lamp",
             "position": [
-                0.0,
+                -6.0,
                 4.0,
-                0.0
+                -6.0
             ],
             "color": [
                 1.0,
                 1.0,
                 1.0
             ],
-            "intensity": 1.0,
+            "intensity": 2.0,
             "range": 10.0
+        },
+        {
+            "type": "Light/Spot",
+            "name": "SpotLamp",
+            "position": [
+                4.0,
+                3.0,
+                1.0
+            ],
+            "direction": [
+                1.0,
+                -1.0,
+                1.0
+            ],
+            "color": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "intensity": 10.0,
+            "range": 12.0,
+            "innerCone": 25.0,
+            "outerCone": 25.0
+        },
+        {
+            "type": "Light/Spot",
+            "name": "SpotLamp1",
+            "position": [
+                4.0,
+                3.0,
+                1
+            ],
+            "direction": [
+                0.0,
+                -1.0,
+                1.0
+            ],
+            "color": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "intensity": 10.0,
+            "range": 12.0,
+            "innerCone": 25.0,
+            "outerCone": 25.0
+        },
+        {
+            "type": "Light/Spot",
+            "name": "SpotLamp2",
+            "position": [
+                4.0,
+                3.0,
+                1
+            ],
+            "direction": [
+                -1.0,
+                -1.0,
+                1.0
+            ],
+            "color": [
+                0.0,
+                0.0,
+                1.0
+            ],
+            "intensity": 10.0,
+            "range": 12.0,
+            "innerCone": 25.0,
+            "outerCone": 25.0
+        },
+        {
+            "type": "Light/Directional",
+            "name": "Sun",
+            "direction": [
+                -0.3,
+                -1.0,
+                -0.2
+            ],
+            "color": [
+                1.0,
+                0.95,
+                0.85
+            ],
+            "intensity": 0.2
         }
     ]
 }

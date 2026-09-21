@@ -7,15 +7,22 @@ namespace Neon
 {
     class Scene;
     class AssetManager;
-    class Renderer;
 
-    // Reads/writes a Scene to a JSON file. Base GameObject fields (type, name,
+    // Reads/writes a Scene to a JSON file. The file is a single "entities" array;
+    // each entity's "type" is "<Category>/<TypeName>" ("GameObject/Cube",
+    // "Light/Point", ...). SceneSerializer only ever looks at the category - it
+    // strips the prefix and routes to GameObjectFactory or LightFactory, and never
+    // mentions a concrete GameObject or Light subclass by name (see
+    // GameObjectFactory.hpp / LightFactory.hpp). Base GameObject fields (type, name,
     // transform, mesh reference, hierarchy) are handled generically here for every
-    // object. A subclass's own extra fields (e.g. Cube's isLightSource/color) are
-    // handled on the way out by that subclass's GameObject::onSerialize() override
-    // (see GameObject.hpp), and on the way in by its own GameObjectFactory-registered
-    // CreateFn (see GameObjectFactory.hpp). SceneSerializer itself never mentions a
-    // concrete GameObject subclass by name - see CONTRIBUTING.md §7/§15.
+    // GameObject; a subclass's own extra fields go through
+    // GameObject::onSerialize()/its GameObjectFactory::CreateFn. Base Light fields
+    // (type, name) are handled generically here for every Light; a subclass's own
+    // extra fields go through Light::onSerialize()/its LightFactory::CreateFn. See
+    // CONTRIBUTING.md §7/§15.
+    //
+    // Lights have no parent/hierarchy concept, unlike GameObjects - SceneSerializer
+    // never resolves a "parent" field for a Light entity.
     class SceneSerializer
     {
     public:
@@ -25,12 +32,13 @@ namespace Neon
         static bool save(const Scene &scene, const std::string &path);
 
         // Reads path and populates outScene. assetManager is forwarded to each
-        // object's registered GameObjectFactory::CreateFn (most types need it to
-        // (re)load their mesh/texture/shader assets, the same way Cube's constructor
-        // already does today) and is used directly here to resolve each object's own
-        // "mesh" field. Returns false on file/parse failure or if 'objects' is
+        // GameObject's registered GameObjectFactory::CreateFn (most types need it to
+        // (re)load their mesh/texture/shader assets) and is used directly here to
+        // resolve each GameObject's own "mesh" field. Light entities go through
+        // LightFactory instead, which doesn't take an AssetManager (see
+        // LightFactory.hpp). Returns false on file/parse failure or if 'entities' is
         // missing/malformed.
-        static bool load(Scene &outScene, const std::string &path, AssetManager &assetManager, Renderer &renderer);
+        static bool load(Scene &outScene, const std::string &path, AssetManager &assetManager);
     };
 }
 

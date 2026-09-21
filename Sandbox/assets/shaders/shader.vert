@@ -11,7 +11,6 @@ uniform mat4 u_Model;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
-
 uniform vec3 u_Color;
 
 out vec3 v_Normal;
@@ -22,7 +21,7 @@ out vec2 v_TexCoord;
 void main()
 {
     vec4 worldPosition =
-    u_Model * vec4(a_Position, 1.0);
+        u_Model * vec4(a_Position, 1.0);
 
     FragPos = worldPosition.xyz;
 
@@ -35,6 +34,7 @@ void main()
     vec3 T =
         normalize(normalMatrix * a_Tangent);
 
+    // Orthogonalize tangent against normal
     T = normalize(T - dot(T, N) * N);
 
     vec3 B =
