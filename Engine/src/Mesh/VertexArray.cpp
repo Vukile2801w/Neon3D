@@ -4,8 +4,8 @@
 #include <cstdlib>
 
 #include "Rendering/Shader.hpp"
+#include "Debug/Logging.hpp"
 #include "Assert.hpp"
-#include "Logging.hpp"
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"

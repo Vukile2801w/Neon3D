@@ -6,7 +6,7 @@
 #include <string>
 
 #include "Assert.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 #include "Assets/AssetManager.hpp"
 #include "Mesh/Mesh.hpp"

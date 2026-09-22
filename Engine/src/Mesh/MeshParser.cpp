@@ -1,8 +1,7 @@
 #include "Mesh/MeshParser.hpp"
-#include "Logging.hpp"
 
+#include "Debug/Logging.hpp"
 #include "fast_obj.h"
-#include "Logging.hpp"
 
 namespace Neon
 {

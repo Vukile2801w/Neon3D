@@ -50,6 +50,8 @@ namespace Neon
         void setCulingDirection(CulingDirection dir);
         void setDepthFunction(DepthFunction function);
 
+        void InitImGUI();
+
     private:
         struct GLFWWindowDeleter
         {

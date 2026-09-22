@@ -8,6 +8,8 @@
 
 #include "Events/EventBus.hpp"
 
+#include "Debug/ImGuiLayer.hpp"
+
 #include "Camera.hpp"
 #include "Input.hpp"
 #include "Time.hpp"
@@ -40,6 +42,9 @@ namespace Neon
         AssetManager &getAssetManager() { return m_assetManager; }
         const AssetManager &getAssetManager() const { return m_assetManager; }
 
+        ImGuiLayer &getImGui() { return m_imGui; }
+        const ImGuiLayer &getImGui() const { return m_imGui; }
+
     protected:
         virtual void onStart() {};
         virtual void onUpdate(float dt) {};
@@ -54,6 +59,7 @@ namespace Neon
         Input m_input;
         Time m_time;
         AssetManager m_assetManager;
+        ImGuiLayer m_imGui;
     };
 }
 

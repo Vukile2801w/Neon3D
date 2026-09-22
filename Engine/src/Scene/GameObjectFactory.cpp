@@ -1,7 +1,7 @@
 #include "Scene/GameObjectFactory.hpp"
 
 #include "Assert.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 namespace Neon
 {

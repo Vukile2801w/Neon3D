@@ -1,6 +1,6 @@
 #include "Mesh/VertexBuffer.hpp"
 
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"

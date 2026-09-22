@@ -4,7 +4,7 @@
 
 #include "Assert.hpp"
 #include "Scene/Behavior.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 #include "Scene/GameObject.hpp"
 #include "Scene/Scene.hpp"

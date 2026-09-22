@@ -39,6 +39,8 @@ namespace Neon
         void bind(unsigned int slot = 0) const;
         static void unbind();
 
+        unsigned int getID() const { return m_id; }
+
         int width() const;
         int height() const;
 

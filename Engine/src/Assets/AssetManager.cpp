@@ -2,7 +2,7 @@
 
 #include <system_error>
 
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 namespace Neon
 {

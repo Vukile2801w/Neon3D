@@ -1,7 +1,7 @@
 #include "Scene/LightFactory.hpp"
 
 #include "Assert.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 #include "Rendering/DirectionalLight.hpp"
 #include "Rendering/PointLight.hpp"

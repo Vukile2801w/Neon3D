@@ -103,7 +103,7 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 - [x] `Scene` class: owns a list of objects, exposes `addObject`/`removeObject`, iterates for update + render submission
 - [x] Optional parent/child transform hierarchy — **note:** `Transform::getMatrix()` currently has no parent concept at all; adding hierarchy means either a `Transform* parent` pointer or moving hierarchy into `Scene`/`GameObject` instead of into `Transform` itself (keep `Transform` a pure local-space math object)
 - [x] Basic scene serialization (start with a simple custom text/JSON format — do not build a generic reflection system yet)
-- [ ] Scene loading/unloading lifecycle hooks
+- [x] Scene loading/unloading lifecycle hooks
 
 **Definition of Done:** Sandbox can load a scene file describing multiple objects with meshes/materials/transforms, and the engine renders all of them without per-object code in `main.cpp`.
 
@@ -172,8 +172,8 @@ Neon3D today is a **thin OpenGL/GLFW wrapper**, not yet a layered engine. The lo
 **Why it matters:** Not started. Lower priority than a working runtime — but debug UI (even just an FPS counter / stat overlay) has outsized value-per-effort and can be pulled earlier if useful.
 **Dependencies:** Phase 2 (Renderer), Phase 3 (Scene, for an inspector to have something to inspect).
 
-- [ ] Integrate Dear ImGui for debug overlays (frame time, entity list, basic value tweaking) — this is the highest-value, lowest-effort item in this phase and could reasonably be pulled forward once Phase 2's Renderer exists
-- [ ] Simple scene inspector (list objects, edit transform values live)
+- [x] Integrate Dear ImGui for debug overlays (frame time, entity list, basic value tweaking) — this is the highest-value, lowest-effort item in this phase and could reasonably be pulled forward once Phase 2's Renderer exists
+- [x] Simple scene inspector (list objects, edit transform values live)
 - [ ] Asset browser (list loaded/available assets)
 - [ ] Gizmos for transform manipulation in the viewport — defer, meaningful effort for limited payoff until there's an actual editor viewport
 - [ ] Full standalone scene editor — **explicitly "nice to have," not required for a "usable engine"**

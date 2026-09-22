@@ -20,6 +20,7 @@ namespace Neon
         double sinceLastFrame() const;
 
         float getDeltaTime() const;
+        float getFPS() const;
 
         void beginFrame();
 

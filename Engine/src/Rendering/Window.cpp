@@ -2,7 +2,7 @@
 
 #include "Assert.hpp"
 #include "Input.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 #include "Events/WindowClosedEvent.hpp"
 #include "Events/WindowFocusedEvent.hpp"
 #include "Events/WindowLostFocusEvent.hpp"
@@ -10,6 +10,9 @@
 
 #include "glad/glad.h"
 #include "glfw/glfw3.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 namespace Neon
 {
@@ -214,6 +217,13 @@ namespace Neon
         }
 
         glDepthFunc(glFunction);
+    }
+
+    void Window::InitImGUI()
+    {
+
+        ImGui_ImplGlfw_InitForOpenGL(m_window.get(), true); // Second param install_callback=true will install GLFW callbacks and chain to existing ones.
+        ImGui_ImplOpenGL3_Init();
     }
 
     int Window::getWidth() const

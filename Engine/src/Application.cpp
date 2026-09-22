@@ -1,10 +1,12 @@
 #include "Application.hpp"
 
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 namespace Neon
 {
-    Application::Application() : m_input(m_eventBus), m_window(m_input, m_eventBus), m_time(), m_camera(), m_renderer(m_camera, m_window), m_assetManager()
+    Application::Application() : m_input(m_eventBus), m_window(m_input, m_eventBus),
+                                 m_time(), m_camera(), m_renderer(m_camera, m_window), m_assetManager(),
+                                 m_imGui(this)
     {
     }
 
@@ -25,14 +27,17 @@ namespace Neon
             m_time.beginFrame();
             m_input.handleInput();
             m_window.update();
+            m_imGui.begin();
 
             onUpdate(m_time.getDeltaTime());
 
             onRender();
+            m_imGui.end();
             m_window.render();
         }
 
         Logging::Info("Application loop ended");
         onEnd();
     }
+
 }

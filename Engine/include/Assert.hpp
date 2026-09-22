@@ -3,7 +3,7 @@
 
 #include <cstdlib>
 
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 
 #ifdef NEON_DEBUG
 

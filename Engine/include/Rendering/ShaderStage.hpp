@@ -5,7 +5,7 @@
 #include <string>
 
 #include "Assets/AssetLoader.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 #include "Ref.hpp"
 
 namespace Neon

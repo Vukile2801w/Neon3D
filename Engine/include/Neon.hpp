@@ -38,10 +38,12 @@
 #include "Scene/Behavior.hpp"
 #include "Scene/Scene.hpp"
 
+// Debug
+#include "Debug/Logging.hpp"
+
 // Core
 #include "Application.hpp"
 #include "Transform.hpp"
-#include "Logging.hpp"
 #include "Assert.hpp"
 #include "Camera.hpp"
 #include "Input.hpp"

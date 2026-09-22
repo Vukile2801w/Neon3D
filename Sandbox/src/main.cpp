@@ -2,7 +2,7 @@
 #include <chrono>
 #include <sstream>
 #include <random>
-
+#include <thread>
 #include "Neon.hpp"
 #include "gtc/matrix_transform.hpp"
 
@@ -57,18 +57,13 @@ protected:
         // spawnCubes(121);
 
         Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene2.neon", assetManager);
-        findMonkey();
+        getImGui().attachScene(&m_scene);
 
         eventBus.subscribe<Neon::MouseMovedEvent>([this](const Neon::MouseMovedEvent &event)
                                                   { inputCallback(event); });
 
         eventBus.subscribe<Neon::KeyPressedEvent>([this](const Neon::KeyPressedEvent &event)
                                                   { this->inputCallback(event); });
-
-        eventBus.subscribe<Neon::KeyReleasedEvent>([this](const Neon::KeyReleasedEvent &event)
-                                                   {
-            if (event.getData().key == Input::KeyAlt)
-            getInput().setCursorMode(Input::CursorMode::Disabled); });
 
         getInput().setCursorMode(Input::CursorMode::Disabled);
 
@@ -118,22 +113,34 @@ protected:
     }
     void inputCallback(const Neon::KeyPressedEvent &event)
     {
-        if (getInput().getCursorMode() == Input::CursorMode::Normal)
-            return;
-
         const auto &data = event.getData();
+
+        if (data.key == Input::KeyF11)
+        {
+            const bool hidden =
+                getInput().getCursorMode() == Input::CursorMode::Hidden;
+
+            getInput().setCursorMode(
+                hidden
+                    ? Input::CursorMode::Normal
+                    : Input::CursorMode::Hidden);
+
+            return;
+        }
+
+        // if (getInput().getCursorMode() == Input::CursorMode::Normal)
+        //     return;
 
         switch (data.key)
         {
-        case Input::KeyAlt:
-            getInput().setCursorMode(Input::CursorMode::Normal);
-            break;
-
         case Input::KeyNumPlus:
             m_moveSpeed += 5.0f;
+
             if (m_moveSpeed <= 5.0f)
                 m_moveSpeed = 5.0f;
-            Logging::Info("MoveSpeed: " + std::to_string(m_moveSpeed));
+
+            Logging::Info(
+                "MoveSpeed: " + std::to_string(m_moveSpeed));
             break;
 
         case Input::KeyNumMinus:
@@ -141,32 +148,40 @@ protected:
 
             if (m_moveSpeed <= 5.0f)
                 m_moveSpeed = 5.0f;
-            Logging::Info("MoveSpeed: " + std::to_string(m_moveSpeed));
+
+            Logging::Info(
+                "MoveSpeed: " + std::to_string(m_moveSpeed));
             break;
 
         case Input::KeyNumAsterisk:
             m_rotationSpeed += 0.2f;
-            Logging::Info("RotationSpeed: " + std::to_string(m_rotationSpeed));
+
+            Logging::Info(
+                "RotationSpeed: " + std::to_string(m_rotationSpeed));
             break;
 
         case Input::KeyNumSlash:
             m_rotationSpeed -= 0.2f;
 
-            Logging::Info("RotationSpeed: " + std::to_string(m_rotationSpeed));
+            Logging::Info(
+                "RotationSpeed: " + std::to_string(m_rotationSpeed));
             break;
 
         case Input::KeyF5:
             onSave();
             break;
+
         case Input::KeyF9:
-            Neon::SceneSerializer::load(m_scene, "Sandbox/assets/scene2.neon", getAssetManager());
+            Neon::SceneSerializer::load(
+                m_scene,
+                "Sandbox/assets/scene2.neon",
+                getAssetManager());
             break;
 
         default:
             break;
         }
     }
-
     void onUpdate(float dt) override
     {
         m_scene.update(dt);
@@ -308,6 +323,7 @@ private:
 
     float m_moveSpeed = 5.0f;
     float m_rotationSpeed = 1; // 90°/s
+    bool m_mouseHiden = true;
 
     Neon::Scene m_scene;
     Neon::Camera &m_camera;

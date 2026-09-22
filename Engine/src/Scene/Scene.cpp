@@ -4,7 +4,7 @@
 
 #include "Scene/Behavior.hpp"
 #include "Scene/GameObject.hpp"
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 #include "Assert.hpp"
 
 namespace Neon

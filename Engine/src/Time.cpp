@@ -44,4 +44,8 @@ namespace Neon
                    m_startOfFrame - m_endOfFrame)
             .count();
     }
+    float Time::getFPS() const
+    {
+        return 1.0 / getDeltaTime();
+    }
 }

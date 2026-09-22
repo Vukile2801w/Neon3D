@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Logging.hpp"
+#include "Debug/Logging.hpp"
 #include "Assert.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION

@@ -1,10 +1,10 @@
 add_subdirectory(lib/glad)
+add_subdirectory(lib/imgui-1.92.9b)
 
 
 add_library(Engine
     src/Application.cpp
     src/Transform.cpp
-    src/Logging.cpp
     src/Camera.cpp
     src/Input.cpp
     src/Time.cpp
@@ -51,7 +51,9 @@ add_library(Engine
     # Assets
     src/Assets/AssetManager.cpp
 
-
+    # Debug
+    src/Debug/Logging.cpp
+    src/Debug/ImGuiLayer.cpp
 
     # lib
     lib/fast_obj/fast_obj.cpp
@@ -70,6 +72,8 @@ target_include_directories(Engine
         lib/nlohmann
         lib/fast_obj
         lib/glm
+        lib/imgui-1.92.9b
+        lib/imgui-1.92.9b/backends
 
     PRIVATE
         lib/glfw/include
@@ -81,6 +85,7 @@ target_link_libraries(Engine
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/lib/glfw/libglfw3.a
         GLAD
+        GUI
         opengl32
         gdi32
         user32
