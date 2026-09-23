@@ -107,16 +107,55 @@ namespace Neon
         }
 
         ImGui::BeginChild("SceneObjectList", ImVec2(0, 120), true);
+        // getGameObjects() is the flat owning list (every object, not just roots -
+        // see GameObject.hpp's ownership comment), so only top-level objects
+        // (getParent() == nullptr) are entered here; everything else is reached
+        // by walking getChildren() inside drawGameObjectNode() instead of
+        // appearing a second time at this level.
         for (const auto &object : m_scene->getGameObjects())
         {
-            const bool isSelected = (m_selectedObject == object.get());
-            if (ImGui::Selectable(object->name.c_str(), isSelected))
-                m_selectedObject = object.get();
+            if (object->getParent() == nullptr)
+                drawGameObjectNode(object.get());
         }
         ImGui::EndChild();
 
         if (m_selectedObject && ImGui::Button("Deselect"))
             m_selectedObject = nullptr;
+    }
+
+    void ImGuiLayer::drawGameObjectNode(GameObject *object)
+    {
+        // Objects Scene::destroy() has marked for removal are still in the flat
+        // list until end-of-frame cleanup (see GameObject::isPendingKill()) -
+        // skip them so the tree doesn't flash dying objects for one frame.
+        if (!object || object->isPendingKill())
+            return;
+
+        const std::vector<GameObject *> &children = object->getChildren();
+
+        ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+
+        const bool hasChildren = !children.empty();
+        if (!hasChildren)
+            flags |= ImGuiTreeNodeFlags_Leaf | ImGuiTreeNodeFlags_NoTreePushOnOpen;
+
+        if (m_selectedObject == object)
+            flags |= ImGuiTreeNodeFlags_Selected;
+
+        ImGui::PushID(object);
+        const bool opened = ImGui::TreeNodeEx(object->name.c_str(), flags);
+
+        if (ImGui::IsItemClicked())
+            m_selectedObject = object;
+
+        if (opened && hasChildren)
+        {
+            for (GameObject *child : children)
+                drawGameObjectNode(child);
+            ImGui::TreePop();
+        }
+
+        ImGui::PopID();
     }
 
     void ImGuiLayer::drawInspectorPanel(GameObject *object)
@@ -155,16 +194,18 @@ namespace Neon
         // read-only, matching Material's own const accessor.
         if (ImGui::TreeNode("Textures"))
         {
-            for (const auto &slot : material->getTextures())
+            std::vector<Material::TextureSlot> textures = material->getTextures();
+            for (size_t i = 2; i < textures.size(); i++)
             {
-                ImGui::Text("%s", slot.name.c_str());
 
-                if (slot.texture)
+                ImGui::Text("%s", textures.at(i).name.c_str());
+
+                if (textures.at(i).texture)
                 {
                     // Assumes Texture exposes its GL handle via getID() - rename
                     // to match the real accessor if it's called something else.
                     const ImTextureID textureId =
-                        (ImTextureID)(intptr_t)slot.texture->getID();
+                        (ImTextureID)(intptr_t)textures.at(i).texture->getID();
                     ImGui::Image(textureId, ImVec2(64, 64));
                 }
                 else

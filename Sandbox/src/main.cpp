@@ -115,21 +115,31 @@ protected:
     {
         const auto &data = event.getData();
 
-        if (data.key == Input::KeyF11)
+        if (data.key == Input::KeyAlt)
         {
-            const bool hidden =
-                getInput().getCursorMode() == Input::CursorMode::Hidden;
+            const bool disabled =
+                getInput().getCursorMode() == Input::CursorMode::Disabled;
 
-            getInput().setCursorMode(
-                hidden
-                    ? Input::CursorMode::Normal
-                    : Input::CursorMode::Hidden);
+            if (disabled)
+            {
+                // Disabled -> Normal
+                // Miš se vidi, kontrole i dalje rade
+                getInput().setCursorMode(Input::CursorMode::Normal);
+                setGuiEnabled(true);
+            }
+            else
+            {
+                // Normal -> Disabled
+                // Miš se ponovo capture-uje
+                getInput().setCursorMode(Input::CursorMode::Disabled);
+                setGuiEnabled(false);
+            }
 
             return;
         }
 
-        // if (getInput().getCursorMode() == Input::CursorMode::Normal)
-        //     return;
+        if (m_inputLocked)
+            return;
 
         switch (data.key)
         {
@@ -146,7 +156,7 @@ protected:
         case Input::KeyNumMinus:
             m_moveSpeed -= 5.0f;
 
-            if (m_moveSpeed <= 5.0f)
+            if (m_moveSpeed < 5.0f)
                 m_moveSpeed = 5.0f;
 
             Logging::Info(
@@ -162,6 +172,9 @@ protected:
 
         case Input::KeyNumSlash:
             m_rotationSpeed -= 0.2f;
+
+            if (m_rotationSpeed <= 0.0f)
+                m_rotationSpeed = 0.0f;
 
             Logging::Info(
                 "RotationSpeed: " + std::to_string(m_rotationSpeed));
@@ -192,6 +205,12 @@ protected:
         // Movement
         // =====================
 
+        const bool disabled =
+            getInput().getCursorMode() == Input::CursorMode::Disabled;
+
+        if (!disabled)
+            return;
+
         if (input.isKeyDown(Input::Key::KeyW))
             m_camera.position += m_camera.getForward() * m_moveSpeed * dt;
 
@@ -209,29 +228,6 @@ protected:
 
         if (input.isKeyDown(Input::Key::KeyCtrl))
             m_camera.position.y -= m_moveSpeed * dt;
-
-        if (m_monkey)
-        {
-            const float rotationSpeed = glm::radians(90.0f);
-
-            if (input.isKeyDown(Input::KeyLeft))
-                m_monkey->transform.rotation.y += rotationSpeed * dt;
-
-            if (input.isKeyDown(Input::KeyRight))
-                m_monkey->transform.rotation.y -= rotationSpeed * dt;
-
-            if (input.isKeyDown(Input::KeyUp))
-                m_monkey->transform.rotation.x += rotationSpeed * dt;
-
-            if (input.isKeyDown(Input::KeyDown))
-                m_monkey->transform.rotation.x -= rotationSpeed * dt;
-
-            if (input.isKeyDown(Input::KeyPageUp))
-                m_monkey->transform.rotation.z += rotationSpeed * dt;
-
-            if (input.isKeyDown(Input::KeyPageDown))
-                m_monkey->transform.rotation.z -= rotationSpeed * dt;
-        }
     }
 
     void onSave()
@@ -259,71 +255,11 @@ protected:
     }
 
 private:
-    void spawnCubes(int count)
-    {
-        const int width =
-            static_cast<int>(std::sqrt(count));
-
-        Cube *previousCube = nullptr;
-        Cube *previousRowFirst = nullptr;
-
-        for (int i = 0; i < count; ++i)
-        {
-            const int x = i % width;
-
-            Cube *parent = nullptr;
-            glm::vec3 position(0.0f);
-
-            if (i == 0)
-            {
-                // Prvi Cube nema parenta
-                parent = nullptr;
-                position = glm::vec3(0.0f);
-            }
-            else if (x == 0)
-            {
-                // Prvi Cube novog reda:
-                // parent je prvi Cube prethodnog reda
-                parent = previousRowFirst;
-                position = glm::vec3(0.0f, 0.0f, 2.0f);
-            }
-            else
-            {
-                // Ostali Cube-ovi u redu:
-                // parent je prethodni Cube
-                parent = previousCube;
-                position = glm::vec3(2.0f, 0.0f, 0.0f);
-            }
-
-            Cube *cube = m_scene.createGameObject<Cube>(
-                parent,
-                position,
-                glm::vec3(1.0f),
-                getAssetManager());
-
-            // Prvi Cube trenutnog reda
-            if (x == 0)
-                previousRowFirst = cube;
-
-            // Poslednji Cube
-            previousCube = cube;
-
-            if (i % 10 == 0)
-            {
-                Logging::Warning(
-                    "Created Cubes: " +
-                    std::to_string(i) +
-                    "/" +
-                    std::to_string(count));
-            }
-        }
-    }
-
     Ref<Neon::Skybox> m_skybox;
 
     float m_moveSpeed = 5.0f;
     float m_rotationSpeed = 1; // 90°/s
-    bool m_mouseHiden = true;
+    bool m_inputLocked = false;
 
     Neon::Scene m_scene;
     Neon::Camera &m_camera;

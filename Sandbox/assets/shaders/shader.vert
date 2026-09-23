@@ -11,6 +11,8 @@ uniform mat4 u_Model;
 uniform mat4 u_View;
 uniform mat4 u_Projection;
 
+uniform vec2 u_UVTiling;
+
 uniform vec3 u_Color;
 
 out vec3 v_Normal;
@@ -44,7 +46,7 @@ void main()
     v_TBN = mat3(T, B, N);
 
     v_Color = u_Color;
-    v_TexCoord = a_TexCoord;
+    v_TexCoord = a_TexCoord * u_UVTiling;
 
     gl_Position =
         u_Projection *

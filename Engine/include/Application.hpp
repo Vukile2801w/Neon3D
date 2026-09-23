@@ -45,6 +45,10 @@ namespace Neon
         ImGuiLayer &getImGui() { return m_imGui; }
         const ImGuiLayer &getImGui() const { return m_imGui; }
 
+        bool isGuiEnabled() const { return m_isGuiEnabled; }
+        void setGuiEnabled(bool isOn) { m_isGuiEnabled = isOn; }
+        void toggleGuiEnabled() { m_isGuiEnabled = !m_isGuiEnabled; }
+
     protected:
         virtual void onStart() {};
         virtual void onUpdate(float dt) {};
@@ -52,6 +56,8 @@ namespace Neon
         virtual void onEnd() {};
 
     private:
+        bool m_isGuiEnabled{false};
+
         Renderer m_renderer;
         EventBus m_eventBus;
         Window m_window;

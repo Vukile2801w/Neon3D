@@ -27,12 +27,17 @@ namespace Neon
             m_time.beginFrame();
             m_input.handleInput();
             m_window.update();
-            m_imGui.begin();
+
+            if (m_isGuiEnabled)
+                m_imGui.begin();
 
             onUpdate(m_time.getDeltaTime());
 
             onRender();
-            m_imGui.end();
+
+            if (m_isGuiEnabled)
+                m_imGui.end();
+
             m_window.render();
         }
 

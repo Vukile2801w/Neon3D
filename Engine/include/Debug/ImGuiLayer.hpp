@@ -23,6 +23,7 @@ namespace Neon
     private:
         void drawStatsPanel();
         void drawSceneHierarchyPanel();
+        void drawGameObjectNode(GameObject *object);
         void drawInspectorPanel(GameObject *object);
         void drawMaterialSection(Material *material);
         void drawLightsPanel();

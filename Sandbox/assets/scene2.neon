@@ -1,10 +1,32 @@
 {
-    "version": 2,
     "entities": [
         {
-            "name": "Floor",
-            "type": "GameObject/Cube",
+            "material": {
+                "properties": {
+                    "u_Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "u_HasNormalTexture": true,
+                    "u_HasTexture": true,
+                    "u_Shininess": 16.0,
+                    "u_UVTiling": [
+                        6.0,
+                        4.0
+                    ]
+                },
+                "shader": {
+                    "fragment": "Sandbox/assets/shaders/shader.frag",
+                    "vertex": "Sandbox/assets/shaders/shader.vert"
+                },
+                "textures": {
+                    "T_Color": "Sandbox/assets/brick.jpg",
+                    "T_Normal": "Sandbox/assets/brickNormal.png"
+                }
+            },
             "mesh": "Sandbox/assets/cube.obj",
+            "name": "Floor",
             "transform": {
                 "position": [
                     0.0,
@@ -22,6 +44,9 @@
                     10.0
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
@@ -29,9 +54,13 @@
                         1.0,
                         1.0
                     ],
-                    "u_Shininess": 16.0,
+                    "u_HasNormalTexture": true,
                     "u_HasTexture": true,
-                    "u_HasNormalTexture": true
+                    "u_Shininess": 16.0,
+                    "u_UVTiling": [
+                        1.0,
+                        1.0
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
@@ -41,12 +70,9 @@
                     "T_Color": "Sandbox/assets/brick.jpg",
                     "T_Normal": "Sandbox/assets/brickNormal.png"
                 }
-            }
-        },
-        {
-            "name": "Cube1",
-            "type": "GameObject/Cube",
+            },
             "mesh": "Sandbox/assets/cube.obj",
+            "name": "Cube1",
             "transform": {
                 "position": [
                     0.0,
@@ -64,6 +90,9 @@
                     1.0
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
@@ -71,9 +100,13 @@
                         1.0,
                         1.0
                     ],
-                    "u_Shininess": 16.0,
+                    "u_HasNormalTexture": true,
                     "u_HasTexture": true,
-                    "u_HasNormalTexture": true
+                    "u_Shininess": 16.0,
+                    "u_UVTiling": [
+                        1.0,
+                        1.0
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
@@ -83,13 +116,10 @@
                     "T_Color": "Sandbox/assets/brick.jpg",
                     "T_Normal": "Sandbox/assets/brickNormal.png"
                 }
-            }
-        },
-        {
-            "name": "Cube2",
-            "type": "GameObject/Cube",
-            "parent": 1,
+            },
             "mesh": "Sandbox/assets/cube.obj",
+            "name": "Cube2",
+            "parent": 1,
             "transform": {
                 "position": [
                     -4.0,
@@ -107,6 +137,9 @@
                     1.0
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
@@ -114,9 +147,13 @@
                         1.0,
                         1.0
                     ],
-                    "u_Shininess": 16.0,
+                    "u_HasNormalTexture": true,
                     "u_HasTexture": true,
-                    "u_HasNormalTexture": true
+                    "u_Shininess": 16.0,
+                    "u_UVTiling": [
+                        1.0,
+                        1.0
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
@@ -126,13 +163,10 @@
                     "T_Color": "Sandbox/assets/brick.jpg",
                     "T_Normal": "Sandbox/assets/brickNormal.png"
                 }
-            }
-        },
-        {
-            "name": "Cube3",
-            "type": "GameObject/Cube",
-            "parent": 2,
+            },
             "mesh": "Sandbox/assets/cube.obj",
+            "name": "Cube3",
+            "parent": 2,
             "transform": {
                 "position": [
                     8.0,
@@ -150,6 +184,9 @@
                     1.0
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
@@ -157,9 +194,13 @@
                         1.0,
                         1.0
                     ],
-                    "u_Shininess": 16.0,
+                    "u_HasNormalTexture": true,
                     "u_HasTexture": true,
-                    "u_HasNormalTexture": true
+                    "u_Shininess": 16.0,
+                    "u_UVTiling": [
+                        1.0,
+                        1.0
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
@@ -169,13 +210,10 @@
                     "T_Color": "Sandbox/assets/brick.jpg",
                     "T_Normal": "Sandbox/assets/brickNormal.png"
                 }
-            }
-        },
-        {
-            "name": "Cube4",
-            "type": "GameObject/Cube",
-            "parent": 1,
+            },
             "mesh": "Sandbox/assets/cube.obj",
+            "name": "Cube4",
+            "parent": 1,
             "transform": {
                 "position": [
                     0.0,
@@ -193,31 +231,35 @@
                     1.0
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
-                        1.0,
+                        0.41999998688697815,
+                        0.7599999904632568,
+                        0.20000000298023224
+                    ],
+                    "u_HasNormalTexture": false,
+                    "u_HasTexture": false,
+                    "u_Shininess": 128.0,
+                    "u_UVTiling": [
                         1.0,
                         1.0
-                    ],
-                    "u_Shininess": 16.0,
-                    "u_HasTexture": true,
-                    "u_HasNormalTexture": true
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
                     "vertex": "Sandbox/assets/shaders/shader.vert"
                 },
                 "textures": {
-                    "T_Color": "Sandbox/assets/brick.jpg",
-                    "T_Normal": "Sandbox/assets/brickNormal.png"
+                    "T_Color": "Sandbox\\assets\\teapot.png",
+                    "T_Normal": "Sandbox\\assets\\teapot.png"
                 }
-            }
-        },
-        {
-            "name": "Teapot",
-            "type": "GameObject/Cube",
+            },
             "mesh": "Sandbox/assets/teapot.obj",
+            "name": "Teapot",
             "transform": {
                 "position": [
                     -4.0,
@@ -235,28 +277,35 @@
                     0.375
                 ]
             },
+            "type": "GameObject/Cube"
+        },
+        {
             "material": {
                 "properties": {
                     "u_Color": [
-                        0.42,
-                        0.76,
-                        0.2
+                        0.20000000298023224,
+                        0.20000000298023224,
+                        1.0
                     ],
-                    "u_Shininess": 128.0,
+                    "u_HasNormalTexture": false,
                     "u_HasTexture": false,
-                    "u_HasNormalTexture": false
+                    "u_Shininess": 1024.0,
+                    "u_UVTiling": [
+                        1.0,
+                        1.0
+                    ]
                 },
                 "shader": {
                     "fragment": "Sandbox/assets/shaders/shader.frag",
                     "vertex": "Sandbox/assets/shaders/shader.vert"
                 },
-                "textures": {}
-            }
-        },
-        {
-            "name": "Monkey",
-            "type": "GameObject/Cube",
+                "textures": {
+                    "T_Color": "Sandbox\\assets\\teapot.png",
+                    "T_Normal": "Sandbox\\assets\\teapot.png"
+                }
+            },
             "mesh": "Sandbox/assets/monkey.obj",
+            "name": "Monkey",
             "transform": {
                 "position": [
                     4.0,
@@ -274,123 +323,108 @@
                     0.75
                 ]
             },
-            "material": {
-                "properties": {
-                    "u_Color": [
-                        0.2,
-                        0.2,
-                        1.0
-                    ],
-                    "u_Shininess": 1024.0,
-                    "u_HasTexture": false,
-                    "u_HasNormalTexture": false
-                },
-                "shader": {
-                    "fragment": "Sandbox/assets/shaders/shader.frag",
-                    "vertex": "Sandbox/assets/shaders/shader.vert"
-                },
-                "textures": {}
-            }
+            "type": "GameObject/Cube"
         },
         {
-            "type": "Light/Point",
+            "color": [
+                1.0,
+                0.2549019753932953,
+                0.7019608020782471
+            ],
+            "intensity": 1.149999976158142,
             "name": "Lamp",
             "position": [
-                -6.0,
-                4.0,
-                -6.0
+                0.0,
+                5.349999904632568,
+                0.0
             ],
-            "color": [
-                1.0,
-                1.0,
-                1.0
-            ],
-            "intensity": 2.0,
-            "range": 10.0
+            "range": 11.800000190734863,
+            "type": "Light/Point"
         },
         {
-            "type": "Light/Spot",
+            "color": [
+                1.0,
+                0.0,
+                0.0
+            ],
+            "direction": [
+                0.4000000059604645,
+                -0.4399999976158142,
+                -0.9599999785423279
+            ],
+            "innerCone": 4.699999809265137,
+            "intensity": 5.0,
             "name": "SpotLamp",
+            "outerCone": 32.5,
             "position": [
-                4.0,
-                3.0,
-                1.0
-            ],
-            "direction": [
-                1.0,
-                -1.0,
-                1.0
-            ],
-            "color": [
-                1.0,
                 0.0,
-                0.0
+                5.400000095367432,
+                10.600000381469727
             ],
-            "intensity": 10.0,
-            "range": 12.0,
-            "innerCone": 25.0,
-            "outerCone": 25.0
+            "range": 15.5,
+            "type": "Light/Spot"
         },
         {
-            "type": "Light/Spot",
+            "color": [
+                0.0,
+                1.0,
+                0.0
+            ],
+            "direction": [
+                0.0,
+                -1.1699999570846558,
+                1.0
+            ],
+            "innerCone": 15.199999809265137,
+            "intensity": 10.0,
             "name": "SpotLamp1",
+            "outerCone": 25.0,
             "position": [
-                4.0,
-                3.0,
-                1
+                4.599999904632568,
+                5.349999904632568,
+                -4.349999904632568
             ],
-            "direction": [
-                0.0,
-                -1.0,
-                1.0
-            ],
+            "range": 12.0,
+            "type": "Light/Spot"
+        },
+        {
             "color": [
                 0.0,
-                1.0,
+                0.0,
+                1.0
+            ],
+            "direction": [
+                9.65999984741211,
+                -3.2100000381469727,
+                0.75
+            ],
+            "innerCone": 6.300000190734863,
+            "intensity": 12.050000190734863,
+            "name": "SpotLamp2",
+            "outerCone": 25.0,
+            "position": [
+                -12.600000381469727,
+                5.449999809265137,
                 0.0
             ],
-            "intensity": 10.0,
-            "range": 12.0,
-            "innerCone": 25.0,
-            "outerCone": 25.0
+            "range": 16.899999618530273,
+            "type": "Light/Spot"
         },
         {
-            "type": "Light/Spot",
-            "name": "SpotLamp2",
-            "position": [
-                4.0,
-                3.0,
-                1
-            ],
-            "direction": [
-                -1.0,
-                -1.0,
-                1.0
-            ],
-            "color": [
-                0.0,
-                0.0,
-                1.0
-            ],
-            "intensity": 10.0,
-            "range": 12.0,
-            "innerCone": 25.0,
-            "outerCone": 25.0
-        },
-        {
-            "type": "Light/Directional",
-            "name": "Sun",
-            "direction": [
-                -0.3,
-                -1.0,
-                -0.2
-            ],
             "color": [
                 1.0,
-                0.95,
-                0.85
+                0.949999988079071,
+                0.8500000238418579
             ],
-            "intensity": 0.2
+            "direction": [
+                -0.30000001192092896,
+                -1.0,
+                -0.20000000298023224
+            ],
+            "intensity": 0.20000000298023224,
+            "name": "Sun",
+            "type": "Light/Directional"
         }
-    ]
+    ],
+    "version": 2
 }
